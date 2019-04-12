@@ -17,8 +17,13 @@ if [ $EUID -ne 0 ]; then
 fi
 
 # Automatic updates
-autoupdates() {
+autoupdate() {
   log "Enabling automatic updates"
   cat presets/auto-upgrades > /etc/apt/apt.conf.d/20auto-upgrades
+}
+
+# Secure sourcing
+sourcing() {
+  log "Using most trustworthy sources in source.list"
   cat presets/sources.list > /etc/apt/sources.list
 }
