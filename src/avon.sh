@@ -48,3 +48,16 @@ firefox() {
   cat presets/syspref.js > /etc/firefox/syspref.js
   firefox -new-tab about:config
 }
+
+# RKHunter
+rkhunter() { rkhunter --update --propupd }
+
+# Configure hosts files
+hosts() {
+  if [ -s /etc/hosts ]; then
+    log "Copying hosts file for convenience"
+    cp /etc/hosts $dump/hosts
+    log "Cleansing hosts file"
+    cat presets/hosts > /etc/hosts
+  fi
+}
