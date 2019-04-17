@@ -37,3 +37,10 @@ dependencies() {
     log "FATAL: Vital apt-get is not working. Please fix and test before rerunning the script."
     exit 1
 }
+
+# Update Firefox
+firefox() {
+  killall firefox
+  mv !/.mozilla ~/.mozilla.old
+  apt-get --purge --reinstall install firefox
+}
