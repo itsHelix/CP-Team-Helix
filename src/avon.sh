@@ -27,3 +27,13 @@ sourcing() {
   log "Using most trustworthy sources in source.list"
   cat presets/sources.list > /etc/apt/sources.list
 }
+
+# Install script dependencies
+dependencies() {
+  log "Installing dependencies"
+  apt-get update
+  apt-get -y install gufw synaptic libpam-cracklib clamav gnome-system-tools auditd audispd-plugins rkhunter chkrootkit iptables curl unattended-upgrades openssl libpam-tmpdir libpam-umask
+  if [ $? = 100 ]; then
+    log "FATAL: Vital apt-get is not working. Please fix and test before rerunning the script."
+    exit 1
+}
