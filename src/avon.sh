@@ -40,7 +40,11 @@ dependencies() {
 
 # Update Firefox
 firefox() {
+  log "Updating Firefox"
   killall firefox
   mv !/.mozilla ~/.mozilla.old
   apt-get --purge --reinstall install firefox
+  log "Configuring Firefox"
+  cat presets/syspref.js > /etc/firefox/syspref.js
+  firefox -new-tab about:config
 }
