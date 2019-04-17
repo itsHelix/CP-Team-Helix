@@ -61,3 +61,9 @@ hosts() {
     cat presets/hosts > /etc/hosts
   fi
 }
+
+# Firewall
+firewall() {
+  log "Enabling firewall"
+  ufw enable
+}
