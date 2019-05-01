@@ -3,7 +3,5 @@
 
 A private repo for the cool kids
 
-Training image password: `CpTraining`
-
 [#TeamHelixForever](http://teamhelix.me)
 [#9370db](http://9370db.me)
