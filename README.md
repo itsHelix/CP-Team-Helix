@@ -2,22 +2,22 @@
 Do you even `lib`, bro?
 
 ## Features
- - [x] Updates
+- [x] Updates
   - [x] Firefox
   - [ ] OS
   - [x] Configuration _(automatic updates)_
- - [x] Secure sources
- - [x] Application hardening
+- [x] Secure sources
+- [x] Application hardening
   - [x] Firefox
   - [ ] Telnet
- - [x] Scanners
+- [x] Scanners
   - [x] Rootkits _(rkhunter)_
   - [x] Antivirus
- - [x] Networking
+- [x] Networking
   - [x] Hosts
   - [x] Firewall
   - [ ] `iptables` hardening
- - [ ] OS hardening
+- [ ] OS hardening
   - [ ] Ctrl+Alt+Del
   - [ ] Eliminate RC-appendages _(rc.local)_
   - [ ] Root password
@@ -25,5 +25,5 @@ Do you even `lib`, bro?
   - [ ] Guest account
   - [ ] Password policies
   - [ ] Secure boot password
- - [ ] Misc.
+- [ ] Misc.
   - [ ] Auditing
