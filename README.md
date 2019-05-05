@@ -1,8 +1,8 @@
 # Helix CPXII
 Switch branches to view respective repositories.
-
-
-
+* [Linux](https://github.com/Cutwow/CPXII-Team-Helix/tree/linux)
+* [Windows](https://github.com/Cutwow/CPXII-Team-Helix/tree/windows)
+<br>
 _HTML is the best programming language_
 
 [#TeamHelixForever](http://teamhelix.me)
