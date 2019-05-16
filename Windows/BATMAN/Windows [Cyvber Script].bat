@@ -19,7 +19,7 @@ if %errorlevel%==0 (
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :options
 
-:: Operating System (thank you to, Compo, user on stackoverflow)
+:: Operating System (thank you to, Compo [user:6738015], user on stackoverflow)
 Set "_P="
 For /F "EOL=P Tokens=*" %%A In ('"WMIC OS Get ProductType,Version 2>Nul"'
 ) Do For /F "Tokens=1-3 Delims=. " %%B In ("%%A") Do Set /A _P=%%B,_V=%%C%%D
@@ -30,6 +30,22 @@ If %_P% Equ 1 (If %_V% Equ 62 Set "OS=Windows8"
     If %_V% Equ 100 Set "OS=Windows10"
 ) Else If %_V% Equ 100 (Set "OS=Server2016") Else Exit /B
 Set OS
+echo.
+
+:: Operating System "bit" (thank you to, Iridium [user:381588], user on stackoverflow)
+if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
+    if "%PROCESSOR_ARCHITEW6432%" EQU "AMD64" (
+        :: 64 bit OS, but running a 32 bit command prompt
+        set bit=64
+    ) else (
+        :: 32 bit OS
+        set bit=32
+    )
+) else (
+    :: 64 bit OS
+    set bit=64
+)
+set bit
 echo.
 
 :: Do you want RemoteDesktop
@@ -527,9 +543,7 @@ if /I "%Users%" EQU "Y"(
 
 	set path=C:\Windows\System32
 
-	set /P choice=32 bit system? [Y/N]
-
-	if /I "%choice%" EQU "Y" (
+	if /I "%bit%" EQU "32" (
 		copy /Y %~dp0\Meta\Curlx86\Curl.exe C:\Windows\System32
 	) else (
 		copy /Y %~dp0\Meta\Curlx64\Curl.exe C:\Windows\System32
