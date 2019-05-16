@@ -31,6 +31,7 @@ If %_P% Equ 1 (If %_V% Equ 62 Set "OS=Windows8"
 ) Else If %_V% Equ 100 (Set "OS=Server2016") Else Exit /B
 Set OS
 echo.
+
 :: Do you want RemoteDesktop
 set RemoteDesktop=N
 set /P choice=Disable RemoteDesktop [Y/N]?
@@ -42,9 +43,10 @@ if /I "%choice%" EQU "Y" (
   set RemoteDesktop=Y
 )
 echo.
+
 :: Do you want SMB
 set SMB=N
-set /P choice=Do you want SMB [Y/N]?
+set /P choice=Do you want SMB enabled [Y/N]?
 if /I "%choice%" EQU "Y" (
   :: Enables and secures SMB
   set SMB=Y
@@ -53,6 +55,7 @@ if /I "%choice%" EQU "Y" (
   set SMB=N
 )
 echo.
+
 :: Do we need files to be shared
 set share=N
 set /P choice=Do we need files to be shared [Y/N]?
@@ -62,6 +65,17 @@ if /I "%choice%" EQU "N" (
   set share=Y
 )
 echo.
+
+:: Do you want to do users
+set HPps1=Y
+set /P choice=Do you want to do hardenpolicy.ps1 [Y/N]?
+if /I "%choice%" EQU "N" (
+  set HPps1=N
+) else (
+  set HPps1=Y
+)
+echo.
+
 :: Do you want to do users
 set Users=Y
 set /P choice=Do you want to do users [Y/N]?
@@ -71,6 +85,7 @@ if /I "%choice%" EQU "N" (
   set Users=Y
 )
 echo.
+
 :: Do you want to edit FirefoxSettings
 set Firefox=Y
 set /P choice=Do you want to complete FirefoxSettings
@@ -93,6 +108,7 @@ echo    4. Input
 echo __________________________________
 echo Current options: Current OS = %OS%
 echo 		 Enalbe RemoteDesktop = %RemoteDesktop%
+echo 		 Run hardenpolicy.ps1 = %HPps1%
 echo 		 Enable SMB = %SMB%
 echo 		 Keep shares = %share%
 echo 		 Run Users script = %Users%
@@ -115,7 +131,16 @@ goto %Loc%
 
 :Everything
 :FirefoxSettings
-if /I "%Firefox%" EQU "Y" call %~dp0\Meta\Firefox_Settings.bat
+if /I "%Firefox%" EQU "Y" (
+	cd %appdata%\Mozilla\Firefox\Profiles
+	for /d %%F in (*) do cd "%%F" & goto :break
+	:break
+	copy /y /v %~dp0\Meta\Perfect\prefs.js %cd%\sysprefs.js
+	cls
+	echo. & echo If you see _user.js.parrot = SUCCESS: No no he's not dead, he's, he's restin'!
+	echo. & echo You are good!
+	start /wait firefox about:config
+) else ( )
 cls
 
 
@@ -152,6 +177,12 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V TcpMaxPorts
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V NoDriveTypeAutorun /T REG_DWORD /D 255 /F
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\LSA\Kerberos\Parameters" /V LogLevel /T REG_DWORD /D 1 /F
 
+:: Security - Disable Autorun.
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoAutorun" /t REG_DWORD /d 1 /f
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoDriveTypeAutoRun" /t REG_DWORD /d 255 /f
+
+:: Privacy/Security - Only download Windows Updates from LAN peers, and Microsoft servers.
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" /v "DODownloadMode" /t REG_DWORD /d 1 /f
 
 :SMB
 :: https://www.alibabacloud.com/help/faq-detail/57499.htm
@@ -351,6 +382,22 @@ dism /online /disable-feature /featurename:TFTP /NoRestart
 dism /online /disable-feature /featurename:TelnetClient /NoRestart
 dism /online /disable-feature /featurename:TelnetServer /NoRestart
 
+:: Privacy - Stop unneeded services.
+net stop DiagTrack
+net stop dmwappushservice
+net stop RemoteRegistry
+net stop RetailDemo
+net stop WinRM
+net stop WMPNetworkSvc
+
+:: Privacy - Delete, or disable, unneeded services.
+sc config RemoteRegistry start=disabled
+sc config RetailDemo start=disabled
+sc config WinRM start=disabled
+sc config WMPNetworkSvc start=disabled
+sc delete DiagTrack
+sc delete dmwappushservice
+
 echo Done with SERVICES/Features simple
 
 cls
@@ -436,11 +483,12 @@ if /I "%Operating%" EQU "true"(
     "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
     "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
 
-:: 	  \/ HIghly Optional \/
-
-::    set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -executionpolicy bypass -file %~dp0\Meta\hardenpolicy.ps1
-::    cd C:\Windows\System32
-::    set path=C:\Windows\System32
+		:: 	  \/ Highly Optional \/
+		if /I "%HPps1%" EQU "Y" (
+			set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -executionpolicy bypass -file %~dp0\Meta\hardenpolicy.ps1
+			cd C:\Windows\System32
+			set path=C:\Windows\System32
+		) else ( )
 
 )
 :: Enables UAC and other things
@@ -453,5 +501,34 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpd
 
 :Users
 if /I "%Users%" EQU "Y"(
-	call %~dp0\Users.bat
+	color 0D
+
+	copy %~dp0\Meta\users.ps1 %USERPROFILE%\desktop
+	MKDIR %USERPROFILE%\desktop\output
+
+	pause
+
+	set path=C:\Windows\System32
+
+	set /P choice=32 bit system? [Y/N]
+
+	if /I "%choice%" EQU "Y" (
+		copy /Y %~dp0\Meta\Curlx86\Curl.exe C:\Windows\System32
+	) else (
+		copy /Y %~dp0\Meta\Curlx64\Curl.exe C:\Windows\System32
+	)
+
+	cd %USERPROFILE%\desktop
+	cls
+	echo Please paste in the readme url!
+	set /p url=
+	curl %url% > .\output\readme.txt
+
+	pause
+	set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
+	powershell.exe -executionpolicy bypass -file %USERPROFILE%\desktop\users.ps1
+	cd C:\Windows\System32
+	set path=C:\Windows\System32
+	pause
+
 ) else ( )
