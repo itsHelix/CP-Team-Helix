@@ -88,11 +88,21 @@ echo.
 
 :: Do you want to edit FirefoxSettings
 set Firefox=Y
-set /P choice=Do you want to complete FirefoxSettings
+set /P choice=Do you want to complete FirefoxSettings [Y/N]?
 if /I "%choice%" EQU "N" (
   set Firefox=N
 ) else (
   set Firefox=Y
+)
+echo.
+
+:: Do you want to install Software
+set Software=Y
+set /P choice=Do you want to install/update software [Y/N]?
+if /I "%choice%" EQU "N" (
+  set Software=N
+) else (
+  set Software=Y
 )
 echo.
 cls
@@ -104,7 +114,8 @@ echo  _________________________________
 echo    1. Does everything
 echo    2. Policies
 echo    3. Users
-echo    4. Input
+echo    4. Software
+echo    5. Input
 echo __________________________________
 echo Current options: Current OS = %OS%
 echo 		 Enalbe RemoteDesktop = %RemoteDesktop%
@@ -113,10 +124,12 @@ echo 		 Enable SMB = %SMB%
 echo 		 Keep shares = %share%
 echo 		 Run Users script = %Users%
 echo 		 Run Firefox script = %Firefox%
+echo 		 Install/update software = %Software%
 echo __________________________________
 
 :: Fetch option
 CHOICE /C 1234 /M "Enter your choice:"
+if ERRORLEVEL 5 goto Software
 if ERRORLEVEL 4 goto Input
 if ERRORLEVEL 3 goto Users
 if ERRORLEVEL 2 goto policies
@@ -498,6 +511,10 @@ reg ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v Prompt
 :: This registry key enables updates :)
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update" /v AUOptions /t REG_DWORD /d 4
 
+:Software
+if /I "%Software%" EQU "Y" (
+	start %~dp0\Meta\"Ninite - Everything Firefox Glary Malwarebytes Installer.exe"
+) else ( )
 
 :Users
 if /I "%Users%" EQU "Y"(
