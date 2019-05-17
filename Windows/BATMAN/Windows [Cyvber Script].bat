@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 color 1f
-REM Check for admin rights
+:: Check for admin rights
 echo Checking if script contains Administrative rights...
 net sessions
 if %errorlevel%==0 (
