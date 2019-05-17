@@ -10,4 +10,4 @@ _HTML is the best programming language_
 [#TeamHelixForever](http://teamhelix.me)
 [#9370db](http://9370db.me)
 
- ![License: WHOOPSIE](https://img.shields.io/badge/License-WHOOPSIE%20-%239370DB.svg)
+ [![License: WHOOPSIE](https://img.shields.io/badge/License-WHOOPSIE%20-%239370DB.svg)](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/LICENSE)
