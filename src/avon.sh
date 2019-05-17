@@ -3,7 +3,7 @@
 # TODO:
 # 1. Add prompts at beginning of user input for asking if these services are needed: VSFTP, MySQL, Apache2, PHP, Bind9, and nginx
 # 2. Implement security for Bind9
-# 3.
+# 3. Implement security for nginx
 
 mkdir avon avon/log avon/dump
 logf=./avon/log/avon_$(date +%T).log
@@ -101,7 +101,7 @@ auditing() {
 }
 
 # Configure root password
-auditing() {
+rootpassword() {
   log "Changing the root password. Make sure you document it"
   passwd root
 }
@@ -362,7 +362,7 @@ automaticusers() {
 }
 
 # Checking for any user who has a UID of 0 and is not a root and removing
-UIDcheck() {
+uidcheck() {
   log "Checking for 0 UID users other than root and removing"
   touch $dump/zeroUIDUsers
   touch $dump/UIDUsers
@@ -556,6 +556,17 @@ ssh() {
   fi
 }
 
+serviceconfiguration() {
+  pureftpd
+  vsftp
+  mysql
+  apachetwo
+  phpconfiguration
+  bindnine
+  nginx
+  ssh
+}
+
 # Kill CUPS (DANGEROUS! THIS IS A *LAST CASE* RESORT)
 killcups() {
   log "Killing cups"
@@ -577,15 +588,92 @@ killavahidaemon() {
 }
 
 # Purging the badness
-purge() {
+purges() {
   apt-get purge -y john* ophcrack minetest nmap wireshark netcat* polari rpcbind
   apt-get purge -y transmission-gtk empathy mutt freeciv kismet hydra* nikto* xinetd
   apt-get purge -y squid minetest p0f minetest-server
 }
 
 # Updates
-update() {
+updates() {
   apt-get autoremove
   apt-get update
   apt-get upgrade
 }
+
+# Establish configuration variables
+configvars() {
+
+  echo "Secure VSFTP? (y/n)\t"
+  read vsftp
+
+  echo "Secure MySQL (y/n)\t"
+  read mysql
+
+  echo "Secure Apache2 (y/n)\t"
+  read apachetwo
+
+  echo "Secure PHP (y/n)\t"
+  read php
+
+  echo "Secure Bind9 (y/n)\t"
+  read bindnine
+
+  echo "Secure nginx (y/n)\t"
+  read nginx
+}
+
+ubuntu14() {
+  configvars
+  autoupdate
+  sourcing
+  dependencies
+  firefox
+  rkhunter
+  hosts
+  firewall
+  ctrlaltdel
+  rclocal
+  telnet
+  auditing
+  rootpassword
+  cronrootonly
+  disableguestacc
+  passwordpolicies
+  nonullok
+  networkconfig
+  securebootpassword
+  grubpassword
+  initramfs
+  prebootsecurity
+  disablecoredumps
+  sysctlsecurity
+  sysctlconfiguration
+  unwantedmedia
+  automaticusers
+  uidcheck
+  serviceconfiguration
+  killavahidaemon
+  purges
+  updates
+}
+
+ubuntu16() {
+  ubuntu14
+}
+
+debian() {
+  ubuntu14
+}
+
+
+currentoperatingsystem=cat /etc/os-release | grep "PRETTY_NAME" | grep -o '".*"' | sed 's/"//g'
+if [[ currentoperatingsystem == "Ubuntu 14.04" ]]; then
+  ubuntu14
+fi
+if [[ currentoperatingsystem == "Ubuntu 16.04" ]]; then
+  ubuntu16
+fi
+if [[ currentoperatingsystem == "Debian 8" ]]; then
+  debian
+fi
