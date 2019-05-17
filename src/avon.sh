@@ -67,3 +67,9 @@ firewall() {
   log "Enabling firewall"
   ufw enable
 }
+
+# Disables Ctrl+Alt+Del
+ctrlaltdel() {
+  log "Disabling Ctrl+Alt+Del"
+  sed -i '/^exec*/ c\exec false' /etc/init/control-alt-delete.conf
+}
