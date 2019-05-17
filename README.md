@@ -30,6 +30,9 @@ Do you even `lib`, bro?
 
 ***
 
+## Notes
+1. The `sources.list` file changes for each operating system. Meaning, that the `sources.list` for Ubuntu is going to contain different sources tthan Debian. This same rule also applies to different versions of the same operating system. We are going to have to change it to work for Ubuntu 14, Ubuntu 16, and Debian 8.
+
 # Helix CPXII
 Switch branches/pages to view respective repositories.
 * [Linux](https://github.com/Cutwow/CPXII-Team-Helix/tree/linux)
