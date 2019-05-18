@@ -440,56 +440,37 @@ del /S "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Program
 echo. & echo Startup files cleansed
 cls
 
-
 :policies
 if "%OS%" EQU "Windows10" set Operating=true
 if "%OS%" EQU "Windows81" set Operating=true
 if "%OS%" EQU "Windows8" set Operating=true
-if /I "%Operating%" EQU "true"(
-    :: Windows 10 and Windows 8.1 and Windows8
-    "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\DomainSysvol\GPO\Machine\registry.pol"
-    "%~dp0\Meta\LGPO.exe" /u "%~dp0\Meta\Perfect\DomainSysvol\GPO\User\registry.pol"
-    "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
-    "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+if /I "%Operating%" EQU "false" goto Server
+  :: Windows 10 and Windows 8.1 and Windows8
+  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\DomainSysvol\GPO\Machine\registry.pol"
+  "%~dp0\Meta\LGPO.exe" /u "%~dp0\Meta\Perfect\DomainSysvol\GPO\User\registry.pol"
+  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
+  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+  reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /V DisableExceptionChainValidation /T REG_DWORD /D 0 /F
+  reg add HKLM\SOFTWARE\Microsoft\PolicyManager\default\Settings\AllowSignInOptions /V value /T REG_DWORD /D 0 /F
+  reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config /V DownloadMode /T REG_DWORD /D 0 /F
+  reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config /V DODownloadMode /T REG_DWORD /D 0 /F
 
-    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /V DisableExceptionChainValidation /T REG_DWORD /D 0 /F
-  	reg add HKLM\SOFTWARE\Microsoft\PolicyManager\default\Settings\AllowSignInOptions /V value /T REG_DWORD /D 0 /F
-  	reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config /V DownloadMode /T REG_DWORD /D 0 /F
-  	reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config /V DODownloadMode /T REG_DWORD /D 0 /F
+  :: They kept changing the value name for this, so I'm just doing all of them.
+  reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V AllowCortana /T REG_DWORD /D 0 /F
+  reg add HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config /V AutoConnectAllowedOEM /T REG_DWORD /D 0 /F
+  reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSyncNGSC /T REG_DWORD /D 1 /F
+  reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSync /T REG_DWORD /D 1 /F
 
-  	:: They kept changing the value name for this, so I'm just doing all of them.
-  	reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V AllowCortana /T REG_DWORD /D 0 /F
-  	reg add HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config /V AutoConnectAllowedOEM /T REG_DWORD /D 0 /F
-  	reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSyncNGSC /T REG_DWORD /D 1 /F
-  	reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSync /T REG_DWORD /D 1 /F
+goto AfterServerPol
 
-  	:: Make sure onedrive is dead
-  	taskkill /f /im OneDrive.exe
-  	%SystemRoot%\System32\OneDriveSetup.exe /uninstall
+:Server
+  :: Windows Server
+  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\registry.pol"
+  "%~dp0\Meta\LGPO.exe" /u "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\User\registry.pol"
+  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
+  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
 
-  	:: Location
-  	reg add HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors /V DisableWindowsLocationProvider /T REG_DWORD /D 1 /F
-) else (
-    :: Windows Server
-    "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\registry.pol"
-    "%~dp0\Meta\LGPO.exe" /u "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\User\registry.pol"
-    "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
-    "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
-
-		:: 	  \/ Highly Optional \/
-		if /I "%HPps1%" EQU "Y" (
-			set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -executionpolicy bypass -file %~dp0\Meta\hardenpolicy.ps1
-			cd C:\Windows\System32
-			set path=C:\Windows\System32
-		) else ( )
-
-)
-:: Enables UAC and other things
-reg ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
-reg ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v PromptOnSecureDesktop /t REG_DWORD /d 1 /f
-
-:: This registry key enables updates :)
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update" /v AUOptions /t REG_DWORD /d 4
+:AfterServerPol
 
 :Software
 if /I "%Software%" EQU "Y" (
