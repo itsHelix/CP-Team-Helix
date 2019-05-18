@@ -146,8 +146,8 @@ echo __________________________________
 
 :: Fetch option
 CHOICE /C 1234 /M "Enter your choice:"
-if ERRORLEVEL 5 goto Software
-if ERRORLEVEL 4 goto Input
+if ERRORLEVEL 5 goto Input
+if ERRORLEVEL 4 goto Software
 if ERRORLEVEL 3 goto Users
 if ERRORLEVEL 2 goto policies
 if ERRORLEVEL 1 goto Everything
@@ -160,20 +160,22 @@ goto %Loc%
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :Everything
+
 :FirefoxSettings
-if /I "%Firefox%" EQU "Y" (
-	cd %appdata%\Mozilla\Firefox\Profiles
-	for /d %%F in (*) do cd "%%F" & goto :break
-	:break
-	copy /y /v %~dp0\Meta\Perfect\sysprefs.js %cd%\sysprefs.js
-	cls
-	echo. & echo You should be good!
-	start /wait firefox about:config
-) else ( )
+
+if /I "%Firefox%" EQU "N" goto SkipFF
+cd %appdata%\Mozilla\Firefox\Profiles
+:: Below: this selects the next folder in the DIR [you have to do this becuase the folder you need to get into is generated at random]
+for /d %%F in (*) do cd "%%F" & goto :break
+:break
+copy /y /v %~dp0\Meta\Perfect\prefs.js %cd%
 cls
+echo. & echo You should be good!
+start /wait firefox about:config
+:SkipFF
 
 :share
-if "%share%" EQU "N" net stop lanmanserver
+if /I "%share%" EQU "N" net stop lanmanserver
 
 :InternetExp
 dism /online /enable-feature:"Internet-Explorer-Optional-amd64"
