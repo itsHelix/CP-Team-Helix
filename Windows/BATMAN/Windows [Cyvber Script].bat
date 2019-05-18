@@ -396,25 +396,25 @@ echo Done with SERVICES/Features simple
 cls
 echo. & echo Configuring services advanced
 
-REM Services that should be burned at the stake.
+:: Services that should be burned at the stake.
 for %%S in (tapisrv,bthserv,mcx2svc,remoteregistry,seclogon,telnet,tlntsvr,p2pimsvc,simptcp,fax,msftpsvc,nettcpportsharing,iphlpsvc,lfsvc,bthhfsrv,irmon,sharedaccess,xblauthmanager,xblgamesave,xboxnetapisvc) do (
 	sc config %%S start= disabled
 	sc stop %%S
 )
 
-REM Services that are an automatic start.
+:: Services that are an automatic start.
 for %%S in (eventlog,mpssvc) do (
 	sc config %%S start= auto
 	sc start %%S
 )
 
-REM Services that are an automatic (delayed) start.
+:: Services that are an automatic (delayed) start.
 for %%S in (windefend,sppsvc,wuauserv) do (
 	sc config %%S start= delayed-auto
 	sc start %%S
 )
 
-REM Services that are a manual start.
+:: Services that are a manual start.
 for %%S in (wersvc,wecsvc) do (
 	sc config %%S start= demand
 )
