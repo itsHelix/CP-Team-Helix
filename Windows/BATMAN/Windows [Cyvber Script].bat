@@ -49,77 +49,38 @@ set bit
 echo.
 
 :: Do you want RemoteDesktop
-set RemoteDesktop=N
-set /P choice=Disable RemoteDesktop [Y/N]?
-if /I "%choice%" EQU "Y" (
-  :: Deisablse RemoteDesktop
-  set RemoteDesktop=N
-) else (
-  :: Enables RemoteDesktop
-  set RemoteDesktop=Y
-)
+set RemoteDesktop=N && set /P choice=Disable RemoteDesktop [Y/N]?
+if /I "%choice%" EQU "Y" set RemoteDesktop=Y
 echo.
 
 :: Do you want SMB
-set SMB=N
-set /P choice=Do you want SMB enabled [Y/N]?
-if /I "%choice%" EQU "Y" (
-  :: Enables and secures SMB
-  set SMB=Y
-) else (
-  :: Disables SMB
-  set SMB=N
-)
+set SMB=N && set /P choice=Do you want SMB enabled [Y/N]?
+if /I "%choice%" EQU "Y" set SMB=Y
 echo.
 
 :: Do we need files to be shared
-set share=N
-set /P choice=Do we need files to be shared [Y/N]?
-if /I "%choice%" EQU "N" (
-  set share=N
-) else (
-  set share=Y
-)
+set share=Y && set /P choice=Do we need files to be shared [Y/N]?
+if /I "%choice%" EQU "N" set share=N
 echo.
 
 :: Do you want to do users
-set HPps1=Y
-set /P choice=Do you want to do hardenpolicy.ps1 [Y/N]?
-if /I "%choice%" EQU "N" (
-  set HPps1=N
-) else (
-  set HPps1=Y
-)
+set HPps1=Y && set /P choice=Do you want to do hardenpolicy.ps1 [Y/N]?
+if /I "%choice%" EQU "N" set HPps1=N
 echo.
 
 :: Do you want to do users
-set Users=Y
-set /P choice=Do you want to do users [Y/N]?
-if /I "%choice%" EQU "N" (
-  set Users=N
-) else (
-  set Users=Y
-)
+set Users=Y && set /P choice=Do you want to do users [Y/N]?
+if /I "%choice%" EQU "N" set Users=N
 echo.
 
 :: Do you want to edit FirefoxSettings
-set Firefox=Y
-set /P choice=Do you want to complete FirefoxSettings [Y/N]?
-if /I "%choice%" EQU "N" (
-  set Firefox=N
-) else (
-  set Firefox=Y
-)
+set Firefox=Y && set /P choice=Do you want to complete FirefoxSettings [Y/N]?
+if /I "%choice%" EQU "N" set Firefox=N
 echo.
 
 :: Do you want to install Software
-set Software=Y
-set /P choice=Do you want to install/update software [Y/N]?
-if /I "%choice%" EQU "N" (
-  set Software=N
-) else (
-  set Software=Y
-)
+set Software=Y && set /P choice=Do you want to install/update software [Y/N]?
+if /I "%choice%" EQU "N" set Software=N
 echo.
 cls
 
