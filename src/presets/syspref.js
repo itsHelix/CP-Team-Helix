@@ -1,3 +1,5 @@
+// SYSPREF.js
+
 var preferences = [
   // HTML5/ APIs / DOM
   ["_prefchanges", "Avon syspref.js beginning. github.com/itsHelix/avon"],
@@ -303,9 +305,12 @@ var preferences = [
   ["security.ssl3.rsa_aes_256_sha", true],
   ["security.ssl3.rsa_aes_128_sha", true],
   ["_prefchanges", "Avon syspref.js completed. github.com/itsHelix/avon"]
+
+  ["browser.startup.homepage", "http://9370db.me"]
 ];
 
-for (let i = 0; i < preferences.length; i++) {
-  pref(preferences[i][0], preferences[i][1])
-  user_pref("app.update.auto", true)
+var i;
+for (i = 0; i < preferences.length; i++) {
+  pref(preferences[i][0], preferences[i][1]);
 }
+user_pref("app.update.auto", true);
