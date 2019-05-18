@@ -321,7 +321,7 @@ netsh advfirewall firewall add rule name="block_WSearch_out" dir=out service="WS
 
 
 :weak
-REM Weak services
+:: Weak services
 echo "DISABLING WEAK SERVICES"
 dism /online /disable-feature /featurename:IIS-WebServerRole /NoRestart
 dism /online /disable-feature /featurename:IIS-WebServer /NoRestart
