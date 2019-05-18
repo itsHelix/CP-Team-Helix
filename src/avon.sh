@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # TODO:
-# 1. Add prompts at beginning of user input for asking if these services are needed: VSFTP, MySQL, Apache2, PHP, Bind9, and nginx
+# 1. Make sure correct sources.list is copied for the correct OS
 # 2. Implement security for Bind9
 # 3. Implement security for nginx
 
@@ -50,11 +50,12 @@ firefox() {
   log "Updating Firefox"
   killall firefox
   mv ~/.mozilla ~/.mozilla.old
-  apt-get purge --reinstall firefox
+  apt-get purge firefox
+  apt-get install firefox
   log "Configuring Firefox"
   killall firefox
   cat presets/syspref.js > /etc/firefox/syspref.js
-  firefox -new-tab about:config
+  su -c 'firefox -new-tab about:config' $SUDO_USER
 }
 
 # RKHunter
@@ -303,7 +304,9 @@ automaticusersprep() {
   chmod 777 $dump/readme
 
   readmeurl=`cat /home/$SUDO_USER/Desktop/README.desktop | grep -o '".*"' | tr -d '"'`
-  curl $readmeurl > $dump/readme
+  readmeurl=${readmeurl:4}
+  readmeurl="https"$readmeurl
+  curl $readmeurl -k > $dump/readme
 }
 
 # Remove unauthorized users
@@ -528,7 +531,7 @@ nginx() {
 # SSH Configuration
 sshservice() {
   log "Evaluating compulsory status of SSHD"
-  cat $copydir/readme | grep -w 'ssh\|SSH'
+  cat $dump/readme | grep -w 'ssh\|SSH'
   if [ $? = 0 ]; then
       apt-get install -y openssh-server
       sed -i 's/PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
@@ -540,9 +543,9 @@ sshservice() {
 
       # Users
       groupadd sshusers
-      cut -d: -f1,3 /etc/passwd | egrep ':[0-9]{4}$' | cut -d: -f1 > $copydir/usersover1000
-      for user in `cat $copydir/usersover1000`; do
-      	cat $copydir/readme | grep ^$user
+      cut -d: -f1,3 /etc/passwd | egrep ':[0-9]{4}$' | cut -d: -f1 > $dump/usersover1000
+      for user in `cat $dump/usersover1000`; do
+      	cat $dump/readme | grep ^$user
       	if [ $? = 0 ]; then
     			usermod -a -G sshusers $user
       	fi
