@@ -96,7 +96,7 @@ echo    4. Software
 echo    5. Input
 echo __________________________________
 echo Current options: Current OS = %OS%
-echo 		 Enalbe RemoteDesktop = %RemoteDesktop%
+echo 		 Enable RemoteDesktop = %RemoteDesktop%
 echo 		 Run hardenpolicy.ps1 = %HPps1%
 echo 		 Enable SMB = %SMB%
 echo 		 Keep shares = %share%
