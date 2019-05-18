@@ -50,7 +50,8 @@ firefox() {
   log "Updating Firefox"
   killall firefox
   mv ~/.mozilla ~/.mozilla.old
-  apt-get purge --reinstall firefox
+  apt-get purge firefox
+  apt-get install firefox
   log "Configuring Firefox"
   killall firefox
   cat presets/syspref.js > /etc/firefox/syspref.js
@@ -632,7 +633,6 @@ ubuntu14() {
   autoupdate
   sourcing
   dependencies
-  firefox
   rkhunterrun
   hosts
   firewall
@@ -654,9 +654,6 @@ ubuntu14() {
   sysctlsecurity
   sysctlconfiguration
   unwantedmedia
-  automaticusers
-  uidcheck
-  serviceconfiguration
   killavahidaemon
   purges
   updates
