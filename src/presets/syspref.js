@@ -7,7 +7,7 @@
 /******************************************************************************
  * SECTION: HTML5 / APIs / DOM                                                *
  ******************************************************************************/
-pref("_prefchanges", "Hoo Hah I am Working");
+pref("_prefchanges", "Here comes the party bus!");
 // PREF: Disable Service Workers
 // https://developer.mozilla.org/en-US/docs/Web/API/Worker
 // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorker_API
@@ -1159,4 +1159,4 @@ pref("security.ssl3.dhe_dss_camellia_256_sha", false);
 pref("security.ssl3.rsa_aes_256_sha", true); // 0x35
 pref("security.ssl3.rsa_aes_128_sha", true); // 0x2f
 
-pref("_prefchanges", "Alluha Helix I have completed My W0rk - syspref.js");
+pref("_prefchanges", "Do you like j a z z? Join Helix today!");
