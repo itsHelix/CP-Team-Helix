@@ -2,6 +2,7 @@
 
 # TODO:
 # 1. Implement security for nginx
+# 2. Implement Bastille
 
 mkdir avon avon/log avon/dump
 logf=./avon/log/avon_$(date +%T).log
