@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
 # TODO:
-# 1. Implement source list for Debian
-# 2. Implement security for Bind9
-# 3. Implement security for nginx
+# 1. Implement security for Bind9
+# 2. Implement security for nginx
 
 mkdir avon avon/log avon/dump
 logf=./avon/log/avon_$(date +%T).log
@@ -39,6 +38,19 @@ sourcing_16() {
   log "Using most trustworthy sources in source.list"
   cat presets/16sources.list > /etc/apt/sources.list
 }
+
+# Secure sourcing for Debian Jessie (8)
+sourcing_jessie() {
+  log "Using most trustworthy sources in source.list"
+  cat presets/jessiesources.list > /etc/apt/sources.list
+}
+
+# Secure sourcing for Debian Stretch (9)
+sourcing_stretch() {
+  log "Using most trustworthy sources in source.list"
+  cat presets/stretchsources.list > /etc/apt/sources.list
+}
+
 
 # Install script dependencies
 dependencies() {
@@ -682,6 +694,7 @@ avon_ubuntu16() {
 
 avon_debian() {
   avon_generic
+  sourcing_jessie # CP generally uses Debian 8 (Jessie)
 }
 
 
