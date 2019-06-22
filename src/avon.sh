@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # TODO:
-# 1. Implement security for Bind9
-# 2. Implement security for nginx
+# 1. Implement security for nginx
 
 mkdir avon avon/log avon/dump
 logf=./avon/log/avon_$(date +%T).log
@@ -529,8 +528,14 @@ phpconfiguration() {
 # Bind9 Configuration
 bindnine() {
   if $bindnine = "y"; then
-    # Check TODO #2 at the top
-    continue
+    apt-get update bind9 bind9-host
+    ps aux | grep bind | grep -v '^root' # Ensure Bind9 is running with non-root account
+    # Permission and ownership modifications
+    chown -R root:bind /etc/bind
+    chown root:bind /etc/bind/named.conf*
+    chmod 640 /etc/bind/named.conf*
+    echo -e "allow-recursion { localhost; 192.168.0.0/24; };\nallow-query { localhost; 192.168.0.0/24; };\nallow-transfer { 192.168.1.1; };\nlisten-on port 53 { 127.0.0.1; 192.168.1.1; };" >> /etc/bind/named.conf.options
+    service bind9 restart
   else
     apt-get purge -y bind9
   fi
@@ -680,6 +685,7 @@ avon_generic() {
   killavahidaemon
   purges
   updates
+  bindnine
 }
 
 avon_ubuntu14() {
