@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # TODO:
-# 1. Make sure correct sources.list is copied for the correct OS
+# 1. Implement source list for Debian
 # 2. Implement security for Bind9
 # 3. Implement security for nginx
 
@@ -28,10 +28,16 @@ autoupdate() {
   cat presets/auto-upgrades > /etc/apt/apt.conf.d/20auto-upgrades
 }
 
-# Secure sourcing
-sourcing() {
+# Secure sourcing for 14.04
+sourcing_14() {
   log "Using most trustworthy sources in source.list"
-  cat presets/sources.list > /etc/apt/sources.list
+  cat presets/14.04sources.list > /etc/apt/sources.list
+}
+
+# Secure sourcing for 16
+sourcing_16() {
+  log "Using most trustworthy sources in source.list"
+  cat presets/16sources.list > /etc/apt/sources.list
 }
 
 # Install script dependencies
@@ -630,10 +636,9 @@ configvars() {
   read nginx
 }
 
-ubuntu14() {
+avon_generic() {
   configvars
   autoupdate
-  sourcing
   dependencies
   firefox
   rkhunterrun
@@ -665,12 +670,18 @@ ubuntu14() {
   updates
 }
 
-ubuntu16() {
-  ubuntu14
+avon_ubuntu14() {
+  avon_generic
+  sourcing_14
 }
 
-debian() {
-  ubuntu14
+avon_ubuntu16() {
+  avon_generic
+  sourcing_16
+}
+
+avon_debian() {
+  avon_generic
 }
 
 
