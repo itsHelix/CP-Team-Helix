@@ -96,16 +96,15 @@ echo บ  3. Users           บ
 echo บ  4. Software        บ
 echo บ  5. Input           บ
 echo ฬอออออออออออออออออออออสอออออออออออออออออออป
-echo บCurrent options: Current OS = %OS%
-echo บ 	 Enable RemoteDesktop = %RemoteDesktop%
-echo บ	 Run hardenpolicy.ps1 = %HPps1%
-echo บ	 Enable SMB = %SMB%
-echo บ	 Keep shares = %share%
-echo บ	 Run Users script = %Users%
-echo บ	 Run Firefox script = %Firefox%
-echo บ	 Install/update software = %Software%
+echo บ Current OS = %OS%
+echo บ Enable RemoteDesktop = %RemoteDesktop%
+echo บ Run hardenpolicy.ps1 = %HPps1%
+echo บ Enable SMB = %SMB%
+echo บ Keep shares = %share%
+echo บ Run Users script = %Users%
+echo บ Run Firefox script = %Firefox%
+echo บ Install/update software = %Software%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
-pause
 
 :: Fetch option
 CHOICE /C 1234 /M "Enter your choice:"
