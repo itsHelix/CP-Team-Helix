@@ -89,22 +89,22 @@ cls
 :MENU
 color f0
 echo Choose An option:
-echo รรรรรรรรรรรรรรรรรรรรรรยป
-echo ยบ  1. Does everything ยบ
-echo ยบ  2. Policies        ยบ
-echo ยบ  3. Users           ยบ
-echo ยบ  4. Software        ยบ
-echo ยบ  5. Input           ยบ
-echo รรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรยป
-echo ยบCurrent options: Current OS = %OS%
-echo ยบ 	 Enable RemoteDesktop = %RemoteDesktop%
-echo ยบ	 Run hardenpolicy.ps1 = %HPps1%
-echo ยบ	 Enable SMB = %SMB%
-echo ยบ	 Keep shares = %share%
-echo ยบ	 Run Users script = %Users%
-echo ยบ	 Run Firefox script = %Firefox%
-echo ยบ	 Install/update software = %Software%
-echo รรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรรยผ
+echo ษอออออออออออออออออออออป
+echo บ  1. Does everything บ
+echo บ  2. Policies        บ
+echo บ  3. Users           บ
+echo บ  4. Software        บ
+echo บ  5. Input           บ
+echo ฬอออออออออออออออออออออสอออออออออออออออออออป
+echo บCurrent options: Current OS = %OS%
+echo บ 	 Enable RemoteDesktop = %RemoteDesktop%
+echo บ	 Run hardenpolicy.ps1 = %HPps1%
+echo บ	 Enable SMB = %SMB%
+echo บ	 Keep shares = %share%
+echo บ	 Run Users script = %Users%
+echo บ	 Run Firefox script = %Firefox%
+echo บ	 Install/update software = %Software%
+echo ศอออออออออออออออออออออออออออออออออออออออออผ
 pause
 
 :: Fetch option
