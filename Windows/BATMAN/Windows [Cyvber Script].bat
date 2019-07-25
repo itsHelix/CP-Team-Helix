@@ -89,22 +89,23 @@ cls
 :MENU
 color f0
 echo Choose An option:
-echo  _________________________________
-echo    1. Does everything
-echo    2. Policies
-echo    3. Users
-echo    4. Software
-echo    5. Input
-echo __________________________________
-echo Current options: Current OS = %OS%
-echo 		 Enable RemoteDesktop = %RemoteDesktop%
-echo 		 Run hardenpolicy.ps1 = %HPps1%
-echo 		 Enable SMB = %SMB%
-echo 		 Keep shares = %share%
-echo 		 Run Users script = %Users%
-echo 		 Run Firefox script = %Firefox%
-echo 		 Install/update software = %Software%
-echo __________________________________
+echo ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+echo º  1. Does everything º
+echo º  2. Policies        º
+echo º  3. Users           º
+echo º  4. Software        º
+echo º  5. Input           º
+echo ÌÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+echo ºCurrent options: Current OS = %OS%
+echo º 	 Enable RemoteDesktop = %RemoteDesktop%
+echo º	 Run hardenpolicy.ps1 = %HPps1%
+echo º	 Enable SMB = %SMB%
+echo º	 Keep shares = %share%
+echo º	 Run Users script = %Users%
+echo º	 Run Firefox script = %Firefox%
+echo º	 Install/update software = %Software%
+echo ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼
+pause
 
 :: Fetch option
 CHOICE /C 1234 /M "Enter your choice:"
