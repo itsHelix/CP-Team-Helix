@@ -1,5 +1,8 @@
-if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 @echo off
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
+CHOICE /M "Do you want Echo ON "
+if %ERRORLEVEL% EQU 2 @echo off
+if %ERRORLEVEL% EQU 1 @echo on
 setlocal enabledelayedexpansion
 color 1f
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -50,37 +53,45 @@ set bit
 echo.
 
 :: Do you want RemoteDesktop
-set RemoteDesktop=N && set /P choice=Disable RemoteDesktop [Y/N]?
+set RemoteDesktop=N
+set /P choice=Disable RemoteDesktop [Y/N]?
 if /I "%choice%" EQU "Y" set RemoteDesktop=Y
 echo.
 
 :: Do you want SMB
-set SMB=N && set /P choice=Do you want SMB enabled [Y/N]?
+set SMB=N
+set /P choice=Do you want SMB enabled [Y/N]?
 if /I "%choice%" EQU "Y" set SMB=Y
 echo.
 
 :: Do we need files to be shared
-set share=Y && set /P choice=Do we need files to be shared [Y/N]?
+set share=Y
+set /P choice=Do we need files to be shared [Y/N]?
 if /I "%choice%" EQU "N" set share=N
 echo.
 
 :: Do you want to do users
-set HPps1=Y && set /P choice=Do you want to do hardenpolicy.ps1 [Y/N]?
+set HPps1=Y
+set /P choice=Do you want to do hardenpolicy.ps1 [Y/N]?
 if /I "%choice%" EQU "N" set HPps1=N
 echo.
 
 :: Do you want to do users
-set Users=Y && set /P choice=Do you want to do users [Y/N]?
+set Users=Y
+set /P choice=Do you want to do users [Y/N]?
 if /I "%choice%" EQU "N" set Users=N
+if /I "%choice%" EQU "Y" set Users=Y
 echo.
 
 :: Do you want to edit FirefoxSettings
-set Firefox=Y && set /P choice=Do you want to complete FirefoxSettings [Y/N]?
+set Firefox=Y
+set /P choice=Do you want to complete FirefoxSettings [Y/N]?
 if /I "%choice%" EQU "N" set Firefox=N
 echo.
 
 :: Do you want to install Software
-set Software=Y && set /P choice=Do you want to install/update software [Y/N]?
+set Software=Y
+set /P choice=Do you want to install/update software [Y/N]?
 if /I "%choice%" EQU "N" set Software=N
 echo.
 cls
@@ -107,12 +118,12 @@ echo บ Install/update software = %Software%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
-CHOICE /C 1234 /M "Enter your choice:"
-if ERRORLEVEL 5 goto Input
-if ERRORLEVEL 4 goto Software
-if ERRORLEVEL 3 goto Users
-if ERRORLEVEL 2 goto policies
-if ERRORLEVEL 1 goto Everything
+CHOICE /C 12345 /M "Enter your choice:"
+if %ERRORLEVEL% EQU 5 goto :Input
+if %ERRORLEVEL% EQU 4 goto :Software
+if %ERRORLEVEL% EQU 3 goto :Users
+if %ERRORLEVEL% EQU 2 goto :policies
+if %ERRORLEVEL% EQU 1 goto :Everything
 
 :Input
 set /p Loc="Enter Location: "
@@ -476,10 +487,11 @@ goto AfterServerPol
 :Software
 if /I "%Software%" EQU "Y" (
 	start %~dp0\Meta\"Ninite - Everything Firefox Glary Malwarebytes Installer.exe"
-) else ( )
+)
 
 :Users
-if /I "%Users%" EQU "Y"(
+if /I "%Users%" EQU "Y" (
+	cls
 	color 0D
 
 	copy %~dp0\Meta\users.ps1 %USERPROFILE%\desktop
@@ -499,7 +511,7 @@ if /I "%Users%" EQU "Y"(
 	cls
 	echo Please paste in the readme url!
 	set /p url=
-	curl %url% > .\output\readme.txt
+	curl -k %url% > .\output\readme.txt
 
 	pause
 	set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
@@ -507,5 +519,4 @@ if /I "%Users%" EQU "Y"(
 	cd C:\Windows\System32
 	set path=C:\Windows\System32
 	pause
-
-) else ( )
+)

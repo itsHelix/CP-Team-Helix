@@ -1,21 +1,23 @@
-@echo off
+CHOICE /M "Do you want Echo ON "
+if %ERRORLEVEL% EQU 2 @echo off
+if %ERRORLEVEL% EQU 1 @echo on
 :MENU
 color f0
 echo Choose An option:
-echo ษอออออออออออออออออออออป
-echo บ  1. Does everything บ
-echo บ  2. Policies        บ
-echo บ  3. Users           บ
-echo บ  4. Software        บ
-echo บ  5. Input           บ
-echo ฬอออออออออออออออออออออสอออออออออออออออออออป
-echo บCurrent options: Current OS = %OS%
-echo บ 	 Enable RemoteDesktop = %RemoteDesktop%
-echo บ	 Run hardenpolicy.ps1 = %HPps1%
-echo บ	 Enable SMB = %SMB%
-echo บ	 Keep shares = %share%
-echo บ	 Run Users script = %Users%
-echo บ	 Run Firefox script = %Firefox%
-echo บ	 Install/update software = %Software%
-echo ศอออออออออออออออออออออออออออออออออออออออออผ
+echo ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอป
+echo ๏ฟฝ  1. Does everything ๏ฟฝ
+echo ๏ฟฝ  2. Policies        ๏ฟฝ
+echo ๏ฟฝ  3. Users           ๏ฟฝ
+echo ๏ฟฝ  4. Software        ๏ฟฝ
+echo ๏ฟฝ  5. Input           ๏ฟฝ
+echo ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอป
+echo ๏ฟฝCurrent options: Current OS = %OS%
+echo ๏ฟฝ 	 Enable RemoteDesktop = %RemoteDesktop%
+echo ๏ฟฝ	 Run hardenpolicy.ps1 = %HPps1%
+echo ๏ฟฝ	 Enable SMB = %SMB%
+echo ๏ฟฝ	 Keep shares = %share%
+echo ๏ฟฝ	 Run Users script = %Users%
+echo ๏ฟฝ	 Run Firefox script = %Firefox%
+echo ๏ฟฝ	 Install/update software = %Software%
+echo ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอผ
 pause
