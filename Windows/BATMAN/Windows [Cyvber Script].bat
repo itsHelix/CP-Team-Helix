@@ -148,7 +148,7 @@ start /wait firefox about:config
 :SkipFF
 
 :share
-if /I "%share%" EQU "N" net stop lanmanserver
+if /I "%share%" EQU "N" wmic path Win32_Share delete
 
 :InternetExp
 dism /online /enable-feature:"Internet-Explorer-Optional-amd64"
@@ -498,25 +498,10 @@ if /I "%Users%" EQU "Y" (
 	MKDIR %USERPROFILE%\desktop\output
 
 	pause
-
-	set path=C:\Windows\System32
-
-	if /I "%bit%" EQU "32" (
-		copy /Y %~dp0\Meta\Curlx86\Curl.exe C:\Windows\System32
-	) else (
-		copy /Y %~dp0\Meta\Curlx64\Curl.exe C:\Windows\System32
-	)
-
-	cd %USERPROFILE%\desktop
-	cls
-	echo Please paste in the readme url!
-	set /p url=
-	curl -k %url% > .\output\readme.txt
-
-	pause
 	set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
 	powershell.exe -executionpolicy bypass -file %USERPROFILE%\desktop\users.ps1
 	cd C:\Windows\System32
 	set path=C:\Windows\System32
 	pause
 )
+pause

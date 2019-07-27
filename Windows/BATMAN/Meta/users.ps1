@@ -1,4 +1,8 @@
 cd C:\Users\$env:USERNAME\Desktop
+Write-Host Stealing the Readme
+$url = Read-Host -Prompt 'Input the Readme URL'
+Invoke-RestMethod -Uri $url -Method Get -OutFile C:\Users\$env:USERNAME\Desktop\Output\readme.txt
+
 Write-Host Checking Authorized Users
 
 $users = Get-LocalUser | findstr -i true
