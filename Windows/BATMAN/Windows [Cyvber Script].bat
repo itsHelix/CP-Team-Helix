@@ -4,6 +4,8 @@ CHOICE /M "Do you want Echo ON "
 if %ERRORLEVEL% EQU 2 @echo off
 if %ERRORLEVEL% EQU 1 @echo on
 
+copy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32\
+copy %~dp0\Meta\dialogboxes \InputBox.cs %windir%\system32\
 
 copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32\
 copy %~dp0\Meta\dialogboxes \MultipleChoiceBox.cs %windir%\system32\
@@ -60,7 +62,7 @@ set Firefox=N
 set Software=N
 set Users=N
 
-::MultipleChoiceBox runs
+::MultipleChoiceBox runs (This add-on was made and distrubuted by Rob van der Woude [https://www.robvanderwoude.com/])
 MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Install software with NINITE;Users" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox

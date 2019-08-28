@@ -1,23 +1,3 @@
-@ECHO OFF
-REM BFCPEOPTIONSTART
-REM Advanced BAT to EXE Converter www.BatToExeConverter.com
-REM BFCPEEXE=C:\Users\Ian Boraks\Documents\Github\CPXII-Team-Helix\Windows\BATMAN\test5.exe
-REM BFCPEICON=
-REM BFCPEICONINDEX=-1
-REM BFCPEEMBEDDISPLAY=1
-REM BFCPEEMBEDDELETE=1
-REM BFCPEADMINEXE=0
-REM BFCPEINVISEXE=0
-REM BFCPEVERINCLUDE=0
-REM BFCPEVERVERSION=1.0.0.0
-REM BFCPEVERPRODUCT=Product Name
-REM BFCPEVERDESC=Product Description
-REM BFCPEVERCOMPANY=Your Company
-REM BFCPEVERCOPYRIGHT=Copyright Info
-REM BFCPEEMBED=C:\Users\Ian Boraks\Documents\Github\CPXII-Team-Helix\Windows\BATMAN\Meta.tar
-REM BFCPEEMBED=C:\Users\Ian Boraks\Documents\Github\CPXII-Team-Helix\Windows\BATMAN\Software.tar
-REM BFCPEOPTIONEND
-@ECHO ON
 @echo off
 if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 CHOICE /M "Do you want Echo ON "

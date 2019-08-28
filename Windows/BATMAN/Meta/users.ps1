@@ -1,6 +1,6 @@
 cd C:\Users\$env:USERNAME\Desktop
 Write-Host Stealing the Readme
-$url = Read-Host -Prompt 'Input the Readme URL'
+$url = INPUTBOX.EXE "Url of ReadMe" "Stealling stuff!" "http:\\teamhelix.me"
 Invoke-RestMethod -Uri $url -Method Get -OutFile C:\Users\$env:USERNAME\Desktop\Output\readme.txt
 
 Write-Host Checking Authorized Users
