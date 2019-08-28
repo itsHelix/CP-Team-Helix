@@ -3,8 +3,10 @@ if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 CHOICE /M "Do you want Echo ON "
 if %ERRORLEVEL% EQU 2 @echo off
 if %ERRORLEVEL% EQU 1 @echo on
+
+
 copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32\
-copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32\
+copy %~dp0\Meta\dialogboxes \MultipleChoiceBox.cs %windir%\system32\
 setlocal enabledelayedexpansion
 color 1f
 
@@ -77,7 +79,7 @@ IF NOT ERRORLEVEL 1 set Software=Y
 FINDSTR /C:"Users" temp.txt
 IF NOT ERRORLEVEL 1 set Users=Y
 del temp.txt
-
+cls
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :MENU
 color f0
@@ -500,6 +502,7 @@ if /I "%Users%" EQU "Y" (
 	powershell.exe -executionpolicy bypass -file %USERPROFILE%\desktop\users.ps1
 	cd C:\Windows\System32
 	set path=C:\Windows\System32
+	del %USERPROFILE%\desktop\users.ps1
 	pause
 )
 pause
