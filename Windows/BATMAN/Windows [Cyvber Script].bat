@@ -7,7 +7,7 @@ copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32\
 copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32\
 setlocal enabledelayedexpansion
 color 1f
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 :: Check for admin rights
 echo Checking if script contains Administrative rights...
 net sessions
@@ -22,7 +22,6 @@ if %errorlevel%==0 (
   echo You have chose to run the script without Aministrative Rights, "Good Luck!"
 	pause
 )
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :options
 
 :: Operating System (thank you to, Compo [user:6738015], user on stackoverflow)
@@ -60,10 +59,10 @@ set Software=N
 set Users=N
 
 ::MultipleChoiceBox runs
-MultipleChoiceBox.exe "Disable Remote Desktop;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Complete Firefox Settings;Install software with NINITE;Complete Users" "What do you want?" "Batman" > temp.txt
+MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Install software with NINITE;Users" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
-FINDSTR /C:"Disable Remote Desktop" temp.txt
+FINDSTR /C:"Disable RDP" temp.txt
 IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
 FINDSTR /C:"Enable SMB" temp.txt
 IF NOT ERRORLEVEL 1 set SMB=Y
@@ -71,13 +70,12 @@ FINDSTR /C:"Keep Shared Files" temp.txt
 IF NOT ERRORLEVEL 1 set share=Y
 FINDSTR /C:"Run hardenpolicy.ps1" temp.txt
 IF NOT ERRORLEVEL 1 set HPps1=Y
-FINDSTR /C:"Complete Firefox Settings" temp.txt
+FINDSTR /C:"Firefox Settings" temp.txt
 IF NOT ERRORLEVEL 1 set Firefox=Y
 FINDSTR /C:"Install software with NINITE" temp.txt
 IF NOT ERRORLEVEL 1 set Software=Y
-FINDSTR /C:"Complete Users" temp.txt
+FINDSTR /C:"Users" temp.txt
 IF NOT ERRORLEVEL 1 set Users=Y
-pause
 del temp.txt
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
