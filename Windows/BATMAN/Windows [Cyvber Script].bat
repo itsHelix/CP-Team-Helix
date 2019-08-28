@@ -3,6 +3,8 @@ if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 CHOICE /M "Do you want Echo ON "
 if %ERRORLEVEL% EQU 2 @echo off
 if %ERRORLEVEL% EQU 1 @echo on
+copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32\
+copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32\
 setlocal enabledelayedexpansion
 color 1f
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -33,8 +35,6 @@ If %_P% Equ 1 (If %_V% Equ 62 Set "OS=Windows8"
     If %_V% Equ 63 Set "OS=Windows81"
     If %_V% Equ 100 Set "OS=Windows10"
 ) Else If %_V% Equ 100 (Set "OS=Server2016") Else Exit /B
-Set OS
-echo.
 
 :: Operating System "bit" (thank you to, Iridium [user:381588], user on stackoverflow)
 if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
@@ -49,52 +49,36 @@ if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
     :: 64 bit OS
     set bit=64
 )
-set bit
-echo.
 
-:: Do you want RemoteDesktop
+:: Setup for MultipleChoiceBox
 set RemoteDesktop=N
-set /P choice=Disable RemoteDesktop [Y/N]?
-if /I "%choice%" EQU "Y" set RemoteDesktop=Y
-echo.
-
-:: Do you want SMB
 set SMB=N
-set /P choice=Do you want SMB enabled [Y/N]?
-if /I "%choice%" EQU "Y" set SMB=Y
-echo.
+set share=N
+set HPps1=N
+set Firefox=N
+set Software=N
+set Users=N
 
-:: Do we need files to be shared
-set share=Y
-set /P choice=Do we need files to be shared [Y/N]?
-if /I "%choice%" EQU "N" set share=N
-echo.
+::MultipleChoiceBox runs
+MultipleChoiceBox.exe "Disable Remote Desktop;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Complete Firefox Settings;Install software with NINITE;Complete Users" "What do you want?" "Batman" > temp.txt
 
-:: Do you want to do users
-set HPps1=Y
-set /P choice=Do you want to do hardenpolicy.ps1 [Y/N]?
-if /I "%choice%" EQU "N" set HPps1=N
-echo.
-
-:: Do you want to do users
-set Users=Y
-set /P choice=Do you want to do users [Y/N]?
-if /I "%choice%" EQU "N" set Users=N
-if /I "%choice%" EQU "Y" set Users=Y
-echo.
-
-:: Do you want to edit FirefoxSettings
-set Firefox=Y
-set /P choice=Do you want to complete FirefoxSettings [Y/N]?
-if /I "%choice%" EQU "N" set Firefox=N
-echo.
-
-:: Do you want to install Software
-set Software=Y
-set /P choice=Do you want to install/update software [Y/N]?
-if /I "%choice%" EQU "N" set Software=N
-echo.
-cls
+::Parsing MultipleChoiceBox
+FINDSTR /C:"Disable Remote Desktop" temp.txt
+IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
+FINDSTR /C:"Enable SMB" temp.txt
+IF NOT ERRORLEVEL 1 set SMB=Y
+FINDSTR /C:"Keep Shared Files" temp.txt
+IF NOT ERRORLEVEL 1 set share=Y
+FINDSTR /C:"Run hardenpolicy.ps1" temp.txt
+IF NOT ERRORLEVEL 1 set HPps1=Y
+FINDSTR /C:"Complete Firefox Settings" temp.txt
+IF NOT ERRORLEVEL 1 set Firefox=Y
+FINDSTR /C:"Install software with NINITE" temp.txt
+IF NOT ERRORLEVEL 1 set Software=Y
+FINDSTR /C:"Complete Users" temp.txt
+IF NOT ERRORLEVEL 1 set Users=Y
+pause
+del temp.txt
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :MENU
@@ -107,14 +91,14 @@ echo บ  3. Users           บ
 echo บ  4. Software        บ
 echo บ  5. Input           บ
 echo ฬอออออออออออออออออออออสอออออออออออออออออออป
-echo บ Current OS = %OS%
-echo บ Enable RemoteDesktop = %RemoteDesktop%
-echo บ Run hardenpolicy.ps1 = %HPps1%
-echo บ Enable SMB = %SMB%
-echo บ Keep shares = %share%
-echo บ Run Users script = %Users%
-echo บ Run Firefox script = %Firefox%
-echo บ Install/update software = %Software%
+echo บCurrent options: Current OS = %OS%
+echo บ 	 Disable RemoteDesktop = %RemoteDesktop%
+echo บ	 Run hardenpolicy.ps1 = %HPps1%
+echo บ	 Enable SMB = %SMB%
+echo บ	 Keep shares = %share%
+echo บ	 Run Users script = %Users%
+echo บ	 Run Firefox script = %Firefox%
+echo บ	 Install/update software = %Software%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
@@ -226,7 +210,7 @@ if /I "%SMB%" EQU "Y" (
 
 
 :RemoteDesktop
-if /I "%RemoteDesktop%" EQU "N" (
+if /I "%RemoteDesktop%" EQU "Y" (
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /V fDenyTSConnections /T REG_DWORD /D 1 /F
 	sc config iphlpsvc start= disabled
 	sc stop iphlpsvc
