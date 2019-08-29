@@ -1,14 +1,15 @@
 @echo off
 if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
-CHOICE /M "Do you want Echo ON "
+CHOICE /M "Do you want Echo ON?"
 if %ERRORLEVEL% EQU 2 @echo off
 if %ERRORLEVEL% EQU 1 @echo on
 
+:: Copying things from Meta to make the GUIs work
 copy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32\
-copy %~dp0\Meta\dialogboxes \InputBox.cs %windir%\system32\
-
+copy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32\
 copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32\
-copy %~dp0\Meta\dialogboxes \MultipleChoiceBox.cs %windir%\system32\
+copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32\
+
 setlocal enabledelayedexpansion
 color 1f
 
@@ -61,9 +62,11 @@ set HPps1=N
 set Firefox=N
 set Software=N
 set Users=N
+set Loading=N
+set Firewall=N
 
 ::MultipleChoiceBox runs (This add-on was made and distrubuted by Rob van der Woude [https://www.robvanderwoude.com/])
-MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Install software with NINITE;Users" "What do you want?" "Batman" /C:2 > temp.txt
+MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Install software with NINITE;Users;Disable features;Firewall Settings" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
 FINDSTR /C:"Disable RDP" temp.txt
@@ -80,12 +83,17 @@ FINDSTR /C:"Install software with NINITE" temp.txt
 IF NOT ERRORLEVEL 1 set Software=Y
 FINDSTR /C:"Users" temp.txt
 IF NOT ERRORLEVEL 1 set Users=Y
+FINDSTR /C:"Disable features" temp.txt
+IF NOT ERRORLEVEL 1 set Loading=Y
+FINDSTR /C:"Firewall Settings" temp.txt
+IF NOT ERRORLEVEL 1 set Firewall=Y
 del temp.txt
 cls
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :MENU
 color f0
 echo Choose An option:
+:: For this to show properly use encoding [Windows 1252] it will show as "I" when you do this. If you don't and then save+run it will break!
 echo ษอออออออออออออออออออออป
 echo บ  1. Does everything บ
 echo บ  2. Policies        บ
@@ -101,6 +109,8 @@ echo บ	 Keep shares = %share%
 echo บ	 Run Users script = %Users%
 echo บ	 Run Firefox script = %Firefox%
 echo บ	 Install/update software = %Software%
+echo บ	 Firewall Settings = %Firewall%
+echo บ	 Disable Weak Services = %Loading%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
@@ -240,6 +250,7 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Ad
 
 
 :firewall
+if /I "%Firewall%" EQU "N" goto :weak
 netsh advfirewall set allprofiles state on
 netsh advfirewall reset
 netsh advfirewall show allprofiles
@@ -336,6 +347,7 @@ netsh advfirewall firewall add rule name="block_WSearch_out" dir=out service="WS
 
 :weak
 :: Weak services
+if /I "%Loading%" EQU "N" goto :NoLoad
 echo "DISABLING WEAK SERVICES"
 dism /online /disable-feature /featurename:IIS-WebServerRole /NoRestart
 dism /online /disable-feature /featurename:IIS-WebServer /NoRestart
@@ -388,7 +400,7 @@ dism /online /disable-feature /featurename:IIS-FTPExtensibility /NoRestart
 dism /online /disable-feature /featurename:TFTP /NoRestart
 dism /online /disable-feature /featurename:TelnetClient /NoRestart
 dism /online /disable-feature /featurename:TelnetServer /NoRestart
-
+:NoLoad
 :: Privacy - Stop unneeded services.
 net stop DiagTrack
 net stop dmwappushservice
