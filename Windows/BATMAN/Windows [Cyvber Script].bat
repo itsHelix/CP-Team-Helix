@@ -4,11 +4,15 @@ CHOICE /M "Do you want Echo ON?"
 if %ERRORLEVEL% EQU 2 @echo off
 if %ERRORLEVEL% EQU 1 @echo on
 
+CHOICE /M "Do you want Breaks ON?"
+if %ERRORLEVEL% EQU 2 set Breaks=N
+if %ERRORLEVEL% EQU 1 set Breaks=Y
+
 :: Copying things from Meta to make the GUIs work
-copy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32\
-copy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32\
-copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32\
-copy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32\
+xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h
+xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h
+xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h
+xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h
 
 setlocal enabledelayedexpansion
 color 1f
@@ -27,6 +31,7 @@ if %errorlevel%==0 (
   echo You have chose to run the script without Aministrative Rights, "Good Luck!"
 	pause
 )
+IF /i %Breaks% EQU "Y" pause
 :options
 
 :: Operating System (thank you to, Compo [user:6738015], user on stackoverflow)
@@ -39,7 +44,7 @@ If %_P% Equ 1 (If %_V% Equ 62 Set "OS=Windows8"
     If %_V% Equ 63 Set "OS=Windows81"
     If %_V% Equ 100 Set "OS=Windows10"
 ) Else If %_V% Equ 100 (Set "OS=Server2016") Else Exit /B
-
+IF /i %Breaks% EQU "Y" pause
 :: Operating System "bit" (thank you to, Iridium [user:381588], user on stackoverflow)
 if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
     if "%PROCESSOR_ARCHITEW6432%" EQU "AMD64" (
@@ -53,7 +58,7 @@ if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
     :: 64 bit OS
     set bit=64
 )
-
+IF /i %Breaks% EQU "Y" pause
 :: Setup for MultipleChoiceBox
 set RemoteDesktop=N
 set SMB=N
@@ -88,6 +93,7 @@ IF NOT ERRORLEVEL 1 set Loading=Y
 FINDSTR /C:"Firewall Settings" temp.txt
 IF NOT ERRORLEVEL 1 set Firewall=Y
 del temp.txt
+IF /i %Breaks% EQU "Y" pause
 cls
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :MENU
@@ -200,7 +206,7 @@ reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /V Enable
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /V EnableLUA /T REG_DWORD /D 1 /F >> nul 2>&1
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /V EnableVirtualization /T REG_DWORD /D 1 /F
 
-
+IF /i %Breaks% EQU "Y" pause
 :SMB
 :: https://www.alibabacloud.com/help/faq-detail/57499.htm
 Dism /online /Get-Features /format:table | find "SMB1Protocol"
@@ -220,7 +226,7 @@ if /I "%SMB%" EQU "Y" (
   sc.exe config mrxsmb20 start= disabled
 )
 
-
+IF /i %Breaks% EQU "Y" pause
 :RemoteDesktop
 if /I "%RemoteDesktop%" EQU "Y" (
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /V fDenyTSConnections /T REG_DWORD /D 1 /F
@@ -242,7 +248,7 @@ reg add "HKLM\SYSTEM\ControlSet001\Control\Remote Assistance" /V fAllowFullContr
 reg add "HKLM\SYSTEM\ControlSet001\Control\Remote Assistance" /V fAllowToGetHelp /T REG_DWORD /D 0 /F
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /V AllowRemoteRPC /T REG_DWORD /D 0 /F
 
-
+IF /i %Breaks% EQU "Y" pause
 :miscellaneous
 :: Security - Do not hide extensions for know file types.
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\HideFileExt" /v "CheckedValue" /t REG_DWORD /d 0 /f
@@ -344,7 +350,7 @@ netsh advfirewall firewall add rule name="block_WMPNetworkSvc_out" dir=out servi
 netsh advfirewall firewall add rule name="block_WSearch_in" dir=in service="WSearch" action=block enable=yes
 netsh advfirewall firewall add rule name="block_WSearch_out" dir=out service="WSearch" action=block enable=yes
 
-
+IF /i %Breaks% EQU "Y" pause
 :weak
 :: Weak services
 if /I "%Loading%" EQU "N" goto :NoLoad
@@ -400,6 +406,8 @@ dism /online /disable-feature /featurename:IIS-FTPExtensibility /NoRestart
 dism /online /disable-feature /featurename:TFTP /NoRestart
 dism /online /disable-feature /featurename:TelnetClient /NoRestart
 dism /online /disable-feature /featurename:TelnetServer /NoRestart
+
+IF /i %Breaks% EQU "Y" pause
 :NoLoad
 :: Privacy - Stop unneeded services.
 net stop DiagTrack
@@ -446,8 +454,9 @@ for %%S in (wersvc,wecsvc) do (
 )
 
 echo. & echo Services configured.
-cls
 
+IF /i %Breaks% EQU "Y" pause
+cls
 
 :Cleaning
 echo. & echo Deleting things
@@ -464,6 +473,8 @@ del /S "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\*" /F /Q
 dir /B "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\" >> %~dp0\Output\deletedfiles.txt
 del /S "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\*" /F /Q
 echo. & echo Startup files cleansed
+
+IF /i %Breaks% EQU "Y" pause
 cls
 
 :policies
@@ -487,6 +498,7 @@ if /I "%Operating%" EQU "false" goto Server
   reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSyncNGSC /T REG_DWORD /D 1 /F
   reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSync /T REG_DWORD /D 1 /F
 
+IF /i %Breaks% EQU "Y" pause
 goto AfterServerPol
 
 :Server
@@ -495,14 +507,14 @@ goto AfterServerPol
   "%~dp0\Meta\LGPO.exe" /u "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\User\registry.pol"
   "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
   "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
-
+IF /i %Breaks% EQU "Y" pause
 :AfterServerPol
 
 :Software
 if /I "%Software%" EQU "Y" (
 	start %~dp0\Meta\"Ninite - Everything Firefox Glary Malwarebytes Installer.exe"
 )
-
+IF /i %Breaks% EQU "Y" pause
 :Users
 if /I "%Users%" EQU "Y" (
 	cls
@@ -517,6 +529,6 @@ if /I "%Users%" EQU "Y" (
 	cd C:\Windows\System32
 	set path=C:\Windows\System32
 	del %USERPROFILE%\desktop\users.ps1
-	pause
 )
-pause
+IF /i %Breaks% EQU "Y" pause
+echo. & echo done
