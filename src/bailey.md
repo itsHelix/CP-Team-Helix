@@ -1,0 +1,39 @@
+# Bailey
+A standard-based, organized hardening script for Ubuntu 14-18 and Debian 7-9.
+
+This document serves as a line-group documentation of the script, as well as, commentary on its ecosystem and uses.
+
+Bailey is the result of work done by countless people. Notable contributions are attributed to:
+* [Abhinav Vemulapalli](https://github.com/nandanav), for his work on `telluride.sh` and `avon.sh`
+* [pyllyukko](https://github.com/pyllyukko) for his work on `user.js`, which is aliased in this work
+* [Tavin Turner](https://github.com/itsTurner) for his work on `tellurise.sh`, `estes.sh`, `avon.sh`, and Bailey
+
+# Ecosystem
+Like other hardening tools made by Helix in the past, Bailey's primary shell script is written in Bash. Unlike other hardening tools made by Helix in the past, Bailey takes advantage of two tools to liken development in shell to that in compile languages in order to promote devops and simplify production use. Notably, it uses [shc](https://github.com/neurobin/shc) to compile shell scripts into an executable and [bats](https://github.com/sstephenson/bats) for unit tests.
+
+While some of Bailey is developed with references to previous scripts, the goal of the script is to promote reference to standardized hardening guides, notably CIS [Ubuntu Linux 16.04](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Ubuntu_16.pdf), [Ubuntu Linux 18.04](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Ubuntu_18.pdf), [Debian Linux 8](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Debian_8.pdf), [Apache HTTP Server 2.4](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Apache_2.4.pdf), and [Mozilla Firefox 38](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Firefox_38.pdf).
+
+## Introduction to a `shc` environment
+### Installing `shc`
+In an \*ubuntu environment, run the following commands with administrator priveliges:
+```bash
+add-apt-repository ppa:neurobin/ppa
+apt-get update
+apt-get install shc
+```
+
+To install shc on other environments, refer to the [`shc` readme](https://github.com/neurobin/shc/blob/release/README.md).
+
+### Compiling with `shc`
+The standard compilation command for Bailey with `shc` only specifies two flags: the file `-f` and the output `-o`. In the directory `src/` run:
+`shc -f bailey.sh -o bailey`
+
+This command generates two files:
+* C file `bailey.sh.x.c` generated from conversion from Bash to C
+* Executable `bailey` (the final executable)
+
+Notes:
+* `shc` is very particular about shebangs. For this reason, the only shebang in `bailey.sh` should be `#!/bin/sh` and not `#!/usr/bin/env bash`.
+	* `#!/usr/bin/env bash` is used for macOS systems, while `#!/bin/sh` is used on Debian systems. For this reason, Bailey should only ever be compiled in a Debian or \*ubuntu environment.
+* There exist two expiramental flags for `shc` used to harden the executable. These prevent the script from running in any shell other than those of the same type as the one it was compiled on (e.g. a Bash-compiled binary cannot run in ZSH). This may threaten the use of the binary in competition. For this reason, never compile with the flags `-H` or `-s`.
+* `shc` offers a flag that makes the binary untraceable by tools like `strace`, `ptrace`, and `truss`. This flag works in a way that prevents other processes from affecting its operations in any way with the exception of the process manager. This may be detrimental to competition use or prevent certain processes from executing correctly in the script. For this reason, never compile with the flag `-U`
