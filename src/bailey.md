@@ -56,5 +56,6 @@ The only existing global variable in the script is `password`, which stores the 
 **BATS Correspondent: `filesystem_mounting_disabled_boolean`**
 #### Applications
 | Filesystem | Command | `$1` parameter |
+| ---------- | ------- | -------------- |
 | `cramfs` | `cramfs_mounting_disabled` | `cramfs` |
 | `freevxfs` | `freevxfs_mounting_disabled` | `freevxfs` |
