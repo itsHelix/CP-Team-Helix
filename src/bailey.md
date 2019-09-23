@@ -47,7 +47,7 @@ Each time something is logged inside of the script, the message is appended to t
 
 The only existing global variable in the script is `password`, which stores the default password of the system, which will be used during automatic user management (user creation, permission correction, and password alteration).
 
-# CIS Implementations in `bailey.sh`
+# CIS Implementations in Bailey
 ## 1.1.1: Disable unused filesystems
 ### `filesystem_mounting_disabled`
 * Appends `install [filesystem] /bin/true` to the end of `/etc/modprobe.d/[filesystem].conf` to disable use of the filesystem
