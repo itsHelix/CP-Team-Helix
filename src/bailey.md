@@ -46,3 +46,15 @@ The logfile is named with `bailey_` followed by the time at which the shell was 
 Each time something is logged inside of the script, the message is appended to the logfile with the time in `+%T` format preceding the message, as well as, output to the console without any preceding content.
 
 The only existing global variable in the script is `password`, which stores the default password of the system, which will be used during automatic user management (user creation, permission correction, and password alteration).
+
+# CIS Implementations in `bailey.sh`
+## 1.1.1: Disable unused filesystems
+### `filesystem_mounting_disabled`
+* Appends `install [filesystem] /bin/true` to the end of `/etc/modprobe.d/[filesystem].conf` to disable use of the filesystem
+* Run `rmmod [filesystem]` to apply changes to the filesystem
+
+**BATS Correspondent: `filesystem_mounting_disabled_boolean`**
+#### Applications
+| Filesystem | Command | `$1` parameter |
+| `cramfs` | `cramfs_mounting_disabled` | `cramfs` |
+| `freevxfs` | `freevxfs_mounting_disabled` | `freevxfs` |
