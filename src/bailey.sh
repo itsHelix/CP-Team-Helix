@@ -28,3 +28,4 @@ udf_mounting_disabled() { filesystem_mounting_disabled udf }
 all_filesystem_mounting_disabled() { cramfs_mounting_disabled; freevxfs_mounting_disabled; jffs2_mounting_disabled; hfs_mounting_disabled; hfsplus_mounting_disabled; udf_mounting_disabled }
 
 # CIS 1.1.2: Ensure separate partition exists for /tmp
+separate_tmp_partition() {} # Intentionally unimplemented

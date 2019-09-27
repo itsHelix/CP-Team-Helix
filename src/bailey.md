@@ -6,7 +6,7 @@ This document serves as a line-group documentation of the script, as well as, co
 Bailey is the result of work done by countless people. Notable contributions are attributed to:
 * [Abhinav Vemulapalli](https://github.com/nandanav), for his work on `telluride.sh` and `avon.sh`
 * [pyllyukko](https://github.com/pyllyukko) for his work on `user.js`, which is aliased in this work
-* [Tavin Turner](https://github.com/itsTurner) for his work on `tellurise.sh`, `estes.sh`, `avon.sh`, and Bailey
+* [Tavin Turner](https://github.com/itsTurner) for his work on `telluride.sh`, `estes.sh`, `avon.sh`, and Bailey
 
 # Ecosystem
 Like other hardening tools made by Helix in the past, Bailey's primary shell script is written in Bash. Unlike other hardening tools made by Helix in the past, Bailey takes advantage of two tools to liken development in shell to that in compile languages in order to promote devops and simplify production use. Notably, it uses [shc](https://github.com/neurobin/shc) to compile shell scripts into an executable and [bats](https://github.com/sstephenson/bats) for unit tests.
@@ -53,6 +53,10 @@ The only existing global variable in the script is `password`, which stores the 
 * Appends `install [filesystem] /bin/true` to the end of `/etc/modprobe.d/[filesystem].conf` to disable use of the filesystem
 * Run `rmmod [filesystem]` to apply changes to the filesystem
 
+Testing:
+* `modprobe -n -v [filesystem]`: `install /bin/true`
+* `lsmod | grep [filesystem]`: N/A
+
 **BATS Correspondent: `filesystem_mounting_disabled_boolean`**
 #### Applications
 | Filesystem | Command | `$1` parameter |
@@ -63,3 +67,31 @@ The only existing global variable in the script is `password`, which stores the 
 | [HFS (Hierarchical File System)](https://en.wikipedia.org/wiki/Hierarchical_File_System) | `hfs_mounting_disabled` | `hfs` |
 | [HFS+ (Extended HFS)](https://en.wikipedia.org/wiki/HFS_Plus) | `hfsplus_mounting_disabled` | `hfsplus` |
 | [UDF (Universal Disk Format)](https://en.wikipedia.org/wiki/Universal_Disk_Format) | `udf_mounting_disabled` | `udf` |
+
+## 1.1.2: Ensure separate partition exists for /tmp
+Isolating `/tmp` in its own partition eliminates the rist of resource exhaustion by world-writing, makes the directory useless for an attacker to install executable code in after setting the `noexec` option, prevents an attacker form establishing a hardlink to a system `setuid` program, as the hardling would break upon update, only giving the attacker a separate copy of the program.
+This suggestion is intentionally unimplemented, since Cyber Patriot files may rely on references to existing `/tmp` directories that could raise flags if the machine is not restarted for a significant period of time. In order to retain the integrity of the script, it cannot restart in the middle, only at the very end as the last operation, which cannot be guarunteed. Furthermore, partition limiting could restrict the `/tmp` directory to a point that it is less efficient than storing it on the boot directory, the opposite of most reasons for implementation.
+However, if one were to implement it, the following could be added:
+* Assign `1777` priveleges to `/tmp`
+* Make directory `/tmp.new` with permissions `1777`
+* Expose `/tmp` on a different path (`mount --bind / /.root.only`)
+* Make a [union mount](https://unix.stackexchange.com/questions/5489/how-to-safely-move-tmp-to-a-different-volume) of `/.root.only/fstab` and `/tmp.new`, mounted on `/tmp`
+* [Add an entry](https://askubuntu.com/questions/303497/adding-an-entry-to-fstab) in `/etc/fstab`
+
+Testing:
+* `mount | grep /tmp`: `tmpfs on /tmp type tmpfs (*)`
+
+## 1.1.3-1.1.4: /tmp options
+This suggestion is intentionally unimplemented, since 1.1.2 is not implemented.
+However, if one were to implement it, the following could be added:
+* Edit `/etc/fstab` and add `[option: nodev/nosuid]` to the fourth column of the `/tmp` partition
+* Remount `/tmp`: `mount -o remount,[option: nodev/nosuid] /tmp`
+
+Testing:
+* `mount | grep /tmp`: `tmpfs on /tmp type tmpfs (*[option: nodev/nosuid]*)`
+
+### 1.1.3: Ensure nodev option set on /tmp partition
+Since `/tmp` is not intended to support devices, set nodev to ensure that users cannot attempt to create block or character special devices in `/tmp`
+
+### 1.1.4: Ensure nosuid option set on /tmp partition
+Since `/tmp` is only intended for temporary file storage, this option can be set to ensure that uses cannot create `setuid` files in `/tmp`
