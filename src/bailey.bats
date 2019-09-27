@@ -13,3 +13,15 @@ filesystem_mounting_disabled_boolean() {
 @test "freevxfs mounting disabled" {
   [ filesystem_mounting_disabled_boolean freevxfs ]
 }
+@test "jffs2 mounting disabled" {
+  [ filesystem_mounting_disabled_boolean jffs2 ]
+}
+@test "hfs mounting disabled" {
+  [ filesystem_mounting_disabled_boolean hfs ]
+}
+@test "hfsplus mounting disabled" {
+  [ filesystem_mounting_disabled_boolean hfsplus ]
+}
+@test "udf mounting disabled" {
+  [ filesystem_mounting_disabled_boolean udf ]
+}
