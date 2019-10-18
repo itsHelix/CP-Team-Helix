@@ -18,7 +18,7 @@ $authUsers > .\Output\authUsers.txt
 foreach($line in Get-Content .\Output\users.txt) {
     if(Get-Content .\Output\authUsers.txt | Select-String $line){
         Write-Host $line has been a good and followed the Rules
-        net user "$line" "Spo0k3y_Scar3y"
+        net user "$line" "Spo0key_Scar3y"
         Write-Host .
     } else {
       Write-Host $line is not in the Readme. Adding him/her to deletedUsers.txt and removing...
@@ -37,7 +37,7 @@ $authAdmin > .\Output\authAdmin.txt
 foreach($line in Get-Content .\Output\admins.txt) {
     if(Get-Content .\Output\authAdmin.txt | Select-String $line){
 	    Write-Host $line is authorized. Not demoting...
-      net user "$line" "Spo0k3y_Scar3y"
+      net user "$line" "Spo0key_Scar3y"
     } else {
 	    Write-Host $line is not authorized. Adding him/her to demotedAdmins.txt and demoting...
 	    Remove-LocalGroupMember -Group "Administrators" -Member $line

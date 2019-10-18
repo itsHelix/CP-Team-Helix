@@ -143,6 +143,7 @@ auditpol /set /category:* /failure:enable
 :FirefoxSettings
 
 if /I "%Firefox%" EQU "N" goto SkipFF
+taskkill /IM firefox.exe /F
 cd %appdata%\Mozilla\Firefox\Profiles
 :: Below: this selects the next folder in the DIR [you have to do this becuase the folder you need to get into is generated at random]
 for /d %%F in (*) do cd "%%F" & goto :break
