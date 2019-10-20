@@ -78,6 +78,7 @@ firefox() {
 
 # RKHunter
 rkhunterrun() {
+  log "RKHunter update and scan"
   rkhunter --update --propupd
 }
 
