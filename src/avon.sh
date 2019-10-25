@@ -16,7 +16,7 @@ log() {
 }
 
 # Ensure script is running as root
-if [ $EUID -ne 0 ]; then
+if [[ $EUID -ne 0 ]]; then
   log "Run as root"
   exit 64
 fi
@@ -711,14 +711,14 @@ avon_debian() {
 
 currentoperatingsystem=`cat /etc/os-release | grep "PRETTY_NAME" | grep -o '".*"' | sed 's/"//g'`
 
-if [[ $currentoperatingsystem == *14.04* ]]; then
+if [[ $currentoperatingsystem -eq *14.04* ]]; then
   ubuntu14 | lolcat
 fi
 
-if [[ $currentoperatingsystem == *16.04* ]]; then
+if [[ $currentoperatingsystem -eq *16.04* ]]; then
   ubuntu16 | lolcat
 fi
 
-if [[ $currentoperatingsystem == *Debian* ]]; then
+if [[ $currentoperatingsystem -eq *Debian* ]]; then
   debian | lolcat
 fi
