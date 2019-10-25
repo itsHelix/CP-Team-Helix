@@ -69,7 +69,7 @@ firefox() {
   killall firefox
   mv ~/.mozilla ~/.mozilla.old
   apt-get purge firefox
-  apt-get install firefox
+  apt-get install -y firefox
   log "Configuring Firefox"
   killall firefox
   cat presets/syspref.js > /etc/firefox/syspref.js
@@ -556,8 +556,7 @@ nginx() {
 # SSH Configuration
 sshservice() {
   log "Evaluating compulsory status of SSHD"
-  cat $dump/readme | grep -w 'ssh\|SSH'
-  if [ $? = 0 ]; then
+  if $openssh = "y"; then
       apt-get install -y openssh-server
       sed -i 's/PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
       sed -i 's/Protocol.*/Protocol 2/g' /etc/ssh/sshd_config
@@ -630,6 +629,7 @@ purges() {
 updates() {
   apt-get autoremove
   apt-get update
+  apt-get install -y linux-image-$(uname -r)
   apt-get upgrade
 }
 
@@ -653,6 +653,9 @@ configvars() {
 
   echo "Secure nginx (y/n)\t"
   read nginx
+
+  echo "Secure OpenSSH (y/n)\t"
+  read openssh
 }
 
 avon_generic() {
