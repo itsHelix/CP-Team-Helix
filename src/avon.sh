@@ -55,7 +55,7 @@ sourcing_stretch() {
 # Install script dependencies
 dependencies() {
   log "Installing dependencies"
-  apt-get update
+  apt-get update -y
   apt-get -y install gufw synaptic libpam-cracklib clamav gnome-system-tools auditd audispd-plugins rkhunter chkrootkit iptables curl unattended-upgrades openssl libpam-tmpdir libpam-umask
   if [ $? = 100 ]; then
     log "FATAL: Vital apt-get is not working. Please fix and test before rerunning the script."
@@ -68,7 +68,7 @@ firefox() {
   log "Updating Firefox"
   killall firefox
   mv ~/.mozilla ~/.mozilla.old
-  apt-get purge firefox
+  apt-get purge -y firefox
   apt-get install -y firefox
   log "Configuring Firefox"
   killall firefox
@@ -115,7 +115,7 @@ telnet() {
   log "Configured telnet"
   ufw deny 23
   iptables -A INPUT -p tcp -s 0/0 -d 0/0 --dport 23 -j DROP
-  apt-get purge telnet
+  apt-get purge -y telnet
 }
 
 # Enable auditing
@@ -322,9 +322,7 @@ automaticusersprep() {
   touch $dump/readme
   chmod 777 $dump/readme
 
-  readmeurl=`cat /home/$SUDO_USER/Desktop/README.desktop | grep -o '".*"' | tr -d '"'`
-  readmeurl=${readmeurl:4}
-  readmeurl="https"$readmeurl
+  readmeurl=$(cat ~/Desktop/README.desktop | egrep -o "(http(s)?://){1}[^'\"]+")
   curl $readmeurl -k > $dump/readme
 }
 
@@ -362,7 +360,7 @@ unauthorizedadministrators() {
   	cat $dump/authadmin | grep ^$user
   	if [ $? = 1 ]; then
   		log $user is not supposed to be an admin. Demoting $user
-  		deluser $user
+  		usermod -G sudo $user
   		echo The admin privileges of $user has been revoked >> $dump/demotedadmins
       log The admin privileges of $user has been revoked
   	fi
@@ -454,7 +452,7 @@ pureftpd() {
 }
 
 # VSFTP Configuration
-vsftp() {
+vsftpconfiguration() {
   if $vsftp = "y" ; then
     # Disable anonymous uploads
     sed -i '/^anon_upload_enable/ c\anon_upload_enable no' /etc/vsftpd.conf
@@ -468,7 +466,7 @@ vsftp() {
 }
 
 # MySQL Configuration
-mysql() {
+mysqlconfiguration() {
   if $mysql = "y"; then
     # Disable remote access
     sed -i '/bind-address/ c\bind-address = 127.0.0.1' /etc/mysql/my.cnf
@@ -530,7 +528,7 @@ phpconfiguration() {
 # Bind9 Configuration
 bindnine() {
   if $bindnine = "y"; then
-    apt-get update bind9 bind9-host
+    apt-get update -y bind9 bind9-host
     ps aux | grep bind | grep -v '^root' # Ensure Bind9 is running with non-root account
     # Permission and ownership modifications
     chown -R root:bind /etc/bind
@@ -620,41 +618,39 @@ killavahidaemon() {
 
 # Purging the badness
 purges() {
-  apt-get purge -y john* ophcrack minetest nmap wireshark netcat* polari rpcbind
-  apt-get purge -y transmission-gtk empathy mutt freeciv kismet hydra* nikto* xinetd
-  apt-get purge -y squid minetest p0f minetest-server
+  apt-get purge -y john* ophcrack minetest nmap wireshark netcat* polari rpcbind transmission-gtk empathy mutt freeciv kismet hydra* nikto* squid minetest p0f minetest-server
 }
 
 # Updates
 updates() {
   apt-get autoremove
-  apt-get update
+  apt-get update -y
   apt-get install -y linux-image-$(uname -r)
-  apt-get upgrade
+  apt-get upgrade -y
 }
 
 # Establish configuration variables
 configvars() {
 
-  echo "Secure VSFTP? (y/n)\t"
+  echo "Secure VSFTP? (y/n)"
   read vsftp
 
-  echo "Secure MySQL (y/n)\t"
+  echo "Secure MySQL (y/n)"
   read mysql
 
-  echo "Secure Apache2 (y/n)\t"
+  echo "Secure Apache2 (y/n)"
   read apachetwo
 
-  echo "Secure PHP (y/n)\t"
+  echo "Secure PHP (y/n)"
   read php
 
-  echo "Secure Bind9 (y/n)\t"
+  echo "Secure Bind9 (y/n)"
   read bindnine
 
-  echo "Secure nginx (y/n)\t"
+  echo "Secure nginx (y/n)"
   read nginx
 
-  echo "Secure OpenSSH (y/n)\t"
+  echo "Secure OpenSSH (y/n)"
   read openssh
 }
 
@@ -690,7 +686,6 @@ avon_generic() {
   killavahidaemon
   purges
   updates
-  bindnine
 }
 
 avon_ubuntu14() {
@@ -711,14 +706,14 @@ avon_debian() {
 
 currentoperatingsystem=`cat /etc/os-release | grep "PRETTY_NAME" | grep -o '".*"' | sed 's/"//g'`
 
-if [[ $currentoperatingsystem -eq *14.04* ]]; then
+if [[ $currentoperatingsystem == *14.04* ]]; then
   avon_ubuntu14
 fi
 
-if [[ $currentoperatingsystem -eq *16.04* ]]; then
+if [[ $currentoperatingsystem == *16.04* ]]; then
   avon_ubuntu16
 fi
 
-if [[ $currentoperatingsystem -eq *Debian* ]]; then
+if [[ $currentoperatingsystem == *Debian* ]]; then
   avon_debian
 fi
