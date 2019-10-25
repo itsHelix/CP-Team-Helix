@@ -1,4 +1,5 @@
 @echo off
+color 1f
 if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 CHOICE /M "Do you want Echo ON?"
 if %ERRORLEVEL% EQU 2 @echo off
@@ -9,13 +10,12 @@ if %ERRORLEVEL% EQU 2 set Breaks=N
 if %ERRORLEVEL% EQU 1 set Breaks=Y
 
 :: Copying things from Meta to make the GUIs work
-xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h
-xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h
-xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h
-xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h
+xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h /Y
+xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h /Y
+xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h /Y
+xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h /Y
 
 setlocal enabledelayedexpansion
-color 1f
 
 :: Check for admin rights
 echo Checking if script contains Administrative rights...
@@ -529,6 +529,7 @@ if /I "%Users%" EQU "Y" (
 	cd C:\Windows\System32
 	set path=C:\Windows\System32
 	del %USERPROFILE%\desktop\users.ps1
+	color 1f
 )
 IF /i %Breaks% EQU "Y" pause
 echo. & echo done
