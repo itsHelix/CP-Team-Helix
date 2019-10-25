@@ -241,6 +241,7 @@ networkconfig() {
   ufw deny 2049
   ufw deny 515
   ufw deny 111
+  ufw enable
 }
 
 # Secure boot password
@@ -445,7 +446,7 @@ pureftpd() {
     service pure-ftpd restart
     log "Installed and secured pure-ftpd"
   else
-    apt-get purge -y pure-ftpd
+    apt-get purge -y *ftp*
     apt-get autoremove
     log "Removed pure-ftpd as not required"
   fi
