@@ -410,7 +410,7 @@ for user in `cat $copydir/adminusers`; do
 	cat $copydir/authadmin | grep ^$user
 	if [ $? = 1 ]; then
 		chirp $user is not supposed to be an admin. Demoting $user
-		deluser $user
+		usermod -G sudo $user
 		echo The admin privileges of $user has been revoked >> $copydir/demotedadmins
     chirp The admin privileges of $user has been revoked
 	fi

@@ -57,7 +57,7 @@ dependencies() {
   log "Installing dependencies"
   apt-get update -y
   apt-get -y install gufw synaptic libpam-cracklib clamav gnome-system-tools auditd audispd-plugins rkhunter chkrootkit iptables curl unattended-upgrades openssl libpam-tmpdir libpam-umask
-  if [ $? = 100 ]; then
+  if [ $? == 100 ]; then
     log "FATAL: Vital apt-get is not working. Please fix and test before rerunning the script."
     exit 1
   fi
@@ -276,7 +276,7 @@ prebootsecurity() {
 disablecoredumps() {
   log "Disabling coredumps"
   echo "* hard core 0" >> /etc/security/limits.conf
-  echo 'fs.suid_dumpable = 0' >> /etc/sysctl.conf
+  echo 'fs.suid_dumpable == 0' >> /etc/sysctl.conf
   sysctl -p
   echo 'ulimit -S -c 0 > /dev/null 2>&1' >> /etc/profile
 }
@@ -334,11 +334,11 @@ unauthorizedusers() {
   echo root >> $dump/usersover1000
   echo > $dump/removedusers
   for user in `cat $dump/usersover1000`; do
-  	if [ $user = "root" ]; then
+  	if [ $user == "root" ]; then
   		log ROOT FOUND
   	else
   		cat $dump/readme | grep ^$user
-  		if [ $? = 1 ]; then
+  		if [ $? == 1 ]; then
   			log "$user is unauthorized. Removing..."
   			userdel $user
   			echo "$user has been removed from the system" >> $dump/removedusers
@@ -359,7 +359,7 @@ unauthorizedadministrators() {
   chmod 777 $dump/demotedadmins
   for user in `cat $dump/adminusers`; do
   	cat $dump/authadmin | grep ^$user
-  	if [ $? = 1 ]; then
+  	if [ $? == 1 ]; then
   		log $user is not supposed to be an admin. Demoting $user
   		usermod -G sudo $user
   		echo The admin privileges of $user has been revoked >> $dump/demotedadmins
@@ -437,7 +437,7 @@ uidcheck() {
 pureftpd() {
   log "Evaluating compulsory status of pure-ftpd"
   cat $copydir/readme | grep -w 'pure-ftpd'
-  if [ $? = 0 ]; then
+  if [ $? == 0 ]; then
     apt-get install -y pure-ftpd
     mkdir /etc/ssl/private
     openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/ssl/private/pure-ftpd.pem -out /etc/ssl/private/pure-ftpd.pem -days 365 -subj "/C=US/ST=Colorado/L=Denver/O=Team Helix/OU=Linux Department/CN=teamhelix.me"
@@ -454,7 +454,7 @@ pureftpd() {
 
 # VSFTP Configuration
 vsftpconfiguration() {
-  if $vsftp = "y" ; then
+  if [ $vsftp == "y" ] ; then
     # Disable anonymous uploads
     sed -i '/^anon_upload_enable/ c\anon_upload_enable no' /etc/vsftpd.conf
     sed -i '/^anonymous_enable/ c\anonymous_enable=NO' /etc/vsftpd.conf
@@ -468,9 +468,9 @@ vsftpconfiguration() {
 
 # MySQL Configuration
 mysqlconfiguration() {
-  if $mysql = "y"; then
+  if [ $mysql == "y" ]; then
     # Disable remote access
-    sed -i '/bind-address/ c\bind-address = 127.0.0.1' /etc/mysql/my.cnf
+    sed -i '/bind-address/ c\bind-address == 127.0.0.1' /etc/mysql/my.cnf
     service mysql restart
   else
     apt-get purge -y mysql*
@@ -479,7 +479,7 @@ mysqlconfiguration() {
 
 # Apache2 Configuration
 apachetwo() {
-  if $apachetwo = "y"; then
+  if [ $apachetwo == "y" ]; then
     cat presets/apache2.conf >> /etc/apache2/apache2.conf
     a2enmod userdir
 
@@ -517,10 +517,10 @@ apachetwo() {
 
 # PHP Configuration
 phpconfiguration() {
-  if $php = "y" ; then
+  if [ $php == "y" ] ; then
     log "Make sure you go to the Application Checklists document and go through the checklist for PHP. Press enter to continue"
     read trash
-    php Meta/phpconfigcheck.php -a -h > $copydir/phpSecurity.html
+    php preset/phpconfigcheck.php -a -h > $copydir/phpSecurity.html
   else
     apt-get purge -y *php*
   fi
@@ -528,7 +528,7 @@ phpconfiguration() {
 
 # Bind9 Configuration
 bindnine() {
-  if $bindnine = "y"; then
+  if [ $bindnine == "y" ]; then
     apt-get update -y bind9 bind9-host
     ps aux | grep bind | grep -v '^root' # Ensure Bind9 is running with non-root account
     # Permission and ownership modifications
@@ -544,7 +544,7 @@ bindnine() {
 
 # nginx Configuration
 nginx() {
-  if $nginx = "y" ; then
+  if [ $nginx == "y" ] ; then
     # Check TODO #3 at the top
     continue
   else
@@ -555,7 +555,7 @@ nginx() {
 # SSH Configuration
 sshservice() {
   log "Evaluating compulsory status of SSHD"
-  if $openssh = "y"; then
+  if [ $openssh == "y" ]; then
       apt-get install -y openssh-server
       sed -i 's/PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
       sed -i 's/Protocol.*/Protocol 2/g' /etc/ssh/sshd_config
@@ -569,7 +569,7 @@ sshservice() {
       cut -d: -f1,3 /etc/passwd | egrep ':[0-9]{4}$' | cut -d: -f1 > $dump/usersover1000
       for user in `cat $dump/usersover1000`; do
       	cat $dump/readme | grep ^$user
-      	if [ $? = 0 ]; then
+      	if [ $? == 0 ]; then
     			usermod -a -G sshusers $user
       	fi
       done
@@ -580,7 +580,7 @@ sshservice() {
       service sshd restart
       log "Installed and secured SSH"
   else
-      apt-get purge -y openssh-server
+      apt-get purge -y *ssh*
       apt-get autoremove
       log "Removed SSH as not required"
   fi
