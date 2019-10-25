@@ -712,13 +712,13 @@ avon_debian() {
 currentoperatingsystem=`cat /etc/os-release | grep "PRETTY_NAME" | grep -o '".*"' | sed 's/"//g'`
 
 if [[ $currentoperatingsystem -eq *14.04* ]]; then
-  ubuntu14 | lolcat
+  avon_ubuntu14
 fi
 
 if [[ $currentoperatingsystem -eq *16.04* ]]; then
-  ubuntu16 | lolcat
+  avon_ubuntu16
 fi
 
 if [[ $currentoperatingsystem -eq *Debian* ]]; then
-  debian | lolcat
+  avon_debian
 fi
