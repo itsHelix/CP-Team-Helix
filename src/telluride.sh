@@ -130,7 +130,7 @@ chirp "Firefox updated!"
 
 chirp "Changing Firefox Settings"
 killall firefox
-cat Meta/syspref.js > /etc/firefox/syspref.js
+cat presets/syspref.js > /etc/firefox/syspref.js
 echo "You should see: Alluha Helix I have completed My W0rk - syspref.js"
 su -c 'firefox -new-tab about:config' $SUDO_USER | su -c 'firefox -new-tab about:config' $SUDO_USER
 chirp "Changed Firefox Settings"
@@ -578,7 +578,7 @@ fi
 if ask "Secure PHP, if installed, otherwise remove? (y/n)"; then
   chirp "Make sure you go to the Application Checklists document and go through the checklist for PHP. Press enter to continue"
   read trash
-  php Meta/phpconfigcheck.php -a -h > $copydir/phpSecurity.html
+  php presets/phpconfigcheck.php -a -h > $copydir/phpSecurity.html
 else
   apt-get purge -y *php*
 fi
