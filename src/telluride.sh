@@ -375,7 +375,7 @@ chirp "Copying & parsing README"
 touch $copydir/readme
 chmod 777 $copydir/readme
 
-readmeurl=`cat /home/$SUDO_USER/Desktop/README.desktop | grep -o '".*"' | tr -d '"'`
+readmeurl=`cat /home/$(logname)/Desktop/README.desktop | grep -o '".*"' | tr -d '"'`
 curl $readmeurl > $copydir/readme
 
 chirp "Checking and removing unauthorized users"
