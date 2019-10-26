@@ -47,7 +47,16 @@ Each time something is logged inside of the script, the message is appended to t
 
 The only existing global variable in the script is `password`, which stores the default password of the system, which will be used during automatic user management (user creation, permission correction, and password alteration).
 
-# CIS Implementations in Bailey
+# CIS Ubuntu 16
+## Implemented Standards
+| Section | Suggestion (X.X...) | Implemented (# of functions) |
+| ------- | ------------------- | ---------------------------- |
+| Filesystem configuration | 1.1.1 | Yes (6) |
+| Filesystem configuration | 1.1.2-1.1.19 | No |
+| Filesystem configuration | 1.1.20 | Yes |
+| Filesystem configuration | 1.1.21 | Yes |
+| Configure software updates | 1.2.1 | Yes |
+
 ## 1.1.1: Disable unused filesystems
 ### `filesystem_mounting_disabled`
 * Appends `install [filesystem] /bin/true` to the end of `/etc/modprobe.d/[filesystem].conf` to disable use of the filesystem
@@ -68,10 +77,12 @@ Testing:
 | [HFS+ (Extended HFS)](https://en.wikipedia.org/wiki/HFS_Plus) | `hfsplus_mounting_disabled` | `hfsplus` |
 | [UDF (Universal Disk Format)](https://en.wikipedia.org/wiki/Universal_Disk_Format) | `udf_mounting_disabled` | `udf` |
 
-## 1.1.2: Ensure separate partition exists for /tmp
-Isolating `/tmp` in its own partition eliminates the rist of resource exhaustion by world-writing, makes the directory useless for an attacker to install executable code in after setting the `noexec` option, prevents an attacker form establishing a hardlink to a system `setuid` program, as the hardling would break upon update, only giving the attacker a separate copy of the program.
-This suggestion is intentionally unimplemented, since Cyber Patriot files may rely on references to existing `/tmp` directories that could raise flags if the machine is not restarted for a significant period of time. In order to retain the integrity of the script, it cannot restart in the middle, only at the very end as the last operation, which cannot be guarunteed. Furthermore, partition limiting could restrict the `/tmp` directory to a point that it is less efficient than storing it on the boot directory, the opposite of most reasons for implementation.
-However, if one were to implement it, the following could be added:
+## 1.1.2-1.1.19: Separate partition (+ `nodev`, `nosuid`) for certain areas
+Isolating a folder or media in its own partition eliminates the risk of resource exhaustion by world-writing, makes the directory useless for an attacker to install executable code in after setting the `noexec` option, prevents an attacker form establishing a hardlink to a system `setuid` program, as the hardling would break upon update, only giving the attacker a separate copy of the program.
+This suggestion is intentionally unimplemented, since Cyber Patriot files may rely on references to existing folder/media directories that could raise flags if the machine is not restarted for a significant period of time. In order to retain the integrity of the script, it cannot restart in the middle, only at the very end as the last operation, which cannot be guarunteed. Furthermore, partition limiting could restrict the folder/media directory to a point that it is less efficient than storing it on the boot directory, the opposite of most reasons for implementation.
+
+### 1.1.2/5/6/10/11/12: Ensure separate partition exists for folder or media
+If one were to implement a folder partition, the following could be added:
 * Assign `1777` priveleges to `/tmp`
 * Make directory `/tmp.new` with permissions `1777`
 * Expose `/tmp` on a different path (`mount --bind / /.root.only`)
@@ -79,19 +90,31 @@ However, if one were to implement it, the following could be added:
 * [Add an entry](https://askubuntu.com/questions/303497/adding-an-entry-to-fstab) in `/etc/fstab`
 
 Testing:
-* `mount | grep /tmp`: `tmpfs on /tmp type tmpfs (*)`
+* `mount | grep [folder/media]]`: `tmpfs on [folder/media] type tmpfs (*)`
 
-## 1.1.3-1.1.4: /tmp options
-This suggestion is intentionally unimplemented, since 1.1.2 is not implemented.
+### 1.1.3/4/7-9/13-19: Paritioned folder options
+These suggestions intentionally unimplemented, since separate folder and media partitions is not implemented.
 However, if one were to implement it, the following could be added:
-* Edit `/etc/fstab` and add `[option: nodev/nosuid]` to the fourth column of the `/tmp` partition
-* Remount `/tmp`: `mount -o remount,[option: nodev/nosuid] /tmp`
+* Edit `/etc/fstab` and add `[option: nodev/nosuid/noexec]` to the fourth column of the folder/media partition
+* Remount folder/media: `mount -o remount,[option: nodev/nosuid/noexec] [folder/media]`
 
 Testing:
 * `mount | grep /tmp`: `tmpfs on /tmp type tmpfs (*[option: nodev/nosuid]*)`
 
-### 1.1.3: Ensure nodev option set on /tmp partition
-Since `/tmp` is not intended to support devices, set nodev to ensure that users cannot attempt to create block or character special devices in `/tmp`
+## 1.1.20: Ensure sticky bit is set on all world-writable directories
+### `world_writable_sticky_bit`
+Sticky bits are permission bits (`rwxrwxrwx` format) that restrict rename/delete to only owner and root. This prevents deleting or renaming files in world writable directories owned by another user. This assignment can be achieved by running the command:
+* df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 
-### 1.1.4: Ensure nosuid option set on /tmp partition
-Since `/tmp` is only intended for temporary file storage, this option can be set to ensure that uses cannot create `setuid` files in `/tmp`
+Testing:
+* `df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null`: N/A
+
+## 1.1.21: Disable Automounting
+### `disable_automatic_mounting`
+Automounting allows anybody with physical access to attach a USB drive or disc to execute its contents in the system, even if they lacked permission to mount it themselves. To remedy this we execute:
+* `systemctl disable autofs`
+
+Testing:
+* `systemctl is-enabled autofs`: `disabled`
+
+## 1.2.1: Ensure package manager repositories are configured

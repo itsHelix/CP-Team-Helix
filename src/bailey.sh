@@ -27,5 +27,7 @@ udf_mounting_disabled() { filesystem_mounting_disabled udf }
 
 all_filesystem_mounting_disabled() { cramfs_mounting_disabled; freevxfs_mounting_disabled; jffs2_mounting_disabled; hfs_mounting_disabled; hfsplus_mounting_disabled; udf_mounting_disabled }
 
-# CIS 1.1.2: Ensure separate partition exists for /tmp
-separate_tmp_partition() {} # Intentionally unimplemented
+# CIS 1.1.20: Ensure sticky bit is set on all world-wriable directories
+world_writable_sticky_bit() {
+  df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+}
