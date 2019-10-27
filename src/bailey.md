@@ -158,11 +158,17 @@ Testing:
 
 ## 1.4.2: Ensure bootloader password is set
 ### `bottloader_password_set`
-
-
 Setting the boot loader password will require that anyone rebooting the system must enter a password before being able to set command line boot parameters. Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time). To fix this we:
 * `grub-mkpasswd-pbkdf2` to create a hashed password then we edit `/etc/grub.d/00_header` to add the following `\ncat <<EOF\nset superusers="Admin"\npassword_pbkdf2 Admin'$passwordHash'\nEOF`
 
 Testing:
 * `grep "^set superusers" /boot/grub/grub.cfg`: Admin
 * `grep "^password" /boot/grub/grub.cfg`: Password hash
+
+## 1.4.3: Ensure authentication required for single user mode
+### `authentication_req_single_user_mode`
+Single user mode is used for recovery when the system detects an issue during boot or by manual selection from the bootloader. Requiring authentication in single user mode prevents an unauthorized user from rebooting the system into single user to gain root privileges without credentials. To fix this we set root password with
+* `passwd root`
+
+Testing:
+* `grep ^root:[*\!]: /etc/shadow`: No results should be returned

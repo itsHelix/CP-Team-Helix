@@ -34,7 +34,7 @@ world_writable_sticky_bit() {
 
 # CIS 1.2.1: Ensure package manager repositories are configured
 package_manager_repos_configured() {
-  # Var setup for function
+  # Var setup
   sources_loc="/etc/apt/sources.list"
   current_os=`cat /etc/*release | grep -i 'PRETTY_NAME' | grep -o '".*"' | sed 's/"//g'`
 
@@ -51,7 +51,7 @@ package_manager_repos_configured() {
 
 # CIS 1.3.1: Ensure AIDE is installed
 install_AIDE() {
-  # Var setup for function
+  # Var setup
   AIDE_dpkg=`dpkg -s aide`
 
   # Installing AIDE if it is not installed
@@ -65,7 +65,7 @@ install_AIDE() {
 
 # CIS 1.3.2: Ensure filesystem integrity is regularly checked
 filesystem_integrity_checked() {
-  # Var setup for function
+  # Var setup
   crontab=`cat /etc/crontab`
 
   # Setting up crontab for checking filesystem
@@ -78,7 +78,7 @@ filesystem_integrity_checked() {
 
 # CIS 1.4.1: Ensure permissions on bootloader config are configured
 bootloader_permission_fix() {
-  # Var setup for function
+  # Var setup
   grub_access=`stat /boot/gub/grub.cfg | grep -i "access: (" | grep -o "(.*)" | sed 's/"//g'`
 
   if [[ $grub_access != *0600* ]]; then
@@ -91,7 +91,7 @@ bootloader_permission_fix() {
 
 # CIS 1.4.2: Ensure bootloader password is set
 bottloader_password_set() {
-  # Var setup for function
+  # Var setup
   passwordHash=`echo -e "$stdpass\n$stdpass" | grub-mkpasswd-pbkdf2 | grep -o "grub.*"`
 
   # Changing password
@@ -99,4 +99,17 @@ bottloader_password_set() {
 
   # Updating grub configuration
   update-grub
+}
+
+# CIS 1.4.3: Ensure authentication required for single user mode
+authentication_req_single_user_mode() {
+  # Var setup
+  rootpsw=`grep ^root:[*\!]: /etc/shadow`
+
+  # Changing password
+  if [[ $rootpsw != "" ]]; then
+    echo -e "$stdpass\n$stdpass" | passwd root
+  else
+    echo "Root password already set"
+  fi
 }

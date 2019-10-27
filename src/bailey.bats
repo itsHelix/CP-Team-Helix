@@ -74,3 +74,9 @@ filesystem_mounting_disabled_boolean() {
   result=$(grep "^password" /boot/grub/grub.cfg)
   [ result -ne "" ]
 }
+
+# CIS 1.4.3: Ensure authentication required for single user mode
+authentication_req_single_user_mode() {
+  result=$(grep ^root:[*\!]: /etc/shadow)
+  [ result -eq ""]
+}
