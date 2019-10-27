@@ -124,4 +124,10 @@ Having incorrect or corrupted source lists can lead to updates failing and/or ap
 * `cat presets/<os_identifier>sources.list > $sources_loc`
 
 Testing:
-* `apt-cache policy` : shows no malicious links
+* `apt-cache policy`: shows no malicious links
+
+## 1.2.2: Ensure GPG keys are configured
+Most packages managers implement GPG key signing to verify package integrity during installation. It is important to ensure that updates are obtained from a valid source to protect against spoofing that could lead to the inadvertent installation of malware on the system.
+
+Testing:
+* `apt-key list`: shows no malicious links/keys
