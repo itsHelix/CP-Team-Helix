@@ -146,4 +146,4 @@ Periodic checking of the filesystem integrity is needed to detect changes to the
 * `crontab -u root -e` and add the following line `0 5 * * * /usr/bin/aide --check`
 
 Testing:
-* `grep -r aide /etc/cron.* /etc/crontab`: <any output means you are checking>
+* `grep -r aide /etc/cron.* /etc/crontab`: any output means you are checking
