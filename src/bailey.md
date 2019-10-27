@@ -131,3 +131,19 @@ Most packages managers implement GPG key signing to verify package integrity dur
 
 Testing:
 * `apt-key list`: shows no malicious links/keys
+
+## 1.3.1: Ensure AIDE is installed
+### `install_AIDE`
+AIDE takes a snapshot of filesystem state including modification times, permissions, and file hashes which can then be used to compare against the current state of the filesystem to detect modifications to the system. By monitoring the filesystem state compromised files can be detected to prevent or limit the exposure of accidental or malicious misconfigurations or modified binaries. To fix this you run:
+* `apt-get install aide` then run `aide --init`
+
+Testing:
+* `dpkg -s aide`: AIDE is installed
+
+## 1.3.2: Ensure filesystem integrity is regularly checked
+### `filesystem_integrity_checked`
+Periodic checking of the filesystem integrity is needed to detect changes to the filesystem. Periodic file checking allows the system administrator to determine on a regular basis if critical files have been changed in an unauthorized fashion. To fix this we will edit our crontab:
+* `crontab -u root -e` and add the following line `0 5 * * * /usr/bin/aide --check`
+
+Testing:
+* `grep -r aide /etc/cron.* /etc/crontab`: <any output means you are checking>

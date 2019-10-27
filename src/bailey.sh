@@ -48,3 +48,30 @@ package_manager_repos_configured() {
   fi
   sudo apt-get update
 }
+
+#CIS 1.3.1: Ensure AIDE is installed
+install_AIDE() {
+  # Var setup for function
+  AIDE_dpkg="dpkg -s aide"
+
+  # Installing AIDE if it is not installed
+  if [[ $AIDE_dpkg == * not * ]]; then
+    apt-get install aide
+    aide --init
+  else
+    echo "AIDE already installed"
+  fi
+}
+
+#CIS 1.3.2: Ensure filesystem integrity is regularly checked
+filesystem_integrity_checked() {
+  # Var setup for function
+  crontab="cat /etc/crontab"
+
+  # Setting up crontab for checking filesystem
+  if [[ $crontab != */usr/bin/aide* ]]; then
+    echo -e "0 5\t* * *\troot\t/usr/bin/aide -- check" >> /etc/crontab
+  else
+    echo "Filesystem integrity is already regularly being checked"
+  fi
+}
