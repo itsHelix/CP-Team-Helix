@@ -119,7 +119,7 @@ Testing:
 * `systemctl is-enabled autofs`: `disabled`
 
 ## 1.2.1: Ensure package manager repositories are configured
-###`package_manager_repos_configured`
+### `package_manager_repos_configured`
 Having incorrect or corrupted source lists can lead to updates failing and/or applications not being able to download. An attacker might use this to put in his own repository for an update that has corrupt date, viruses, and/or bot nets in it. To fix this we execute:
 * `cat presets/<os_identifier>sources.list > $sources_loc`
 
