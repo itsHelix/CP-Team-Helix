@@ -46,4 +46,5 @@ package_manager_repos_configured() {
   elif [[ $current_os == *Debian* ]]; then
     cat presets/jessiesources.list > $sources_loc
   fi
+  sudo apt-get update
 }
