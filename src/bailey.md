@@ -147,3 +147,11 @@ Periodic checking of the filesystem integrity is needed to detect changes to the
 
 Testing:
 * `grep -r aide /etc/cron.* /etc/crontab`: any output means you are checking
+
+## 1.4.1: Ensure permissions on bootloader config are configured
+### `bootloader_permission_fix`
+The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually `grub.cfg` stored in `/boot/grub`. Setting the permissions to read and write for root only prevents non-root users from seeing the boot parameters or changing them. Non-root users who read the boot parameters may be able to identify weaknesses in security upon boot and be able to exploit them. To fix this we set permissions by running:
+* `chown root:root /boot/grub/grub.cfg` and `chmod og-rwx /boot/grub/grub.cfg`
+
+Testing:
+* `stat /boot/grub/grub.cfg | grep -i "access: ("`: Access: (0600/-rw-------) Uid: ( 0/ root) Gid: ( 0/ root)

@@ -49,7 +49,7 @@ package_manager_repos_configured() {
   sudo apt-get update
 }
 
-#CIS 1.3.1: Ensure AIDE is installed
+# CIS 1.3.1: Ensure AIDE is installed
 install_AIDE() {
   # Var setup for function
   AIDE_dpkg="dpkg -s aide"
@@ -63,7 +63,7 @@ install_AIDE() {
   fi
 }
 
-#CIS 1.3.2: Ensure filesystem integrity is regularly checked
+# CIS 1.3.2: Ensure filesystem integrity is regularly checked
 filesystem_integrity_checked() {
   # Var setup for function
   crontab="cat /etc/crontab"
@@ -73,5 +73,18 @@ filesystem_integrity_checked() {
     echo -e "0 5\t* * *\troot\t/usr/bin/aide -- check" >> /etc/crontab
   else
     echo "Filesystem integrity is already regularly being checked"
+  fi
+}
+
+# CIS 1.4.1: Ensure permissions on bootloader config are configured
+bootloader_permission_fix() {
+  #Var setup for function
+  grub_access=`stat /boot/gub/grub.cfg | grep -i "access: (" | grep -o "(.*)" | sed 's/"//g'`
+
+  if [[ $grub_access != *0600* ]]; then
+    chown root:root /boot/grub/grub.cfg
+    chmod og-rwx /boot/grub/grub.cfg
+  else
+    echo "Grub access set correctly"
   fi
 }
