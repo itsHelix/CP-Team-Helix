@@ -7,7 +7,7 @@ Bailey is the result of work done by countless people. Notable contributions are
 * [Abhinav Vemulapalli](https://github.com/nandanav), for his work on `telluride.sh` and `avon.sh`
 * [pyllyukko](https://github.com/pyllyukko) for his work on `user.js`, which is aliased in this work
 * [Tavin Turner](https://github.com/itsTurner) for his work on `telluride.sh`, `estes.sh`, `avon.sh`, and Bailey
-* [Ian Boraks](https://stackoverflow.com/users/11013589/cutwow475) for his work on Bailey
+* [Ian](https://stackoverflow.com/users/11013589/cutwow475) [Boraks](https://github.com/Cutwow) for his work on Bailey
 
 # Ecosystem
 Like other hardening tools made by Helix in the past, Bailey's primary shell script is written in Bash. Unlike other hardening tools made by Helix in the past, Bailey takes advantage of two tools to liken development in shell to that in compile languages in order to promote devops and simplify production use. Notably, it uses [shc](https://github.com/neurobin/shc) to compile shell scripts into an executable and [bats](https://github.com/sstephenson/bats) for unit tests.
