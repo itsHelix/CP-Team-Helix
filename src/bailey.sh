@@ -4,7 +4,7 @@
 mkdir bailey bailey/log bailey/dump
 logfile=./bailey/log/bailey_$(date +%T).log
 dump=./bailey/dump
-password="TiredofWork50"
+stdpass="Spo0key_Scar3y"
 
 # Logging
 log() {
