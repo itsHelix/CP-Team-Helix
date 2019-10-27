@@ -76,7 +76,34 @@ filesystem_mounting_disabled_boolean() {
 }
 
 # CIS 1.4.3: Ensure authentication required for single user mode
-authentication_req_single_user_mode() {
+@test "authentication is required for single user mode" {
   result=$(grep ^root:[*\!]: /etc/shadow)
   [ result -eq ""]
+}
+
+# CIS 2.1: inetd services
+@test "Making sure insecure inetd services are disabled" {
+  # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service
+  grep -R "^chargen" /etc/inetd.* > temp.txt
+  test_for_file=`cat temp.txt`
+  if [[ $test_for_file == *No such file* ]]; then
+    echo "No inetd servers/services are installed"
+  else
+    grep -R "^daytime" /etc/inetd.* >> temp.txt # All of these greps should return nothing if the inetd file exists
+    grep -R "^discard" /etc/inetd.* >> temp.txt
+    grep -R "^echo" /etc/inetd.* >> temp.txt
+    grep -R "^time" /etc/inetd.* >> temp.txt
+    grep -R "^shell" /etc/inetd.* >> temp.txt
+    grep -R "^login" /etc/inetd.* >> temp.txt
+    grep -R "^exec" /etc/inetd.* >> temp.txt
+    grep -R "^talk" /etc/inetd.* >> temp.txt
+    grep -R "^ntalk" /etc/inetd.* >> temp.txt
+    grep -R "^telnet" /etc/inetd.* >> temp.txt
+    grep -R "^tftp" /etc/inetd.* >> temp.txt
+    systemctl is-enabled xinetd >> temp.txt # This final check will write the word "disabled" into the temp.txt
+
+    result=`cat temp.txt`
+    [ result -eq "disabled"]
+  fi
+  rm temp.txt
 }

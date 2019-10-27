@@ -172,3 +172,11 @@ Single user mode is used for recovery when the system detects an issue during bo
 
 Testing:
 * `grep ^root:[*\!]: /etc/shadow`: No results should be returned
+
+## 2.1: inetd Services
+### `disable_services`
+inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:
+* `service <service> stop` and `update-rc.d -f <service> remove`
+
+Testing:
+* `grep -R "^<services>" /etc/inetd.*`: Should return nothing

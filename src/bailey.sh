@@ -113,3 +113,17 @@ authentication_req_single_user_mode() {
     echo "Root password already set"
   fi
 }
+
+# CIS: 2.1 inetd Services
+disable_services() {
+  # Var setup
+  declare -a services=("chargen" "daytime" "discard" "echo" "time" "rsh" "rlogin" "rexec" "talk" "ntalk" "telnet" "tftp" "xinetd")
+  services_comma=`printf "%s," "${services[@]}" | cut -d "," -f 1-${#services[@]}`
+
+  # Disabling services in array
+  systemctl disable xinetd
+  update-inetd --remove [$services_comma]
+  for (i in "${services[@]}"); do
+    update-inetd --remove "$i"
+  done
+}
