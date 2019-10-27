@@ -155,3 +155,14 @@ The grub configuration file contains information on boot settings and passwords 
 
 Testing:
 * `stat /boot/grub/grub.cfg | grep -i "access: ("`: Access: (0600/-rw-------) Uid: ( 0/ root) Gid: ( 0/ root)
+
+## 1.4.2: Ensure bootloader password is set
+### `bottloader_password_set`
+
+
+Setting the boot loader password will require that anyone rebooting the system must enter a password before being able to set command line boot parameters. Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time). To fix this we:
+* `grub-mkpasswd-pbkdf2` to create a hashed password then we edit `/etc/grub.d/00_header` to add the following `\ncat <<EOF\nset superusers="Admin"\npassword_pbkdf2 Admin'$passwordHash'\nEOF`
+
+Testing:
+* `grep "^set superusers" /boot/grub/grub.cfg`: Admin
+* `grep "^password" /boot/grub/grub.cfg`: Password hash

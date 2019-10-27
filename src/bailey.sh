@@ -52,7 +52,7 @@ package_manager_repos_configured() {
 # CIS 1.3.1: Ensure AIDE is installed
 install_AIDE() {
   # Var setup for function
-  AIDE_dpkg="dpkg -s aide"
+  AIDE_dpkg=`dpkg -s aide`
 
   # Installing AIDE if it is not installed
   if [[ $AIDE_dpkg == * not * ]]; then
@@ -66,7 +66,7 @@ install_AIDE() {
 # CIS 1.3.2: Ensure filesystem integrity is regularly checked
 filesystem_integrity_checked() {
   # Var setup for function
-  crontab="cat /etc/crontab"
+  crontab=`cat /etc/crontab`
 
   # Setting up crontab for checking filesystem
   if [[ $crontab != */usr/bin/aide* ]]; then
@@ -78,7 +78,7 @@ filesystem_integrity_checked() {
 
 # CIS 1.4.1: Ensure permissions on bootloader config are configured
 bootloader_permission_fix() {
-  #Var setup for function
+  # Var setup for function
   grub_access=`stat /boot/gub/grub.cfg | grep -i "access: (" | grep -o "(.*)" | sed 's/"//g'`
 
   if [[ $grub_access != *0600* ]]; then
@@ -87,4 +87,16 @@ bootloader_permission_fix() {
   else
     echo "Grub access set correctly"
   fi
+}
+
+# CIS 1.4.2: Ensure bootloader password is set
+bottloader_password_set() {
+  # Var setup for function
+  passwordHash=`echo -e "$stdpass\n$stdpass" | grub-mkpasswd-pbkdf2 | grep -o "grub.*"`
+
+  # Changing password
+  echo -e '\ncat <<EOF\nset superusers="Admin"\npassword_pbkdf2 Admin'$passwordHash'\nEOF' >> /etc/grub.d/00_header
+
+  # Updating grub configuration
+  update-grub
 }

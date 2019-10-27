@@ -41,13 +41,13 @@ filesystem_mounting_disabled_boolean() {
   # Checking source lists
   if [[ $current_os == *14.04* ]]; then
     result=$(cat presets/14.04sources.list)
-    [result -eq $sources]
+    [ result -eq $sources ]
   elif [[ $current_os == *16* ]]; then
     result=$(cat presets/16sources.list)
-    [result -eq $sources]
+    [ result -eq $sources ]
   elif [[ $current_os == *Debian* ]]; then
     result=$(cat presets/jessiesources.list)
-    [result -eq $sources]
+    [ result -eq $sources ]
   fi
 }
 
@@ -60,11 +60,17 @@ filesystem_mounting_disabled_boolean() {
 # CIS 1.3.2: Ensure filesystem integrity is regularly checked
 @test "filesystem integrity checks are automatic" {
   result=$(grep -r aide /etc/cron.* /etc/crontab)
-  [result -ne ""]
+  [ result -ne "" ]
 }
 
 # CIS 1.4.1: Ensure permissions on bootloader config are configured
 @test "bootloader permissions are set correctly" {
   result=$(stat /boot/grub/grub.cfg | grep -i "access: (" | sed 's/"//g')
-  [result -eq *0600*]
+  [ result -eq *0600* ]
+}
+
+# CIS 1.4.2: Ensure bootloader password is set
+@test "bootloader has a password" {
+  result=$(grep "^password" /boot/grub/grub.cfg)
+  [ result -ne "" ]
 }
