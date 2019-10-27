@@ -31,3 +31,19 @@ all_filesystem_mounting_disabled() { cramfs_mounting_disabled; freevxfs_mounting
 world_writable_sticky_bit() {
   df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 }
+
+# CIS 1.2.1: Ensure package manager repositories are configured
+package_manager_repos_configured() {
+  # Var setup for function
+  sources_loc="/etc/apt/sources.list"
+  current_os=`cat /etc/*release | grep -i 'PRETTY_NAME' | grep -o '".*"' | sed 's/"//g'`
+
+  # Setting source lists
+  if [[ $current_os == *14.04* ]]; then
+    cat presets/14.04sources.list > $sources_loc
+  elif [[ $current_os == *16* ]]; then
+    cat presets/16sources.list > $sources_loc
+  elif [[ $current_os == *Debian* ]]; then
+    cat presets/jessiesources.list > $sources_loc
+  fi
+}

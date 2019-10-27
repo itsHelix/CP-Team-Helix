@@ -7,6 +7,7 @@ Bailey is the result of work done by countless people. Notable contributions are
 * [Abhinav Vemulapalli](https://github.com/nandanav), for his work on `telluride.sh` and `avon.sh`
 * [pyllyukko](https://github.com/pyllyukko) for his work on `user.js`, which is aliased in this work
 * [Tavin Turner](https://github.com/itsTurner) for his work on `telluride.sh`, `estes.sh`, `avon.sh`, and Bailey
+* [Ian Boraks](https://stackoverflow.com/users/11013589/cutwow475) for his work on Bailey
 
 # Ecosystem
 Like other hardening tools made by Helix in the past, Bailey's primary shell script is written in Bash. Unlike other hardening tools made by Helix in the past, Bailey takes advantage of two tools to liken development in shell to that in compile languages in order to promote devops and simplify production use. Notably, it uses [shc](https://github.com/neurobin/shc) to compile shell scripts into an executable and [bats](https://github.com/sstephenson/bats) for unit tests.
@@ -104,7 +105,7 @@ Testing:
 ## 1.1.20: Ensure sticky bit is set on all world-writable directories
 ### `world_writable_sticky_bit`
 Sticky bits are permission bits (`rwxrwxrwx` format) that restrict rename/delete to only owner and root. This prevents deleting or renaming files in world writable directories owned by another user. This assignment can be achieved by running the command:
-* df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+* `df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t`
 
 Testing:
 * `df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null`: N/A
@@ -118,3 +119,6 @@ Testing:
 * `systemctl is-enabled autofs`: `disabled`
 
 ## 1.2.1: Ensure package manager repositories are configured
+###`package_manager_repos_configured`
+Having incorrect or corrupted source lists can lead to updates failing and/or applications not being able to download. An attacker might use this to put in his own repository for an update that has corrupt date, viruses, and/or bot nets in it. To fix this we execute:
+* `cat presets/<os_identifier>sources.list > $sources_loc`
