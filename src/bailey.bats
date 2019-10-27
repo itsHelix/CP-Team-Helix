@@ -64,3 +64,7 @@ filesystem_mounting_disabled_boolean() {
 }
 
 # CIS 1.4.1: Ensure permissions on bootloader config are configured
+@test "bootloader permissions are set correctly" {
+  result=$(stat /boot/grub/grub.cfg | grep -i "access: (" | sed 's/"//g')
+  [result -eq *0600*]
+}
