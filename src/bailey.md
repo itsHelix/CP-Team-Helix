@@ -48,6 +48,9 @@ Each time something is logged inside of the script, the message is appended to t
 
 The only existing global variable in the script is `password`, which stores the default password of the system, which will be used during automatic user management (user creation, permission correction, and password alteration).
 
+#CIS Mozilla Firefox 38
+### `firefox_update_and_CIS`
+
 # CIS Ubuntu 16
 ## Implemented Standards
 | Section | Suggestion (X.X...) | Implemented (# of functions) |

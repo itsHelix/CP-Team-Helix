@@ -12,6 +12,16 @@ log() {
   echo $1
 }
 
+# CIS: Mozilla Firefox 38
+firefox_update_and_CIS() {
+  killall firefox
+  mv ~/.mozilla ~/.mozilla.old
+  sudo apt install -y firefox
+  killall firefox
+  cat presets/syspref.js > /etc/firefox/syspref.js
+  su -c 'firefox -new-tab about:config' $SUDO_USER
+}
+
 # CIS 1.1.1: Disable unused filesystems
 filesystem_mounting_disabled() {
   echo "install ${$1} /bin/true" >> /etc/modprobe.d/${$1}.conf
