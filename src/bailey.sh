@@ -1,5 +1,18 @@
 #!/bin/sh
 
+# Setup pause function
+function pause(){
+   read -p "$*"
+}
+
+# Ensure script is running as root
+if [[ $EUID -ne 0 ]]; then
+  pause 'Press [Enter] key to elavate Bailey...'
+  su -
+else
+  pause 'You are running Bailey as root. Press [Enter] key to start Bailey...'
+fi
+
 # Script Utilities
 mkdir bailey bailey/log bailey/dump
 logfile=./bailey/log/bailey_$(date +%T).log
@@ -12,6 +25,8 @@ log() {
   echo $1
 }
 
+# CIS: Moz ##############################################################
+
 # CIS: Mozilla Firefox 38
 firefox_update_and_CIS() {
   killall firefox
@@ -21,6 +36,8 @@ firefox_update_and_CIS() {
   cat presets/syspref.js > /etc/firefox/syspref.js
   su -c 'firefox -new-tab about:config' $SUDO_USER
 }
+
+# CIS: 1.1 ##############################################################
 
 # CIS 1.1.1: Disable unused filesystems
 filesystem_mounting_disabled() {
@@ -42,6 +59,8 @@ world_writable_sticky_bit() {
   df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 }
 
+# CIS: 1.2 ##############################################################
+
 # CIS 1.2.1: Ensure package manager repositories are configured
 package_manager_repos_configured() {
   # Var setup
@@ -58,6 +77,8 @@ package_manager_repos_configured() {
   fi
   sudo apt-get update
 }
+
+# CIS: 1.3 ##############################################################
 
 # CIS 1.3.1: Ensure AIDE is installed
 install_AIDE() {
@@ -85,6 +106,8 @@ filesystem_integrity_checked() {
     echo "Filesystem integrity is already regularly being checked"
   fi
 }
+
+# CIS: 1.4 ##############################################################
 
 # CIS 1.4.1: Ensure permissions on bootloader config are configured
 bootloader_permission_fix() {
@@ -124,6 +147,8 @@ authentication_req_single_user_mode() {
   fi
 }
 
+# CIS: 2.1 ##############################################################
+
 # CIS: 2.1 inetd Services
 disable_inetd_services() {
   # Var setup
@@ -138,6 +163,8 @@ disable_inetd_services() {
   update-inetd --multi --remove [$services_comma]
 }
 
+# CIS: 2.2 ##############################################################
+
 # CIS 2.2.2-17 (not including 2.2.15): Special Purpose Services
 disable_special_purpose_services() {
   services=("avahi-daemon" "cups" "isc-dhcp-server6" "isc-dhcp-server" "slapd" "rpcbind" "nfs-kernel-server" "bind9" "vsftpd" "apache2" "dovecot" "smbd" "squid" "snmpd" "rsync" "nis")
@@ -146,3 +173,5 @@ disable_special_purpose_services() {
     systemctl disable "$i"
   done
 }
+
+# CIS: 3.1 ##############################################################

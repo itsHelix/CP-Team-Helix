@@ -1,5 +1,12 @@
 #!/usr/bin/env bats
 
+# CIS: Mozilla Firefox 38
+@test "CIS is implemented in Firefox" {
+  correct=`cat presets/syspref.js`
+  result=`cat /etc/firefox/syspref.js`
+  [ result -eq correct ]
+}
+
 # CIS 1.1.1: Disable unused filesystems
 filesystem_mounting_disabled_boolean() {
   result1="$(modprobe -n -v ${$1})"
