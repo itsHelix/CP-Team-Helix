@@ -89,19 +89,11 @@ filesystem_mounting_disabled_boolean() {
   if [[ $test_for_file == *No such file* ]]; then
     echo "No inetd servers/services are installed"
   else
-    grep -R "^daytime" /etc/inetd.* >> temp.txt # All of these greps should return nothing if the inetd file exists
-    grep -R "^discard" /etc/inetd.* >> temp.txt
-    grep -R "^echo" /etc/inetd.* >> temp.txt
-    grep -R "^time" /etc/inetd.* >> temp.txt
-    grep -R "^shell" /etc/inetd.* >> temp.txt
-    grep -R "^login" /etc/inetd.* >> temp.txt
-    grep -R "^exec" /etc/inetd.* >> temp.txt
-    grep -R "^talk" /etc/inetd.* >> temp.txt
-    grep -R "^ntalk" /etc/inetd.* >> temp.txt
-    grep -R "^telnet" /etc/inetd.* >> temp.txt
-    grep -R "^tftp" /etc/inetd.* >> temp.txt
+    services=("^daytime" "^discard" "^echo" "^time" "^shell" "^login" "^exec" "^talk" "^ntalk" "^telnet" "^tftp")
+    for (i in "${services}"); do
+      grep -R "$i" /etc/inetd.* >> temp.txt
+    done
     systemctl is-enabled xinetd >> temp.txt # This final check will write the word "disabled" into the temp.txt
-
     result=`cat temp.txt`
     [ result -eq "disabled"]
   fi
