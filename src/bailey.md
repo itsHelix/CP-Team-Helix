@@ -56,20 +56,20 @@ The only existing global variable in the script is `password`, which stores the 
 | Section | Suggestion (X.X...) | Implemented (# of functions) |
 | ------- | ------------------- | ---------------------------- |
 | Filesystem configuration | 1.1.1 | Yes (6) |
-| Filesystem configuration | 1.1.2-1.1.19 | No |
+| Filesystem configuration | 1.1.2-1.1.19 | `No` |
 | Filesystem configuration | 1.1.20 | Yes |
 | Filesystem configuration | 1.1.21 | Yes |
 | Configure software updates | 1.2.1 | Yes |
-| Configure GPG keys | 1.2.2 | No |
+| Configure GPG keys | 1.2.2 | `No` |
 | AIDE is installed | 1.3.1 | Yes |
 | Filesystem integrity is being checked | 1.3.2 | Yes |
 | Bootloader is configured | 1.4.1 | Yes |
 | Bottloader password is set | 1.4.2 | Yes |
 | Authentication required for single user mode | 1.4.3 | Yes |
 | Disabling inetd services | 2.1 | Yes |
-| Time Synchronization | 2.2.1 | No |
+| Time Synchronization | 2.2.1 | `No` |
 | Disabling Special Purpose Services<sup>1</sup> | 2.2.2-2.2.14 | Yes |
-| Ensure mail transfer agent is configured | 2.2.15 | No |
+| Ensure mail transfer agent is configured | 2.2.15 | `No` |
 | Disabling Special Purpose Services<sup>2</sup> | 2.2.16/17 | Yes |
 
 
