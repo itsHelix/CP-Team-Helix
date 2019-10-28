@@ -107,3 +107,14 @@ filesystem_mounting_disabled_boolean() {
   fi
   rm temp.txt
 }
+
+# CIS 2.2.2-17 (not including 2.2.15): Special Purpose Services
+@test "Making sure special services are disabled" {
+  services=("avahi-daemon" "cups" "isc-dhcp-server6" "isc-dhcp-server" "slapd" "rpcbind" "nfs-kernel-server" "bind9" "vsftpd" "apache2" "dovecot" "smbd" "squid" "snmpd" "rsync" "nis")
+  for (i in "${services[@]}"); do
+    systemctl is-enabled "$i" >> temp.txt
+  done
+  result=`cat temp.txt`
+  [ result -ne *enabled* ]
+  rm temp.txt
+}

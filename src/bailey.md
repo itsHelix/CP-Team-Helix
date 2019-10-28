@@ -174,9 +174,26 @@ Testing:
 * `grep ^root:[*\!]: /etc/shadow`: No results should be returned
 
 ## 2.1: inetd Services
-### `disable_services`
+### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:
 * `service <service> stop` and `update-rc.d -f <service> remove`
 
 Testing:
 * `grep -R "^<services>" /etc/inetd.*`: Should return nothing
+
+## 2.2.1: Time Synchronization
+System time should be synchronized between all systems in an environment. This is typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them. Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations. This is not completed in Bailey as this needs to be done on a per network basis.
+
+## 2.2.2-17 (not including 2.2.15): Special Purpose Services
+### `disable_special_purpose_services`
+If any of these services, [`X Window System, Avahi, CUPS, DHCP, LDAP, NFS, RPC, DNS, FTP, HTTP, IMAP, POP3, Samba, HTTP Proxy, SNMP, rsync, NIS`], are not required, it is recommended that they be disabled or deleted from the system to reduce the potential attack surface. To do this we:
+* `systemctl disable <service/server name>` or in some cases `apt-get remove <service/server name>`
+
+Testing:
+* `systemctl is-enabled <service/server name>`: disabled
+
+## 2.2.15: Ensure mail transfer agent is configured for local-only mode
+Mail Transfer Agents (MTA), such as `sendmail` and `Postfix`, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail. The software for all Mail Transfer Agents is complex and most have a long history of security issues. While it is important to ensure that the system can process local mail messages, it is not necessary to have the MTA's daemon listening on a port unless the server is intended to be a mail server that receives and processes mail from other systems. The reason why Bailey dose not fix this problem, is because it is on a system by system basis. But, if you do need to complete this here is how:
+* Run `netstat -an | grep LIST | grep ":25[[:space:]]"` and make sure that the MTA is not listening on any non-loopback address (`127.0.0.1` or `::1`). Output should look somthing like this: `tcp 0 0 127.0.0.1:25 0.0.0.0:* LISTEN `.
+* If there is a problem, you will need to edit `/etc/postfix/main.cf` and add the line `inet_interfaces = localhost` to the RECEIVING MAIL `section`. If the line already exists, change it so it looks like the line above.
+* Then restart postfix: `service postfix restart`

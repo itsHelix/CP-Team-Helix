@@ -115,15 +115,24 @@ authentication_req_single_user_mode() {
 }
 
 # CIS: 2.1 inetd Services
-disable_services() {
+disable_inetd_services() {
   # Var setup
-  declare -a services=("chargen" "daytime" "discard" "echo" "time" "rsh" "rlogin" "rexec" "talk" "ntalk" "telnet" "tftp" "xinetd")
+  services=("chargen" "daytime" "discard" "echo" "time" "rsh" "rlogin" "rexec" "talk" "ntalk" "telnet" "tftp" "xinetd")
   services_comma=`printf "%s," "${services[@]}" | cut -d "," -f 1-${#services[@]}`
 
   # Disabling services in array
   systemctl disable xinetd
-  update-inetd --remove [$services_comma]
   for (i in "${services[@]}"); do
-    update-inetd --remove "$i"
+    update-inetd --disable "$i"
+  done
+  update-inetd --multi --remove [$services_comma]
+}
+
+# CIS 2.2.2-17 (not including 2.2.15): Special Purpose Services
+disable_special_purpose_services() {
+  services=("avahi-daemon" "cups" "isc-dhcp-server6" "isc-dhcp-server" "slapd" "rpcbind" "nfs-kernel-server" "bind9" "vsftpd" "apache2" "dovecot" "smbd" "squid" "snmpd" "rsync" "nis")
+  # apt-get remove xserver-xorg* # X Window System (commented out becuase unless you don't want a gui, you need this)
+  for (i in "${services[@]}"); do
+    systemctl disable "$i"
   done
 }
