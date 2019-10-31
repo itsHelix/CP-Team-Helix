@@ -175,3 +175,13 @@ disable_special_purpose_services() {
 }
 
 # CIS: 3.1 ##############################################################
+
+
+
+
+# CIS: 4.1 ##############################################################
+
+# CIS 4.1.2: Ensure auditd service is enabled
+enable_auditd() {
+  systemctl enable auditd
+}

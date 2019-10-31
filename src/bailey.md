@@ -213,3 +213,11 @@ Mail Transfer Agents (MTA), such as `sendmail` and `Postfix`, are used to listen
 * Run `netstat -an | grep LIST | grep ":25[[:space:]]"` and make sure that the MTA is not listening on any non-loopback address (`127.0.0.1` or `::1`). Output should look somthing like this: `tcp 0 0 127.0.0.1:25 0.0.0.0:* LISTEN `.
 * If there is a problem, you will need to edit `/etc/postfix/main.cf` and add the line `inet_interfaces = localhost` to the RECEIVING MAIL `section`. If the line already exists, change it so it looks like the line above.
 * Then restart postfix: `service postfix restart`
+
+## 4.1.2: Ensure auditd service is enabled
+### `enable_auditd`
+Turn on the `auditd` daemon to record system events. The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring. To fix this we run:
+* `systemctl enable auditd`
+
+Testing:
+* `systemctl is-enabled auditd`: enabled

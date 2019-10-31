@@ -117,3 +117,9 @@ filesystem_mounting_disabled_boolean() {
   [ result -ne *enabled* ]
   rm temp.txt
 }
+
+# CIS 4.1.2: Ensure auditd service is enabled
+@test "Auditd service enabled" {
+  resault=`systemctl is-enabled auditd`
+  [ result -eq *enabled* ]
+}
