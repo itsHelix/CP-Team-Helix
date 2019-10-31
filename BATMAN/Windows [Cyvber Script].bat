@@ -14,6 +14,7 @@ xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h /Y
+xcopy %~dp0\Software\PatchMyPc.exe %windir%\system32 /h /Y
 
 setlocal enabledelayedexpansion
 
@@ -71,7 +72,7 @@ set Loading=N
 set Firewall=N
 
 ::MultipleChoiceBox runs (This add-on was made and distrubuted by Rob van der Woude [https://www.robvanderwoude.com/])
-MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Install software with NINITE;Users;Disable features;Firewall Settings" "What do you want?" "Batman" /C:2 > temp.txt
+MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Update Software with PATCHMYPC;Users;Disable features;Firewall Settings" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
 FINDSTR /C:"Disable RDP" temp.txt
@@ -84,7 +85,7 @@ FINDSTR /C:"Run hardenpolicy.ps1" temp.txt
 IF NOT ERRORLEVEL 1 set HPps1=Y
 FINDSTR /C:"Firefox Settings" temp.txt
 IF NOT ERRORLEVEL 1 set Firefox=Y
-FINDSTR /C:"Install software with NINITE" temp.txt
+FINDSTR /C:"Update Software with PATCHMYPC" temp.txt
 IF NOT ERRORLEVEL 1 set Software=Y
 FINDSTR /C:"Users" temp.txt
 IF NOT ERRORLEVEL 1 set Users=Y
@@ -114,7 +115,7 @@ echo บ	 Enable SMB = %SMB%
 echo บ	 Keep shares = %share%
 echo บ	 Run Users script = %Users%
 echo บ	 Run Firefox script = %Firefox%
-echo บ	 Install/update software = %Software%
+echo บ	 Update Software = %Software%
 echo บ	 Firewall Settings = %Firewall%
 echo บ	 Disable Weak Services = %Loading%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
@@ -464,7 +465,7 @@ IF /i %Breaks% EQU "Y" pause
 
 :Software
 if /I "%Software%" EQU "Y" (
-	start %~dp0\Meta\"Ninite - Everything Firefox Glary Malwarebytes Installer.exe"
+	PatchMyPc /s
 )
 IF /i %Breaks% EQU "Y" pause
 :Users
