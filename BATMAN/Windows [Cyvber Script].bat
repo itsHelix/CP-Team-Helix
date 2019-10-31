@@ -75,24 +75,15 @@ set Firewall=N
 MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Update Software with PATCHMYPC;Users;Disable features;Firewall Settings" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
-FINDSTR /C:"Disable RDP" temp.txt
-IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
-FINDSTR /C:"Enable SMB" temp.txt
-IF NOT ERRORLEVEL 1 set SMB=Y
-FINDSTR /C:"Keep Shared Files" temp.txt
-IF NOT ERRORLEVEL 1 set share=Y
-FINDSTR /C:"Run hardenpolicy.ps1" temp.txt
-IF NOT ERRORLEVEL 1 set HPps1=Y
-FINDSTR /C:"Firefox Settings" temp.txt
-IF NOT ERRORLEVEL 1 set Firefox=Y
-FINDSTR /C:"Update Software with PATCHMYPC" temp.txt
-IF NOT ERRORLEVEL 1 set Software=Y
-FINDSTR /C:"Users" temp.txt
-IF NOT ERRORLEVEL 1 set Users=Y
-FINDSTR /C:"Disable features" temp.txt
-IF NOT ERRORLEVEL 1 set Loading=Y
-FINDSTR /C:"Firewall Settings" temp.txt
-IF NOT ERRORLEVEL 1 set Firewall=Y
+FINDSTR /C:"Disable RDP" temp.txt && IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
+FINDSTR /C:"Enable SMB" temp.txt && IF NOT ERRORLEVEL 1 set SMB=Y
+FINDSTR /C:"Keep Shared Files" temp.txt && IF NOT ERRORLEVEL 1 set share=Y
+FINDSTR /C:"Run hardenpolicy.ps1" temp.txt && IF NOT ERRORLEVEL 1 set HPps1=Y
+FINDSTR /C:"Firefox Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firefox=Y
+FINDSTR /C:"Update Software with PATCHMYPC" temp.txt && IF NOT ERRORLEVEL 1 set Software=Y
+FINDSTR /C:"Users" temp.txt && IF NOT ERRORLEVEL 1 set Users=Y
+FINDSTR /C:"Disable features" temp.txt && IF NOT ERRORLEVEL 1 set Loading=Y
+FINDSTR /C:"Firewall Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firewall=Y
 del temp.txt
 IF /i %Breaks% EQU "Y" pause
 cls
