@@ -129,7 +129,7 @@ if %ERRORLEVEL% EQU 1 goto :Everything
 
 :Input
 set /p Loc="Enter Location: "
-echo %Loc%
+echo %Loc%, good?
 pause
 goto %Loc%
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -356,58 +356,9 @@ IF /i %Breaks% EQU "Y" pause
 :: Weak services
 if /I "%Loading%" EQU "N" goto :NoLoad
 echo "DISABLING WEAK SERVICES"
-dism /online /disable-feature /featurename:IIS-WebServerRole /NoRestart
-dism /online /disable-feature /featurename:IIS-WebServer /NoRestart
-dism /online /disable-feature /featurename:IIS-CommonHttpFeatures /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpErrors /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpRedirect /NoRestart
-dism /online /disable-feature /featurename:IIS-ApplicationDevelopment /NoRestart
-dism /online /disable-feature /featurename:IIS-NetFxExtensibility /NoRestart
-dism /online /disable-feature /featurename:IIS-NetFxExtensibility45 /NoRestart
-dism /online /disable-feature /featurename:IIS-HealthAndDiagnostics /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpLogging /NoRestart
-dism /online /disable-feature /featurename:IIS-LoggingLibraries /NoRestart
-dism /online /disable-feature /featurename:IIS-RequestMonitor /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpTracing /NoRestart
-dism /online /disable-feature /featurename:IIS-Security /NoRestart
-dism /online /disable-feature /featurename:IIS-URLAuthorization /NoRestart
-dism /online /disable-feature /featurename:IIS-RequestFiltering /NoRestart
-dism /online /disable-feature /featurename:IIS-IPSecurity /NoRestart
-dism /online /disable-feature /featurename:IIS-Performance /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpCompressionDynamic /NoRestart
-dism /online /disable-feature /featurename:IIS-WebServerManagementTools /NoRestart
-dism /online /disable-feature /featurename:IIS-ManagementScriptingTools /NoRestart
-dism /online /disable-feature /featurename:IIS-IIS6ManagementCompatibility /NoRestart
-dism /online /disable-feature /featurename:IIS-Metabase /NoRestart
-dism /online /disable-feature /featurename:IIS-HostableWebCore /NoRestart
-dism /online /disable-feature /featurename:IIS-StaticContent /NoRestart
-dism /online /disable-feature /featurename:IIS-DefaultDocument /NoRestart
-dism /online /disable-feature /featurename:IIS-DirectoryBrowsing /NoRestart
-dism /online /disable-feature /featurename:IIS-WebDAV /NoRestart
-dism /online /disable-feature /featurename:IIS-WebSockets /NoRestart
-dism /online /disable-feature /featurename:IIS-ApplicationInit /NoRestart
-dism /online /disable-feature /featurename:IIS-ASPNET /NoRestart
-dism /online /disable-feature /featurename:IIS-ASPNET45 /NoRestart
-dism /online /disable-feature /featurename:IIS-ASP /NoRestart
-dism /online /disable-feature /featurename:IIS-CGI /NoRestart
-dism /online /disable-feature /featurename:IIS-ISAPIExtensions /NoRestart
-dism /online /disable-feature /featurename:IIS-ISAPIFilter /NoRestart
-dism /online /disable-feature /featurename:IIS-ServerSideIncludes /NoRestart
-dism /online /disable-feature /featurename:IIS-CustomLogging /NoRestart
-dism /online /disable-feature /featurename:IIS-BasicAuthentication /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpCompressionStatic /NoRestart
-dism /online /disable-feature /featurename:IIS-ManagementConsole /NoRestart
-dism /online /disable-feature /featurename:IIS-ManagementService /NoRestart
-dism /online /disable-feature /featurename:IIS-WMICompatibility /NoRestart
-dism /online /disable-feature /featurename:IIS-LegacyScripts /NoRestart
-dism /online /disable-feature /featurename:IIS-LegacySnapIn /NoRestart
-dism /online /disable-feature /featurename:IIS-FTPServer /NoRestart
-dism /online /disable-feature /featurename:IIS-FTPSvc /NoRestart
-dism /online /disable-feature /featurename:IIS-FTPExtensibility /NoRestart
-dism /online /disable-feature /featurename:TFTP /NoRestart
-dism /online /disable-feature /featurename:TelnetClient /NoRestart
-dism /online /disable-feature /featurename:TelnetServer /NoRestart
-
+for %%S in (IIS-WebServerRole,IIS-WebServer,IIS-CommonHttpFeatures,IIS-HttpErrors,IIS-HttpRedirect,IIS-ApplicationDevelopment,IIS-NetFxExtensibility,IIS-NetFxExtensibility45,IIS-HealthAndDiagnostics,IIS-HttpLogging,IIS-LoggingLibraries,IIS-RequestMonitor,IIS-HttpTracin,g,IIS-Security,IIS-URLAuthorization,IIS-RequestFiltering,IIS-IPSecurity,IIS-Performance,IIS-HttpCompressionDynamic,IIS-WebServerManagementTools,IIS-ManagementScriptingTools,IIS-IIS6ManagementCompatibility,IIS-Metabase,IIS-HostableWebCore,IIS-StaticContent,IIS-DefaultDocument,IIS-DirectoryBrowsing,IIS-WebDAV,IIS-WebSockets,IIS-ApplicationInit,IIS-ASPNET,IIS-ASPNET45,IIS-ASP,IIS-CGI,IIS-ISAPIExtensions,IIS-ISAPIFilter,IIS-ServerSideIncludes,IIS-CustomLogging,IIS-BasicAuthentication,IIS-HttpCompressionStatic,IIS-ManagementConsole,IIS-ManagementService,IIS-WMICompatibility,IIS-LegacyScripts,IIS-LegacySnapIn,IIS-FTPServer,IIS-FTPSvc,IIS-FTPExtensibility,TFTP,TelnetClient,TelnetServer) do (
+	dism /online /disable-feature /featurename:%%S /NoRestart
+)
 IF /i %Breaks% EQU "Y" pause
 :NoLoad
 :: Privacy - Stop unneeded services.
