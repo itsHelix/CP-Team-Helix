@@ -72,7 +72,7 @@ set Loading=N
 set Firewall=N
 
 ::MultipleChoiceBox runs (This add-on was made and distrubuted by Rob van der Woude [https://www.robvanderwoude.com/])
-MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Update Software with PATCHMYPC;Users;Disable features;Firewall Settings" "What do you want?" "Batman" /C:2 > temp.txt
+MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Update Software with PATCHMYPC;Users;Disable features;Firewall Settings;Run Everything.exe" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
 FINDSTR /C:"Disable RDP" temp.txt && IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
@@ -84,6 +84,7 @@ FINDSTR /C:"Update Software with PATCHMYPC" temp.txt && IF NOT ERRORLEVEL 1 set 
 FINDSTR /C:"Users" temp.txt && IF NOT ERRORLEVEL 1 set Users=Y
 FINDSTR /C:"Disable features" temp.txt && IF NOT ERRORLEVEL 1 set Loading=Y
 FINDSTR /C:"Firewall Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firewall=Y
+FINDSTR /C:"Run Everything.exe" temp.txt && IF NOT ERRORLEVEL 1 set Files=Y
 del temp.txt
 IF /i %Breaks% EQU "Y" pause
 cls
@@ -109,6 +110,7 @@ echo บ	 Run Firefox script = %Firefox%
 echo บ	 Update Software = %Software%
 echo บ	 Firewall Settings = %Firewall%
 echo บ	 Disable Weak Services = %Loading%
+echo บ	 Run Everything.exe = %Files%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
@@ -458,7 +460,13 @@ IF /i %Breaks% EQU "Y" pause
 if /I "%Software%" EQU "Y" (
 	PatchMyPc /s
 )
+
+:Files
+if /I "%Files%" EQU "Y" (
+	start /wait %~dp0\Software\Everything-Setup.exe
+)
 IF /i %Breaks% EQU "Y" pause
+
 :Users
 if /I "%Users%" EQU "Y" (
 	cls
