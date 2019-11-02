@@ -66,6 +66,10 @@ The only existing global variable in the script is `password`, which stores the 
 | Bootloader is configured | 1.4.1 | Yes |
 | Bottloader password is set | 1.4.2 | Yes |
 | Authentication required for single user mode | 1.4.3 | Yes |
+| Ensure core dumps are restricted | 1.5.1 | Yes |
+| Ensure XD/NX support is enabled | 1.5.2 | `No` |
+| Ensure address space layout randomization (ASLR) is enabled | 1.5.3 | Yes |
+| Ensure prelink is disabled | 1.5.4 | Yes |
 | Disabling inetd services | 2.1 | Yes |
 | Time Synchronization | 2.2.1 | `No` |
 | Disabling Special Purpose Services<sup>1</sup> | 2.2.2-2.2.14 | Yes |
