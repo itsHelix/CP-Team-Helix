@@ -88,6 +88,14 @@ filesystem_mounting_disabled_boolean() {
   [ result -eq ""]
 }
 
+# CIS 1.5.1: Ensure core dumps are restricted
+@test "core dumps are restricted" {
+  result1=$(grep "hard core" /etc/security/limits.conf /etc/security/limits.d/*)
+  result2=$(sysctl fs.suid_dumpable)
+  result3=$(grep "fs\.suid_dumpable" /etc/sysctl.conf /etc/sysctl.d/*)
+  [ result1 -eq "* hard core 0" && result2 -eq "fs.suid_dumpable = 0" && result3 -eq "fs.suid_dumpable = 0" ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service

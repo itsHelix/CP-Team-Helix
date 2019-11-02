@@ -147,9 +147,18 @@ authentication_req_single_user_mode() {
   fi
 }
 
+# CIS: 1.5 ##############################################################
+
+# CIS 1.5.1: Ensure core dumps are restricted
+restrict_core_dumps() {
+  echo "* hard core 0" | tee -a /etc/security/limits.conf /etc/sysctl.d/*
+  echo "fs.suid_dumpable = 0" | tee -a /etc/sysctl.conf /etc/sysctl.d/*
+  sysctl -w fs.suid_dumpable=0
+}
+
 # CIS: 2.1 ##############################################################
 
-# CIS: 2.1 inetd Services
+# CIS 2.1 inetd Services:
 disable_inetd_services() {
   # Var setup
   services=("chargen" "daytime" "discard" "echo" "time" "rsh" "rlogin" "rexec" "talk" "ntalk" "telnet" "tftp" "xinetd")

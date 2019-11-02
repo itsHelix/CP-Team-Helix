@@ -189,6 +189,17 @@ Single user mode is used for recovery when the system detects an issue during bo
 Testing:
 * `grep ^root:[*\!]: /etc/shadow`: No results should be returned
 
+## 1.5.1: Ensure core dumps are restricted
+Core dumps– memory from executable programs, often to determine reationale for program abortion– can leak confidential information from a core file. Setting a soft limit secures processes requiring core dumps while allowing users to ovverride the limit variable (hard limits cannot be overridden by users). Setting `fs.suid_dumpable = 0` prevents setuid (privilege escalation flagging user access rights to that of the executable owner) programs from dumping core.
+* Append `* hard core 0` to `/etc/security/limits.conf` or `/etc/security/limits.d/*`
+*  Set `fs.suid_dumpable = 0` in `/etc/sysctl.conf` or `/etc/sysctl.d/*`
+*  Set the active kernel parameter: `sysctl -w fs.suid_dumpable=0`
+
+Testing:
+* `grep "hard core" /etc/security/limits.conf /etc/security/limits.d/*`: `* hard core 0`
+* `sysctl fs.suid_dumpable`: `fs.suid_dumpable = 0`
+* `grep "fs\.suid_dumpable" /etc/sysctl.conf /etc/sysctl.d/*`: `fs.suid_dumpable = 0`
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:
