@@ -162,6 +162,12 @@ enable_aslr() {
   sysctl -w kernel.randomize_va_space=2
 }
 
+# CIS 1.5.4: Ensure prelink is disabled
+disable_prelink() {
+  prelink -ua
+  apt-get remove prelink
+}
+
 # CIS: 2.1 ##############################################################
 
 # CIS 2.1 inetd Services:

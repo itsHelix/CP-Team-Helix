@@ -217,6 +217,14 @@ Testing:
 * `sysctl kernel.randomize_va_space`: `kernel.randomize_va_space = 2`
 * `grep "kernel\.randomize_va_space" /etc/sysctl.conf /etc/sysctl.d/*`: `kernel.randomize_va_space = 2`
 
+## 1.5.4: Ensure prelink is disabled
+`prelink`, a program that optimizes startup relocations by modifying ELF shared libraries and ELF dynamically linked binaries specially, can interfere with the operation of AIDE, since it changes binaries and can increase the vulnerability of a system if a malivious user is able to compromise a common library.
+* Restore binaries to normal (`prelink -ua`)
+* Uninstall `prelink`
+
+Testing:
+* `dpkg -s prelink`: N/A
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:

@@ -103,6 +103,12 @@ filesystem_mounting_disabled_boolean() {
   [ result1 -eq "kernel.randomize_va_space = 2" && result2 -eq "kernel.randomize_va_space = 2" ]
 }
 
+# CIS 1.5.4: Ensure prelink is disabled
+@test "prelink is disabled" {
+  result1=$(dpkg -s prelink)
+  [ result1 -eq "" ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service
