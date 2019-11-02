@@ -198,7 +198,15 @@ Core dumps– memory from executable programs, often to determine reationale for
 Testing:
 * `grep "hard core" /etc/security/limits.conf /etc/security/limits.d/*`: `* hard core 0`
 * `sysctl fs.suid_dumpable`: `fs.suid_dumpable = 0`
-* `grep "fs\.suid_dumpable" /etc/sysctl.conf /etc/sysctl.d/*`: `fs.suid_dumpable = 0`
+* `grep "fs\.suid_dumpable" /etc/sysctl.conf /etc/sysctl.d/*`: `fs.suid_dumpable=0`
+
+## 1.5.2: Ensure XD/NX support is enabled
+In an effort to help counteract buffer overflow exploitation, No Execute (AMD, aka NX) or Execute Disabled (Intel, aka XD)– preventing code execution on per memory page basis on x86 processors– should be enabled.
+This suggestion is intentionally unimplemented, as Cyber Patriot images do not operate on x86 architecture, and cannot survey BIOS configuration. If one were to use XD/NX, the following would have to be done:
+* Enable XD/NX in your BIOS and configure bootloader to load a new kernel.
+
+Testing:
+* `dmesg | grep NX`: `NX (Execute Disable) protection: active`
 
 ## 2.1: inetd Services
 ### `disable_inetd_services`
