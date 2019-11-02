@@ -156,6 +156,12 @@ restrict_core_dumps() {
   sysctl -w fs.suid_dumpable=0
 }
 
+# CIS 1.5.3: Ensure address space layour randomization (ASLR) is enabled
+enable_aslr() {
+  echo "kernel.randomize_va_space = 2" | tee -a /etc/sysctl.conf /etc/sysctl.d/*
+  sysctl -w kernel.randomize_va_space=2
+}
+
 # CIS: 2.1 ##############################################################
 
 # CIS 2.1 inetd Services:

@@ -208,6 +208,15 @@ This suggestion is intentionally unimplemented, as Cyber Patriot images do not o
 Testing:
 * `dmesg | grep NX`: `NX (Execute Disable) protection: active`
 
+## 1.5.3: Ensure address space layout randomization (ASLR) is enabled
+Address space layout randomization, an exploit mitigation technique which randomly arranged address space of key data areas of processes, should be enabled to make it more difficult to write memory page exploits and buffer overflow vulnerabilities, since memory placement will be consistenly shifting.
+* Set `kernel.randomize_va_space = 2` in `/etc/sysctl.conf` or `/etc/sysctl.d/*`
+* Set the active kernel parameter: `sysctl -w kernel.randomize_va_space=2`
+
+Testing:
+* `sysctl kernel.randomize_va_space`: `kernel.randomize_va_space = 2`
+* `grep "kernel\.randomize_va_space" /etc/sysctl.conf /etc/sysctl.d/*`: `kernel.randomize_va_space = 2`
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:
