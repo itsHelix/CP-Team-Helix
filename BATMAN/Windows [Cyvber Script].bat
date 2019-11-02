@@ -14,6 +14,7 @@ xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h /Y
+xcopy %~dp0\Software\PatchMyPc.exe %windir%\system32 /h /Y
 
 setlocal enabledelayedexpansion
 
@@ -71,27 +72,19 @@ set Loading=N
 set Firewall=N
 
 ::MultipleChoiceBox runs (This add-on was made and distrubuted by Rob van der Woude [https://www.robvanderwoude.com/])
-MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Install software with NINITE;Users;Disable features;Firewall Settings" "What do you want?" "Batman" /C:2 > temp.txt
+MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Update Software with PATCHMYPC;Users;Disable features;Firewall Settings;Run Everything.exe" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
-FINDSTR /C:"Disable RDP" temp.txt
-IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
-FINDSTR /C:"Enable SMB" temp.txt
-IF NOT ERRORLEVEL 1 set SMB=Y
-FINDSTR /C:"Keep Shared Files" temp.txt
-IF NOT ERRORLEVEL 1 set share=Y
-FINDSTR /C:"Run hardenpolicy.ps1" temp.txt
-IF NOT ERRORLEVEL 1 set HPps1=Y
-FINDSTR /C:"Firefox Settings" temp.txt
-IF NOT ERRORLEVEL 1 set Firefox=Y
-FINDSTR /C:"Install software with NINITE" temp.txt
-IF NOT ERRORLEVEL 1 set Software=Y
-FINDSTR /C:"Users" temp.txt
-IF NOT ERRORLEVEL 1 set Users=Y
-FINDSTR /C:"Disable features" temp.txt
-IF NOT ERRORLEVEL 1 set Loading=Y
-FINDSTR /C:"Firewall Settings" temp.txt
-IF NOT ERRORLEVEL 1 set Firewall=Y
+FINDSTR /C:"Disable RDP" temp.txt && IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
+FINDSTR /C:"Enable SMB" temp.txt && IF NOT ERRORLEVEL 1 set SMB=Y
+FINDSTR /C:"Keep Shared Files" temp.txt && IF NOT ERRORLEVEL 1 set share=Y
+FINDSTR /C:"Run hardenpolicy.ps1" temp.txt && IF NOT ERRORLEVEL 1 set HPps1=Y
+FINDSTR /C:"Firefox Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firefox=Y
+FINDSTR /C:"Update Software with PATCHMYPC" temp.txt && IF NOT ERRORLEVEL 1 set Software=Y
+FINDSTR /C:"Users" temp.txt && IF NOT ERRORLEVEL 1 set Users=Y
+FINDSTR /C:"Disable features" temp.txt && IF NOT ERRORLEVEL 1 set Loading=Y
+FINDSTR /C:"Firewall Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firewall=Y
+FINDSTR /C:"Run Everything.exe" temp.txt && IF NOT ERRORLEVEL 1 set Files=Y
 del temp.txt
 IF /i %Breaks% EQU "Y" pause
 cls
@@ -114,9 +107,10 @@ echo บ	 Enable SMB = %SMB%
 echo บ	 Keep shares = %share%
 echo บ	 Run Users script = %Users%
 echo บ	 Run Firefox script = %Firefox%
-echo บ	 Install/update software = %Software%
+echo บ	 Update Software = %Software%
 echo บ	 Firewall Settings = %Firewall%
 echo บ	 Disable Weak Services = %Loading%
+echo บ	 Run Everything.exe = %Files%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
@@ -129,7 +123,7 @@ if %ERRORLEVEL% EQU 1 goto :Everything
 
 :Input
 set /p Loc="Enter Location: "
-echo %Loc%
+echo %Loc%, good?
 pause
 goto %Loc%
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -356,58 +350,9 @@ IF /i %Breaks% EQU "Y" pause
 :: Weak services
 if /I "%Loading%" EQU "N" goto :NoLoad
 echo "DISABLING WEAK SERVICES"
-dism /online /disable-feature /featurename:IIS-WebServerRole /NoRestart
-dism /online /disable-feature /featurename:IIS-WebServer /NoRestart
-dism /online /disable-feature /featurename:IIS-CommonHttpFeatures /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpErrors /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpRedirect /NoRestart
-dism /online /disable-feature /featurename:IIS-ApplicationDevelopment /NoRestart
-dism /online /disable-feature /featurename:IIS-NetFxExtensibility /NoRestart
-dism /online /disable-feature /featurename:IIS-NetFxExtensibility45 /NoRestart
-dism /online /disable-feature /featurename:IIS-HealthAndDiagnostics /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpLogging /NoRestart
-dism /online /disable-feature /featurename:IIS-LoggingLibraries /NoRestart
-dism /online /disable-feature /featurename:IIS-RequestMonitor /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpTracing /NoRestart
-dism /online /disable-feature /featurename:IIS-Security /NoRestart
-dism /online /disable-feature /featurename:IIS-URLAuthorization /NoRestart
-dism /online /disable-feature /featurename:IIS-RequestFiltering /NoRestart
-dism /online /disable-feature /featurename:IIS-IPSecurity /NoRestart
-dism /online /disable-feature /featurename:IIS-Performance /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpCompressionDynamic /NoRestart
-dism /online /disable-feature /featurename:IIS-WebServerManagementTools /NoRestart
-dism /online /disable-feature /featurename:IIS-ManagementScriptingTools /NoRestart
-dism /online /disable-feature /featurename:IIS-IIS6ManagementCompatibility /NoRestart
-dism /online /disable-feature /featurename:IIS-Metabase /NoRestart
-dism /online /disable-feature /featurename:IIS-HostableWebCore /NoRestart
-dism /online /disable-feature /featurename:IIS-StaticContent /NoRestart
-dism /online /disable-feature /featurename:IIS-DefaultDocument /NoRestart
-dism /online /disable-feature /featurename:IIS-DirectoryBrowsing /NoRestart
-dism /online /disable-feature /featurename:IIS-WebDAV /NoRestart
-dism /online /disable-feature /featurename:IIS-WebSockets /NoRestart
-dism /online /disable-feature /featurename:IIS-ApplicationInit /NoRestart
-dism /online /disable-feature /featurename:IIS-ASPNET /NoRestart
-dism /online /disable-feature /featurename:IIS-ASPNET45 /NoRestart
-dism /online /disable-feature /featurename:IIS-ASP /NoRestart
-dism /online /disable-feature /featurename:IIS-CGI /NoRestart
-dism /online /disable-feature /featurename:IIS-ISAPIExtensions /NoRestart
-dism /online /disable-feature /featurename:IIS-ISAPIFilter /NoRestart
-dism /online /disable-feature /featurename:IIS-ServerSideIncludes /NoRestart
-dism /online /disable-feature /featurename:IIS-CustomLogging /NoRestart
-dism /online /disable-feature /featurename:IIS-BasicAuthentication /NoRestart
-dism /online /disable-feature /featurename:IIS-HttpCompressionStatic /NoRestart
-dism /online /disable-feature /featurename:IIS-ManagementConsole /NoRestart
-dism /online /disable-feature /featurename:IIS-ManagementService /NoRestart
-dism /online /disable-feature /featurename:IIS-WMICompatibility /NoRestart
-dism /online /disable-feature /featurename:IIS-LegacyScripts /NoRestart
-dism /online /disable-feature /featurename:IIS-LegacySnapIn /NoRestart
-dism /online /disable-feature /featurename:IIS-FTPServer /NoRestart
-dism /online /disable-feature /featurename:IIS-FTPSvc /NoRestart
-dism /online /disable-feature /featurename:IIS-FTPExtensibility /NoRestart
-dism /online /disable-feature /featurename:TFTP /NoRestart
-dism /online /disable-feature /featurename:TelnetClient /NoRestart
-dism /online /disable-feature /featurename:TelnetServer /NoRestart
-
+for %%S in (IIS-WebServerRole,IIS-WebServer,IIS-CommonHttpFeatures,IIS-HttpErrors,IIS-HttpRedirect,IIS-ApplicationDevelopment,IIS-NetFxExtensibility,IIS-NetFxExtensibility45,IIS-HealthAndDiagnostics,IIS-HttpLogging,IIS-LoggingLibraries,IIS-RequestMonitor,IIS-HttpTracin,g,IIS-Security,IIS-URLAuthorization,IIS-RequestFiltering,IIS-IPSecurity,IIS-Performance,IIS-HttpCompressionDynamic,IIS-WebServerManagementTools,IIS-ManagementScriptingTools,IIS-IIS6ManagementCompatibility,IIS-Metabase,IIS-HostableWebCore,IIS-StaticContent,IIS-DefaultDocument,IIS-DirectoryBrowsing,IIS-WebDAV,IIS-WebSockets,IIS-ApplicationInit,IIS-ASPNET,IIS-ASPNET45,IIS-ASP,IIS-CGI,IIS-ISAPIExtensions,IIS-ISAPIFilter,IIS-ServerSideIncludes,IIS-CustomLogging,IIS-BasicAuthentication,IIS-HttpCompressionStatic,IIS-ManagementConsole,IIS-ManagementService,IIS-WMICompatibility,IIS-LegacyScripts,IIS-LegacySnapIn,IIS-FTPServer,IIS-FTPSvc,IIS-FTPExtensibility,TFTP,TelnetClient,TelnetServer) do (
+	dism /online /disable-feature /featurename:%%S /NoRestart
+)
 IF /i %Breaks% EQU "Y" pause
 :NoLoad
 :: Privacy - Stop unneeded services.
@@ -513,9 +458,15 @@ IF /i %Breaks% EQU "Y" pause
 
 :Software
 if /I "%Software%" EQU "Y" (
-	start %~dp0\Meta\"Ninite - Everything Firefox Glary Malwarebytes Installer.exe"
+	PatchMyPc /s
+)
+
+:Files
+if /I "%Files%" EQU "Y" (
+	start /wait %~dp0\Software\Everything-Setup.exe
 )
 IF /i %Breaks% EQU "Y" pause
+
 :Users
 if /I "%Users%" EQU "Y" (
 	cls
