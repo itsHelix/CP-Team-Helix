@@ -218,8 +218,27 @@ configure_rsyslog() {
   if [[ $rsyslog_install != *No such* ]]; then
     systemctl enable rsyslog # Making sure the rsyslog ser. is enabled (4.2.1.1)
     sed -i 's/$rsyslog_FCM/$FileCreateMode 0640/g' /etc/rsyslog.conf # Ensure rsyslog default file permissions configured (4.2.1.3)
-    
+
   else
     echo "Rsyslog is not installed"
   fi
+}
+
+# CIS: 5.1 ##############################################################
+
+file_config_cron() {
+  chown root:root $1
+  chmod og-rwx $1
+}
+
+crontab_config_cron() { file_config_cron /etc/crontab }
+hourly_config_cron() { file_config_cron /etc/cron.hourly }
+daily_config_cron() { file_config_cron /etc/cron.daily }
+weekly_config_cron() { file_config_cron /etc/cron.weekly }
+monthly_config_cron() { file_config_cron /etc/cron.monthly }
+d_config_cron() { file_config_cron /etc/cron.d }
+
+configure_cron() {
+  crontab_config_cron; hourly_config_cron; daily_config_cron; weekly_config_cron; monthly_config_cron; d_config_cron
+  systemctl enable crond
 }

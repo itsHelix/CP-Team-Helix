@@ -161,3 +161,16 @@ filesystem_mounting_disabled_boolean() {
     [ 1 -eq 1 ]
   fi
 }
+
+# CIS 5.1.1-7: Ensure permissions on /etc/cron._____ are configured
+file_config_cron_boolean() {
+  result=`stat $1`
+  [ result -eq *0600*0/*root*0/*root* ]
+}
+
+@test "crontab config cron" { [file_config_cron_boolean /etc/crontab] }
+@test "hourly config cron" { [file_config_cron_boolean /etc/cron.hourly] }
+@test "daily config cron" { [file_config_cron_boolean /etc/cron.daily] }
+@test "weekly config cron" { [file_config_cron_boolean /etc/cron.weekly] }
+@test "monthly config cron" { [file_config_cron_boolean /etc/cron.monthly] }
+@test "d config cron" { [file_config_cron_boolean /etc/cron.d] }
