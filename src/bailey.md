@@ -299,6 +299,9 @@ The contents of `/etc/motd` are displayed to users after login and fucntion as a
 Testing:
 * `egrep '(\\v|\\r|\\m|\\s)' /etc/motd`: N/A
 
+### 1.7.1.2-1.7.1.6
+Specifies 1.7.1.1-like configuration for `/etc/issue`, et cetera. These are not implemented because it is not relevant to the Cyber Patriot competition.
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:
@@ -373,7 +376,7 @@ The `DenyGroups` variable gives the system administrator the option of denying s
 Restricting which users can remotely access the system via SSH will help ensure that only authorized users access the system. This is very important but, is not done in Bailey.
 
 ## 6.1.1: Audit system file permissions
-The Debian package manager has a number of useful options. One of these, the –verify option, can be used to verify that system packages are correctly installed. The –verify option can be used to verify a particular package or to verify all system packages. If no output is returned, the package is installed correctly. Sadly, Bailey is not set up to process this data. You will need to go in and run: `dpkg --verify`. Then you, the user, will need to go in and fix any problems that are happening with the packages.
+The Debian package manager has a number of useful options. One of these, the ï¿½verify option, can be used to verify that system packages are correctly installed. The ï¿½verify option can be used to verify a particular package or to verify all system packages. If no output is returned, the package is installed correctly. Sadly, Bailey is not set up to process this data. You will need to go in and run: `dpkg --verify`. Then you, the user, will need to go in and fix any problems that are happening with the packages.
 
 ## 6.1.2-9: Ensure file permissions on `/etc/*` are configured
 The `/etc/*` files contain user information that is used by many system utilities and security applications and therefore must be readable for these utilities to operate. For each separate file that is listed, there is a different set of recommended settings. This can be completed by running:
