@@ -7,7 +7,7 @@ Bailey is the result of work done by countless people. Notable contributions are
 * [Abhinav Vemulapalli](https://github.com/nandanav), for his work on `telluride.sh` and `avon.sh`
 * [pyllyukko](https://github.com/pyllyukko) for his work on `user.js`, which is aliased in this work
 * [Tavin Turner](https://github.com/itsTurner) for his work on `telluride.sh`, `estes.sh`, `avon.sh`, and `Bailey`
-* [Ian](https://stackoverflow.com/users/11013589/cutwow475) [Boraks](https://github.com/Cutwow) for his work on `Bailey`
+* [Ian](https://stackoverflow.com/users/11013589/cutwow475) [Boraks](https://github.com/Cutwow) for his work on `Bailey` (and forcing everyone else to do their part)
 * [Brinda Malik](https://github.com/BrindaMal) for her work on `Bailey`
 
 # Ecosystem
