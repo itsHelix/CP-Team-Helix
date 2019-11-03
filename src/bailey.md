@@ -268,14 +268,13 @@ AppArmor provides a Mandatory Access Control (MAC) system that greatly augments 
 
 ### 1.6.2.1: Ensure AppArmor is not disabled in bootloader configuration
 Configure AppArmor to be enabled at boot time and verity that it has not been overwritten by the bootloader boot parameters. AppArmor must be enabled at boot time in your bootloader configuration to ensure that the controls it provides are not overridden.
-* Edit /etc/default/grub and remove all instances of `apparmor=0`: ```
-GRUB_CMDLINE_LINUX_DEFAULT="quiet"
-GRUB_CMDLINE_LINUX=""
-```
+* Edit /etc/default/grub and remove all instances of `apparmor=0`: `GRUB_CMDLINE_LINUX_DEFAULT="quiet" [\n] GRUB_CMDLINE_LINUX=""`
 * Update the grub2 configuration.
 
 Testing:
 * `grep "^\s*linux" /boot/grub/grub.cfg`: N/A
+
+###
 
 ## 2.1: inetd Services
 ### `disable_inetd_services`
