@@ -229,6 +229,17 @@ Testing:
 Testing:
 * `dpkg -s prelink`: N/A
 
+## 1.6.1: Configure SELinux
+SELinux provides Mandatory Access Control that greatly augments the default Disccresionary Access Control model. Every process and every object on the ysstem is assigned a security context (a label that includes detailed type information about the object). The kernela llowws processes to access objects only if that access is explicitly allowed by the poly in effect. The poly defines transitions, so that a user can be allowed to run software, which can run under a different context than the user's default. This automatically limits the damage that the sotwarre can do to files accessible by the calling user. The user does not need to take any action to gain this benefit. For ana ction to occur, both the traditional DAC permissions must be satisfied as well as the SELinux MAC rules.
+
+### 1.6.1.1: Ensure SELinux is not disabled in bootloader configuration
+To get the effects of SELinux, it must be enabled at boot time and verify that it has not been overwritten by the grub boot parameters.
+* Remove all instances of `selinux=0` and `envorcing=0` from `/etc/default/grub`
+* Update the `grub2` configuration
+
+Testing:
+* `grep "^\s*linux" /boot/grub/grub.cfg`: N/A
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:

@@ -109,6 +109,12 @@ filesystem_mounting_disabled_boolean() {
   [ result1 -eq "" ]
 }
 
+# CIS 1.6.1.1: Ensure SELinux is not disabled in bootloader configuration
+@test "no `selinux=0` or `enforcing=0` in linux lines" {
+  result1=$(grep "^\s*linux" /boot/grub/grub.cfg)
+  [ result1 -eq "" ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service

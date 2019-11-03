@@ -168,6 +168,18 @@ disable_prelink() {
   apt-get remove prelink
 }
 
+# CIS: 1.6 ##############################################################
+
+# CIS 1.6.1: Configure SELinux
+
+# CIS 1.6.1.1: Ensure SELinux is not disabled in bootloader configuration
+enable_selinux_in_bootloader_configuration() {
+  sed -i `s/selinux=0//g` /etc/default/grub
+  sed -i `s/enforcing=0//g` /etc/default/grub
+  echo -e "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\nGRUB_CMDLINE_LINUX=\"\"" >> /etc/default/grub
+  update-grub
+}
+
 # CIS: 2.1 ##############################################################
 
 # CIS 2.1 inetd Services:
@@ -218,7 +230,7 @@ configure_rsyslog() {
   if [[ $rsyslog_install != *No such* ]]; then
     systemctl enable rsyslog # Making sure the rsyslog ser. is enabled (4.2.1.1)
     sed -i 's/$rsyslog_FCM/$FileCreateMode 0640/g' /etc/rsyslog.conf # Ensure rsyslog default file permissions configured (4.2.1.3)
-    
+
   else
     echo "Rsyslog is not installed"
   fi
