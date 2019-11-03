@@ -277,6 +277,24 @@ configure_cron() {
 # CIS: 5.2 ##############################################################
 
 configure_ssh() {
+  chmod 777 /etc/ssh/sshd_config
   cat ./presets/perfect_sshd > /etc/ssh/sshd_config
+  chmod 644 /etc/ssh/sshd_config
   service sshd reload
 }
+
+# CIS: 6.1 ##############################################################
+
+configuring_file_permissions() {
+  chown root:$3 $1
+  chmod $2 $1
+}
+
+{configuring_file_permissions /etc/passwd 644 root}
+{configuring_file_permissions /etc/shadow o-rwx,g-wx shadow}
+{configuring_file_permissions /etc/group 644 root}
+{configuring_file_permissions /etc/gshadow o-rwx,g-wx shadow}
+{configuring_file_permissions /etc/passwd- 600 root}
+{configuring_file_permissions /etc/shadow- 600 root}
+{configuring_file_permissions /etc/group- 600 root}
+{configuring_file_permissions /etc/gshadow- 600 root}
