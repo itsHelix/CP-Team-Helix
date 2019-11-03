@@ -88,6 +88,27 @@ filesystem_mounting_disabled_boolean() {
   [ result -eq ""]
 }
 
+# CIS 1.5.1: Ensure core dumps are restricted
+@test "core dumps are restricted" {
+  result1=$(grep "hard core" /etc/security/limits.conf /etc/security/limits.d/*)
+  result2=$(sysctl fs.suid_dumpable)
+  result3=$(grep "fs\.suid_dumpable" /etc/sysctl.conf /etc/sysctl.d/*)
+  [ result1 -eq "* hard core 0" && result2 -eq "fs.suid_dumpable = 0" && result3 -eq "fs.suid_dumpable = 0" ]
+}
+
+# CIS 1.5.3: Ensure address space layout randomization (ASLR) is enabled
+@test "aslr is enabled" {
+  result1=$(sysctl kernel.randomize_va_space)
+  result2=$(grep "kernel\n.randomize_va_space" /etc/sysctl.conf /etc/sysctl.d/*)
+  [ result1 -eq "kernel.randomize_va_space = 2" && result2 -eq "kernel.randomize_va_space = 2" ]
+}
+
+# CIS 1.5.4: Ensure prelink is disabled
+@test "prelink is disabled" {
+  result1=$(dpkg -s prelink)
+  [ result1 -eq "" ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service

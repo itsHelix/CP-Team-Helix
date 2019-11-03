@@ -66,6 +66,10 @@ The only existing global variable in the script is `password`, which stores the 
 | Bootloader is configured | 1.4.1 | Yes |
 | Bottloader password is set | 1.4.2 | Yes |
 | Authentication required for single user mode | 1.4.3 | Yes |
+| Ensure core dumps are restricted | 1.5.1 | Yes |
+| Ensure XD/NX support is enabled | 1.5.2 | `No` |
+| Ensure address space layout randomization (ASLR) is enabled | 1.5.3 | Yes |
+| Ensure prelink is disabled | 1.5.4 | Yes |
 | Disabling inetd services | 2.1 | Yes |
 | Time Synchronization | 2.2.1 | `No` |
 | Disabling Special Purpose Services<sup>1</sup> | 2.2.2-2.2.14 | Yes |
@@ -188,6 +192,42 @@ Single user mode is used for recovery when the system detects an issue during bo
 
 Testing:
 * `grep ^root:[*\!]: /etc/shadow`: No results should be returned
+
+## 1.5.1: Ensure core dumps are restricted
+Core dumps– memory from executable programs, often to determine reationale for program abortion– can leak confidential information from a core file. Setting a soft limit secures processes requiring core dumps while allowing users to ovverride the limit variable (hard limits cannot be overridden by users). Setting `fs.suid_dumpable = 0` prevents setuid (privilege escalation flagging user access rights to that of the executable owner) programs from dumping core.
+* Append `* hard core 0` to `/etc/security/limits.conf` or `/etc/security/limits.d/*`
+*  Set `fs.suid_dumpable = 0` in `/etc/sysctl.conf` or `/etc/sysctl.d/*`
+*  Set the active kernel parameter: `sysctl -w fs.suid_dumpable=0`
+
+Testing:
+* `grep "hard core" /etc/security/limits.conf /etc/security/limits.d/*`: `* hard core 0`
+* `sysctl fs.suid_dumpable`: `fs.suid_dumpable = 0`
+* `grep "fs\.suid_dumpable" /etc/sysctl.conf /etc/sysctl.d/*`: `fs.suid_dumpable=0`
+
+## 1.5.2: Ensure XD/NX support is enabled
+In an effort to help counteract buffer overflow exploitation, No Execute (AMD, aka NX) or Execute Disabled (Intel, aka XD)– preventing code execution on per memory page basis on x86 processors– should be enabled.
+This suggestion is intentionally unimplemented, as Cyber Patriot images do not operate on x86 architecture, and cannot survey BIOS configuration. If one were to use XD/NX, the following would have to be done:
+* Enable XD/NX in your BIOS and configure bootloader to load a new kernel.
+
+Testing:
+* `dmesg | grep NX`: `NX (Execute Disable) protection: active`
+
+## 1.5.3: Ensure address space layout randomization (ASLR) is enabled
+Address space layout randomization, an exploit mitigation technique which randomly arranged address space of key data areas of processes, should be enabled to make it more difficult to write memory page exploits and buffer overflow vulnerabilities, since memory placement will be consistenly shifting.
+* Set `kernel.randomize_va_space = 2` in `/etc/sysctl.conf` or `/etc/sysctl.d/*`
+* Set the active kernel parameter: `sysctl -w kernel.randomize_va_space=2`
+
+Testing:
+* `sysctl kernel.randomize_va_space`: `kernel.randomize_va_space = 2`
+* `grep "kernel\.randomize_va_space" /etc/sysctl.conf /etc/sysctl.d/*`: `kernel.randomize_va_space = 2`
+
+## 1.5.4: Ensure prelink is disabled
+`prelink`, a program that optimizes startup relocations by modifying ELF shared libraries and ELF dynamically linked binaries specially, can interfere with the operation of AIDE, since it changes binaries and can increase the vulnerability of a system if a malivious user is able to compromise a common library.
+* Restore binaries to normal (`prelink -ua`)
+* Uninstall `prelink`
+
+Testing:
+* `dpkg -s prelink`: N/A
 
 ## 2.1: inetd Services
 ### `disable_inetd_services`
