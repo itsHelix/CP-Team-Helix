@@ -418,6 +418,14 @@ This monitors the programs that required admin use to see if unauthorized users 
 
 ## 4.1.13 Ensure successful file system mounts are collected
 This monitors the use of the mount system call which controls the mounting and unmounting of file systems. This is to make sure that unauthorized users aren't mounting file systems because it will give the administrator access to see if any standard users are doing this. Sadly, Bailey is not set up to process this data.
+## 4.1.14 Ensure file deletion events by users are collected
+This monitors any deletion/renaming of files and file attributions. This will log any instances of deletion or editing and will tag them with the identifier "delete." This is important to make sure that non-priviledged users aren't removing files or various file attributes. Sadly, Bailey is not set up to process this data.
+
+## 4.1.15 Ensure changes to the system administration scope (sudoers) is collected
+This monitors any changes to the system administration, because if it is configured properly to make sure that administrations have to log in first and then use sudo, then you can monitor any changes. This is through the file /etc/sudoers which records instances of this with the identifier "scope." Sadly, Bailey is not set up to process this data.
+
+## 4.1.16 Ensure system administrator actions (sudolog) are collected
+This monitors the sudo log file  through /var/log/sudo.log. So any time a command is executed, it will add to the file /var/log/sudo.log which is important to make sure that nothing is being tampered with, because any changes to the file will show that an administrator executed a command or it has been messed with. Sadly, Bailey is not set up to process this data.
 
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
