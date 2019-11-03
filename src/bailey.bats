@@ -150,6 +150,12 @@ filesystem_mounting_disabled_boolean() {
   [ result1 -ne "" ]
 }
 
+# CIS 1.7.1.1: Ensure message of the day is configured properly
+@test "ensure motd is configured properly" {
+  result1=$(egrep '(\\v|\\r|\\m|\\s)' /etc/motd)
+  [ result1 -eq "" ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service

@@ -288,6 +288,17 @@ SELinux and AppArmor provide Mandatory Access Controls; without the system insta
 Testing:
 * `dpkg -s selinux apparmor`
 
+## 1.7: Warning Banners
+Presenting a warning message prior to the normal user login may assist in the prosecution fo trespassers on the computer system. Changing some of these login banners also has the side effect of hiding OS version information and other detailed system information from attackers attempting to target specific exploits at a system.
+
+## 1.7.1: Command line warning banners
+### 1.7.1.1: Ensure message of the day is configured properly
+The contents of `/etc/motd` are displayed to users after login and fucntion as a message of the day for authenticated users. Warning messages inform users who are attemptint to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place.
+* Edit `/etc/motd` according to the site policy, removing any instances of `\m`, `\r`, `\s`, `\v`
+
+Testing:
+* `egrep '(\\v|\\r|\\m|\\s)' /etc/motd`: N/A
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:

@@ -194,7 +194,7 @@ configure_selinux_policy() {
 
 # CIS 1.6.2.1: Ensure AppArmor is not disabled in bootloader configuration
 enable_apparmor_in_bootloader_configuration() {
-  sed- i `s/apparmor=0//g` /etc/default/grub
+  sed -i `s/apparmor=0//g` /etc/default/grub
   echo -e "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\nGRUB_CMDLINE_LINUX=\"\"" >> /etc/default/grub
   update-grub
 }
@@ -207,6 +207,18 @@ enforce_apparmor_profiles() {
 # CIS 1.6.3: Ensure SELinux or AppArmor are installed
 install_mac_systems() {
   apt-get install selinux apparmor
+}
+
+# CIS: 1.7 ##############################################################
+
+# CIS 1.7.1: Command line warning banners
+
+# CIS 1.7.1.1: Ensure message of the day is configured properly
+motd_configured_properly() {
+  sed -i `s/\m//g` /etc/motd
+  sed -i `s/\r//g` /etc/motd
+  sed -i `s/\s//g` /etc/motd
+  sed -i `s/\v//g` /etc/motd
 }
 
 # CIS: 2.1 ##############################################################
