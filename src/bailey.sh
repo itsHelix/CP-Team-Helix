@@ -242,3 +242,10 @@ configure_cron() {
   crontab_config_cron; hourly_config_cron; daily_config_cron; weekly_config_cron; monthly_config_cron; d_config_cron
   systemctl enable crond
 }
+
+# CIS: 5.2 ##############################################################
+
+configure_ssh() {
+  cat ./presets/perfect_sshd > /etc/ssh/sshd_config
+  service sshd reload
+}

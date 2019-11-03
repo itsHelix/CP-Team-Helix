@@ -174,3 +174,10 @@ file_config_cron_boolean() {
 @test "weekly config cron" { [file_config_cron_boolean /etc/cron.weekly] }
 @test "monthly config cron" { [file_config_cron_boolean /etc/cron.monthly] }
 @test "d config cron" { [file_config_cron_boolean /etc/cron.d] }
+
+# CIS 5.2: SSH Server Configuration
+@test "sshd file is set to presets" {
+  perfect_sshd=`cat ./presets/perfect_sshd`
+  result=`cat /etc/ssh/sshd_config`
+  [ result -eq perfect_sshd]
+}
