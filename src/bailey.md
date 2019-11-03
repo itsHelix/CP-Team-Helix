@@ -435,7 +435,7 @@ This will set the system audit to make sure that the audit rules aren't able to 
 * Add "-e 2" to the end of /etc/audit/audit.rules file
 
 Testing:
-*  `grep "^\s*[^#]" /etc/audit/audit.rules | tail -1 -e 2`
+*  `grep `^\s*[^#]` /etc/audit/audit.rules | tail -1 -e 2`
 
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
@@ -443,6 +443,9 @@ The `rsyslog` software is recommended as a replacement for the `syslogd` daemon 
 We also edit `/etc/rsyslog.conf` so that the `FileCrateMode` is set to `0640` or more restrictive. This is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected.
 Another important item to complete is setting up a remote log host. The `rsyslog` utility supports the ability to send logs it gathers to a remote log host running `syslogd(8)` or to receive messages from remote hosts, reducing administrative overhead. Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system. But, Bailey dose not provide this service as we can't automatically identify your remote host name [or if you even have one] (4.2.1.4 Ensure `rsyslog` is configured to send logs to a remote log host).
 For the same reasons above Bailey doesn't complete `4.2.1.5`: Ensure remote `rsyslog` messages are only accepted on designated log hosts). But, this is still an important step because completing `4.2.1.5` ensures that remote log hosts are configured to only accept `rsyslog` data from hosts within the specified domain and that those systems that are not designed to be log hosts do not accept any remote `rsyslog` messages. This provides protection from spoofed log data and ensures that system administrators are reviewing reasonably complete syslog data in a central location.
+
+## 4.2.2 Configure syslog-ng
+This is only applicable if syslog-ng is installed on the system. After installing the package, you need to activate it, which is important because if it isn't activated on the system, it will default to syslogd. To enable syslog-ng, type `update-rc.d syslog-ng enable`. To ensure loggingin is configured (4.2.2.2) the /etc/syslog-ng/syslog-ng.conf file will show the rules for logging and which files to use to log different circumstances. This is important because various security related information is sent via syslog-ng. To do this, you edit the log lines in /etc/syslog-ng/syslog-ng.conf for your environment. Sadly, Bailey is not set up to process this data.
 
 ## 5.1.1-7: Ensure permissions on /etc/cron.* are configured
 ### `configure_cron`
