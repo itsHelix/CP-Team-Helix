@@ -400,7 +400,19 @@ This will record the events that affect the group, password, shadow, and gshadow
 This records the changes to the network environment files, so files that affect the sethostname or setdomainname so it will write an audit event on the system files. This is important to monitor unauthorized changes to the host and domain name of the system which could break security parameters. Sadly, Bailey is not set up to process this data.
 
 ## 4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected
-This monitors the SELinux/APPArmor access controls, which will see if there is any changes made to /etc/selinux or /etc/apparmor and the /etc/apparmor.d directories, which is important to see if there are any authorized changes made to modify the controls. Sadly, Bailey is not set up to process this data. 
+This monitors the SELinux/APPArmor access controls, which will see if there is any changes made to /etc/selinux or /etc/apparmor and the /etc/apparmor.d directories, which is important to see if there are any authorized changes made to modify the controls. Sadly, Bailey is not set up to process this data.
+
+## 4.1.8 Ensure login and logout events are collected
+This monitors any login and logout events which will be tracked in the /var/log/faillog file. This will maintain the records whenever a user successfully logs in and will record failures through pam_tally2. Sadly, Bailey is not set up to process this data.
+## 4.1.9 Ensure session initation information is collected
+This monitors the initiation events, so any changes to the files through the file /var/run/utmp which will track all the logged in users, and the /var/log/wtmp file which tracks the login, logouts, shutdowns, and if the system rebooted. /var/log/btmp keeps track of all the failed login attempts with the identifier "session." Sadly, Bailey is not set up to process this data.
+
+## 4.1.10 Ensure discretionary access control permission modification events are collected
+This monitors changes to the file permissions or other attributes of the file, which is found through chmod, fchmod, and fchmodat which all can change the permissions of a file. This is important because it will alert an admin of any potentially unauthorized activity on files. Sadly, Bailey is not set up to process this data.
+
+## 4.1.11 Ensure unsuccessful unauthorized file access attempts are collected
+This monitors any unsuccessful attempts to access various files. This is important to make sure that only authorized users are getting into the files, and if there are failed instances of this, that could mean that someone who is unauthorized is trying to gain access to the system. Sadly, Bailey is not set up to process this data.
+
 
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
