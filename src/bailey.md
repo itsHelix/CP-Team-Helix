@@ -319,3 +319,33 @@ The `rsyslog` software is recommended as a replacement for the `syslogd` daemon 
 We also edit `/etc/rsyslog.conf` so that the `FileCrateMode` is set to `0640` or more restrictive. This is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected.
 Another important item to complete is setting up a remote log host. The `rsyslog` utility supports the ability to send logs it gathers to a remote log host running `syslogd(8)` or to receive messages from remote hosts, reducing administrative overhead. Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system. But, Bailey dose not provide this service as we can't automatically identify your remote host name [or if you even have one] (4.2.1.4 Ensure `rsyslog` is configured to send logs to a remote log host).
 For the same reasons above Bailey doesn't complete `4.2.1.5`: Ensure remote `rsyslog` messages are only accepted on designated log hosts). But, this is still an important step because completing `4.2.1.5` ensures that remote log hosts are configured to only accept `rsyslog` data from hosts within the specified domain and that those systems that are not designed to be log hosts do not accept any remote `rsyslog` messages. This provides protection from spoofed log data and ensures that system administrators are reviewing reasonably complete syslog data in a central location.
+
+## 5.1.1-7: Ensure permissions on /etc/cron._____ are configured
+### `configure_cron`
+We first have to ensure that the `cron` service is running, we do this by running: `systemctl enable crond`
+This set of files (crontab,cron.hourly,cron.daily,cron.weekly,cron.monthly,cron.d) contains information on what system jobs are run by cron. Write access to these files could provide unprivileged users with the ability to elevate their privileges. Read access to these files could provide users with the ability to gain insight on system jobs that run on the system and could provide them a way to gain unauthorized privileged access. This is implemented by running these commands:
+* `chown root:root etc/cron.____`
+* `chmod og-rwx etc/cron.____`
+
+Testing:
+* `systemctl is-enabled crond`: enabled
+* `stat /etc/cron.____`: Access: (0600/-rw-------) Uid: ( 0/ root) Gid: ( 0/ root)
+
+## 5.1.8: Ensure at/cron is restricted to authorized users
+In this section we configure `/etc/cron.allow` and `/etc/at.allow` to allow specific users to use these services. If `/etc/cron.allow` or `/etc/at.allow` do not exist, then `/etc/at.deny` and `/etc/cron.deny` are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in `/etc/cron.allow` and `/etc/at.allow` are allowed to use at and cron. Note that even though a given user is not listed in `cron.allow`, cron jobs can still be run as that user. The `cron.allow` file only controls administrative access to the crontab command for scheduling and modifying cron jobs. On many systems, only the system administrator is authorized to schedule cron jobs. Using the `cron.allow` file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files. This task is not completed in Bailey as it is specific for what admins a system network has
+
+## 5.2.1-15 (excluding 5.2.14): Ensure SSH settings are setup in a secure manner
+SSH supports two different and incompatible protocols: SSH1 and SSH2. SSH1 was the original protocol and was subject to security issues. SSH2 is more advanced and secure.
+
+## 5.2.14 Ensure SSH access is limited
+There are several options available to limit which users and group can access the system via SSH. It is recommended that at least one of the following options be leveraged:
+#### AllowUsers
+The `AllowUsers` variable gives the system administrator the option of allowing specific users to ssh into the system. The list consists of comma separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by only allowing the allowed users to log in from a particular host, the entry can be specified in the form of user@host.
+#### AllowGroups
+The `AllowGroups` variable gives the system administrator the option of allowing specific groups of users to ssh into the system. The list consists of comma separated group names. Numeric group IDs are not recognized with this variable.
+#### DenyUsers
+The `DenyUsers` variable gives the system administrator the option of denying specific users to ssh into the system. The list consists of comma separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by specifically denying a user's access from a particular host, the entry can be specified in the form of user@host.
+#### DenyGroups
+The `DenyGroups` variable gives the system administrator the option of denying specific groups of users to ssh into the system. The list consists of comma separated group names. Numeric group IDs are not recognized with this variable.
+
+Restricting which users can remotely access the system via SSH will help ensure that only authorized users access the system. This is very important but, is not done in Bailey.

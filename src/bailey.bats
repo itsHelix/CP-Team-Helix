@@ -165,7 +165,7 @@ filesystem_mounting_disabled_boolean() {
 
 # CIS 4.1.2: Ensure auditd service is enabled
 @test "Auditd service enabled" {
-  resault=`systemctl is-enabled auditd`
+  result=`systemctl is-enabled auditd`
   [ result -eq *enabled* ]
 }
 
@@ -179,7 +179,29 @@ filesystem_mounting_disabled_boolean() {
   if [[ $rsyslog_install != *No such* ]]; then
     systemctl is-enabled rsyslog >> temp.txt # enabled
     grep ^\$FileCreateMode /etc/rsyslog.conf >> temp.txt # 0640
+    result=`cat temp.txt`
+    [result -eq *enabled*0640*]
   else
     [ 1 -eq 1 ]
   fi
+}
+
+# CIS 5.1.1-7: Ensure permissions on /etc/cron._____ are configured
+file_config_cron_boolean() {
+  result=`stat $1`
+  [ result -eq *0600*0/*root*0/*root* ]
+}
+
+@test "crontab config cron" { [file_config_cron_boolean /etc/crontab] }
+@test "hourly config cron" { [file_config_cron_boolean /etc/cron.hourly] }
+@test "daily config cron" { [file_config_cron_boolean /etc/cron.daily] }
+@test "weekly config cron" { [file_config_cron_boolean /etc/cron.weekly] }
+@test "monthly config cron" { [file_config_cron_boolean /etc/cron.monthly] }
+@test "d config cron" { [file_config_cron_boolean /etc/cron.d] }
+
+# CIS 5.2: SSH Server Configuration
+@test "sshd file is set to presets" {
+  perfect_sshd=`cat ./presets/perfect_sshd`
+  result=`cat /etc/ssh/sshd_config`
+  [ result -eq perfect_sshd]
 }

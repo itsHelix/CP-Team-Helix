@@ -254,3 +254,29 @@ configure_rsyslog() {
     echo "Rsyslog is not installed"
   fi
 }
+
+# CIS: 5.1 ##############################################################
+
+file_config_cron() {
+  chown root:root $1
+  chmod og-rwx $1
+}
+
+crontab_config_cron() { file_config_cron /etc/crontab }
+hourly_config_cron() { file_config_cron /etc/cron.hourly }
+daily_config_cron() { file_config_cron /etc/cron.daily }
+weekly_config_cron() { file_config_cron /etc/cron.weekly }
+monthly_config_cron() { file_config_cron /etc/cron.monthly }
+d_config_cron() { file_config_cron /etc/cron.d }
+
+configure_cron() {
+  crontab_config_cron; hourly_config_cron; daily_config_cron; weekly_config_cron; monthly_config_cron; d_config_cron
+  systemctl enable crond
+}
+
+# CIS: 5.2 ##############################################################
+
+configure_ssh() {
+  cat ./presets/perfect_sshd > /etc/ssh/sshd_config
+  service sshd reload
+}
