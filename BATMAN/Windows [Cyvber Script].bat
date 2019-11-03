@@ -26,7 +26,7 @@ if %errorlevel%==0 (
 	cls
 ) else (
 	cls
-	echo No admin, please run with Administrative rights if you want to the script to work!
+	echo You are not an admin, please run with Administrative rights if you want to the script to work!
 	pause
   cls
   echo You have chose to run the script without Aministrative Rights, "Good Luck!"
@@ -457,9 +457,7 @@ IF /i %Breaks% EQU "Y" pause
 :AfterServerPol
 
 :Software
-if /I "%Software%" EQU "Y" (
-	PatchMyPc /s
-)
+if /I "%Software%" EQU "Y" PatchMyPc /s
 
 :Files
 if /I "%Files%" EQU "Y" (
