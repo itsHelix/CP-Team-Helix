@@ -204,6 +204,11 @@ enforce_apparmor_profiles() {
   aa-enforcce /etc/apparmor.d/*
 }
 
+# CIS 1.6.3: Ensure SELinux or AppArmor are installed
+install_mac_systems() {
+  apt-get install selinux apparmor
+}
+
 # CIS: 2.1 ##############################################################
 
 # CIS 2.1 inetd Services:

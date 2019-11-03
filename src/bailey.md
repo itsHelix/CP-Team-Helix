@@ -281,6 +281,13 @@ AppArmore profiles define what resources aspplications are able to access. Secur
 Testing:
 * `apparmor_status`: `*apparmor module is loaded*`
 
+## 1.6.3: Ensure SELinux or AppArmor are installed
+SELinux and AppArmor provide Mandatory Access Controls; without the system installed, only default DAC will be available.
+* `apt-get install selinux apparmor`
+
+Testing:
+* `dpkg -s selinux apparmor`
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:
