@@ -211,8 +211,6 @@ install_mac_systems() {
 
 # CIS: 1.7 ##############################################################
 
-# CIS 1.7.1: Command line warning banners
-
 # CIS 1.7.1.1: Ensure message of the day is configured properly
 motd_configured_properly() {
   sed -i `s/\m//g` /etc/motd
