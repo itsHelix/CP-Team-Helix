@@ -8,6 +8,7 @@ Bailey is the result of work done by countless people. Notable contributions are
 * [pyllyukko](https://github.com/pyllyukko) for his work on `user.js`, which is aliased in this work
 * [Tavin Turner](https://github.com/itsTurner) for his work on `telluride.sh`, `estes.sh`, `avon.sh`, and `Bailey`
 * [Ian](https://stackoverflow.com/users/11013589/cutwow475) [Boraks](https://github.com/Cutwow) for his work on `Bailey`
+* [Brinda Malik] (https://github.com/BrindaMal)for her work on `Bailey`
 
 # Ecosystem
 Like other hardening tools made by Helix in the past, Bailey's primary shell script is written in Bash. Unlike other hardening tools made by Helix in the past, Bailey takes advantage of two tools to liken development in shell to that in compile languages in order to promote devops and simplify production use. Notably, it uses [shc](https://github.com/neurobin/shc) to compile shell scripts into an executable and [bats](https://github.com/sstephenson/bats) for unit tests.
@@ -350,6 +351,8 @@ Testing:
 ## 4.1.4 Ensure events that modify date and time information are collected
 Sadly, Bailey is not set up to process this data. To do this, capture every time the date/time is being modified, which determines if the kernel clock, time of date, seconds, or clock set time have been executed, which will auto write to /var/log/audit.log with the identifier "time-change"
 
+## 4.1.5
+
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
 The `rsyslog` software is recommended as a replacement for the `syslogd` daemon and provides improvements over `syslogd`, such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server. Configuring advanced items is not done by Bailey as it is on a per system basis (4.2.1.2 Ensure logging is configured). You would want to configure logging because a great deal of important security-related information is sent via `rsyslog` (e.g., successful and failed su attempts, failed login attempts, root login attempts, etc.).
@@ -403,10 +406,10 @@ Testing:
 Unix-based systems support variable settings to control access to files. World writable files are the least secure. See the `chmod(2)` man page for more information. Data in world-writable files can be modified and compromised by any user on the system. World writable files may also indicate an incorrectly written script or program that could potentially be the cause of a larger compromise to the system's integrity. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
 ## 6.1.11: Ensure no unowned files or directories exist
-Sometimes when administrators delete users from the password file they neglect to remove all files owned by those users from the system. A new user who is assigned the deleted user's user ID or group ID may then end up “owning” these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+Sometimes when administrators delete users from the password file they neglect to remove all files owned by those users from the system. A new user who is assigned the deleted user's user ID or group ID may then end up ï¿½owningï¿½ these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
 ## 6.1.12: Ensure no ungrouped files or directories exist
-Sometimes when administrators delete users or groups from the system they neglect to remove all files owned by those users or groups. A new user who is assigned the deleted user's user ID or group ID may then end up “owning” these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+Sometimes when administrators delete users or groups from the system they neglect to remove all files owned by those users or groups. A new user who is assigned the deleted user's user ID or group ID may then end up ï¿½owningï¿½ these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
 ## 6.1.13: Audit SUID executables
 The owner of a file can set the file's permissions to run with the owner's or group's permissions, even if the user running the program is not the owner or a member of the group. The most common reason for a SUID program is to enable users to perform functions (such as changing their password) that require root privileges. There are valid reasons for SUID programs, but it is important to identify and review such programs to ensure they are legitimate. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
