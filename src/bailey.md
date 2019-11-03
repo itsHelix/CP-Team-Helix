@@ -8,7 +8,7 @@ Bailey is the result of work done by countless people. Notable contributions are
 * [pyllyukko](https://github.com/pyllyukko) for his work on `user.js`, which is aliased in this work
 * [Tavin Turner](https://github.com/itsTurner) for his work on `telluride.sh`, `estes.sh`, `avon.sh`, and `Bailey`
 * [Ian](https://stackoverflow.com/users/11013589/cutwow475) [Boraks](https://github.com/Cutwow) for his work on `Bailey`
-* [Brinda Malik] (https://github.com/BrindaMal)for her work on `Bailey`
+* [Brinda Malik](https://github.com/BrindaMal) for her work on `Bailey`
 
 # Ecosystem
 Like other hardening tools made by Helix in the past, Bailey's primary shell script is written in Bash. Unlike other hardening tools made by Helix in the past, Bailey takes advantage of two tools to liken development in shell to that in compile languages in order to promote devops and simplify production use. Notably, it uses [shc](https://github.com/neurobin/shc) to compile shell scripts into an executable and [bats](https://github.com/sstephenson/bats) for unit tests.
@@ -349,9 +349,10 @@ Testing:
 * `grep "^\s*linux" /boot/grub/grub.cfg`: audit=1
 
 ## 4.1.4 Ensure events that modify date and time information are collected
-Sadly, Bailey is not set up to process this data. To do this, capture every time the date/time is being modified, which determines if the kernel clock, time of date, seconds, or clock set time have been executed, which will auto write to /var/log/audit.log with the identifier "time-change"
+To do this, capture every time the date/time is being modified, which determines if the kernel clock, time of date, seconds, or clock set time have been executed, which will auto write to /var/log/audit.log with the identifier "time-change". Sadly, Bailey is not set up to process this data.
 
-## 4.1.5
+## 4.1.5 Ensure events that modify user/group information are collected
+This will record the events that affect the group, password, shadow, and gshadow. The parameters set will see if any files have been opened to write or have had permission changes to them with the identifier "identity". Sadly, Bailey is not set up to process this data. 
 
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
