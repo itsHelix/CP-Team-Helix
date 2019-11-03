@@ -144,6 +144,12 @@ filesystem_mounting_disabled_boolean() {
   [ result1 -ne "" ]
 }
 
+# Ensure Whoopsie is installed (no CIS)
+@test "ensure whoopsie is installed" {
+  result1=$(dpkg -s whoospie)
+  [ result1 -ne "" ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service
