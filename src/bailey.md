@@ -15,6 +15,11 @@ Like other hardening tools made by Helix in the past, Bailey's primary shell scr
 
 While some of Bailey is developed with references to previous scripts, the goal of the script is to promote reference to standardized hardening guides, notably CIS [Ubuntu Linux 16.04](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Ubuntu_16.pdf), [Ubuntu Linux 18.04](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Ubuntu_18.pdf), [Debian Linux 8](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Debian_8.pdf), [Apache HTTP Server 2.4](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Apache_2.4.pdf), and [Mozilla Firefox 38](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Firefox_38.pdf).
 
+Also, while developing this ecosystem we used some music to help:
+* [JoJos Bizarre Adventure Full OP 1-9](https://www.youtube.com/watch?v=rA4eesTbNKE)
+* [Kahoot Christmas Lobby Music 2017](https://www.youtube.com/watch?v=fRzddwmE_to&t=322s)
+* [lofi hip hop radio - beats to relax/study to](https://www.youtube.com/watch?v=hHW1oY26kxQ)
+
 ## Introduction to a `shc` environment
 ### Installing `shc`
 In an \*ubuntu environment, run the following commands with administrator priveliges:
