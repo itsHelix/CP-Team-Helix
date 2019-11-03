@@ -199,6 +199,11 @@ enable_apparmor_in_bootloader_configuration() {
   update-grub
 }
 
+# CIS 1.6.2.2: Ensure all AppArmor Profiles are enforcing
+enforce_apparmor_profiles() {
+  aa-enforcce /etc/apparmor.d/*
+}
+
 # CIS: 2.1 ##############################################################
 
 # CIS 2.1 inetd Services:

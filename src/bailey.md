@@ -274,7 +274,12 @@ Configure AppArmor to be enabled at boot time and verity that it has not been ov
 Testing:
 * `grep "^\s*linux" /boot/grub/grub.cfg`: N/A
 
-###
+### 1.6.2.2: Ensure all AppArmor profiles are enforcing
+AppArmore profiles define what resources aspplications are able to access. Security configuration requirements vary frm site to site. Some sites may mandate a policy that is stricter than the default policy, which is perfectly acceptable. This item is intended to ensure that any policies that exist on the system are activated.
+* Set all profiles to enforce mode
+
+Testing:
+* `apparmor_status`: `*apparmor module is loaded*`
 
 ## 2.1: inetd Services
 ### `disable_inetd_services`
