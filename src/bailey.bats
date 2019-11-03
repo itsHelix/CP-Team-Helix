@@ -120,7 +120,7 @@ filesystem_mounting_disabled_boolean() {
 
 # CIS 4.1.2: Ensure auditd service is enabled
 @test "Auditd service enabled" {
-  resault=`systemctl is-enabled auditd`
+  result=`systemctl is-enabled auditd`
   [ result -eq *enabled* ]
 }
 
@@ -134,6 +134,8 @@ filesystem_mounting_disabled_boolean() {
   if [[ $rsyslog_install != *No such* ]]; then
     systemctl is-enabled rsyslog >> temp.txt # enabled
     grep ^\$FileCreateMode /etc/rsyslog.conf >> temp.txt # 0640
+    result=`cat temp.txt`
+    [result -eq *enabled*0640*]
   else
     [ 1 -eq 1 ]
   fi
