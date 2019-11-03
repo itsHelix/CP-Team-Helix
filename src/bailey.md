@@ -371,3 +371,11 @@ The `DenyUsers` variable gives the system administrator the option of denying sp
 The `DenyGroups` variable gives the system administrator the option of denying specific groups of users to ssh into the system. The list consists of comma separated group names. Numeric group IDs are not recognized with this variable.
 
 Restricting which users can remotely access the system via SSH will help ensure that only authorized users access the system. This is very important but, is not done in Bailey.
+
+## 6.1.1: Audit system file permissions
+The Debian package manager has a number of useful options. One of these, the –verify option, can be used to verify that system packages are correctly installed. The –verify option can be used to verify a particular package or to verify all system packages. If no output is returned, the package is installed correctly. Sadly, Bailey is not set up to process this data. You will need to go in and run: `dpkg --verify`. Then you, the user, will need to go in and fix any problems that are happening with the packages.
+
+## 6.1.2-9: Ensure file permissions on `/etc/*` are configured
+The `/etc/*` files contain user information that is used by many system utilities and security applications and therefore must be readable for these utilities to operate. For each separate file that is listed, there is a different set of recommended settings. This can be completed by running:
+* `chown root:* /etc/*`
+* `chmod * /etc/*`
