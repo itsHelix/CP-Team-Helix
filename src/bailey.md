@@ -396,6 +396,12 @@ To do this, capture every time the date/time is being modified, which determines
 ## 4.1.5 Ensure events that modify user/group information are collected
 This will record the events that affect the group, password, shadow, and gshadow. The parameters set will see if any files have been opened to write or have had permission changes to them with the identifier "identity". Sadly, Bailey is not set up to process this data!
 
+## 4.1.6 Ensure events that modify the system's network environment are collected
+This records the changes to the network environment files, so files that affect the sethostname or setdomainname so it will write an audit event on the system files. This is important to monitor unauthorized changes to the host and domain name of the system which could break security parameters. Sadly, Bailey is not set up to process this data.
+
+## 4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected
+This monitors the SELinux/APPArmor access controls, which will see if there is any changes made to /etc/selinux or /etc/apparmor and the /etc/apparmor.d directories, which is important to see if there are any authorized changes made to modify the controls. Sadly, Bailey is not set up to process this data. 
+
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
 The `rsyslog` software is recommended as a replacement for the `syslogd` daemon and provides improvements over `syslogd`, such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server. Configuring advanced items is not done by Bailey as it is on a per system basis (4.2.1.2 Ensure logging is configured). You would want to configure logging because a great deal of important security-related information is sent via `rsyslog` (e.g., successful and failed su attempts, failed login attempts, root login attempts, etc.).
