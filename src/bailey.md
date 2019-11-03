@@ -419,13 +419,23 @@ This monitors the programs that required admin use to see if unauthorized users 
 ## 4.1.13 Ensure successful file system mounts are collected
 This monitors the use of the mount system call which controls the mounting and unmounting of file systems. This is to make sure that unauthorized users aren't mounting file systems because it will give the administrator access to see if any standard users are doing this. Sadly, Bailey is not set up to process this data.
 ## 4.1.14 Ensure file deletion events by users are collected
-This monitors any deletion/renaming of files and file attributions. This will log any instances of deletion or editing and will tag them with the identifier "delete." This is important to make sure that non-priviledged users aren't removing files or various file attributes. Sadly, Bailey is not set up to process this data.
+This monitors any deletion/renaming of files and file attributions. This will log any instances of deletion or editing and will tag them with the identifier "delete". This is important to make sure that non-priviledged users aren't removing files or various file attributes. Sadly, Bailey is not set up to process this data.
 
 ## 4.1.15 Ensure changes to the system administration scope (sudoers) is collected
-This monitors any changes to the system administration, because if it is configured properly to make sure that administrations have to log in first and then use sudo, then you can monitor any changes. This is through the file /etc/sudoers which records instances of this with the identifier "scope." Sadly, Bailey is not set up to process this data.
+This monitors any changes to the system administration, because if it is configured properly to make sure that administrations have to log in first and then use sudo, then you can monitor any changes. This is through the file /etc/sudoers which records instances of this with the identifier "scope". Sadly, Bailey is not set up to process this data.
 
 ## 4.1.16 Ensure system administrator actions (sudolog) are collected
 This monitors the sudo log file  through /var/log/sudo.log. So any time a command is executed, it will add to the file /var/log/sudo.log which is important to make sure that nothing is being tampered with, because any changes to the file will show that an administrator executed a command or it has been messed with. Sadly, Bailey is not set up to process this data.
+
+## 4.1.17 Ensure kernel module loading and unloading is collected
+This monitors the loading and unloading of the kernels, so it will use insmod, rmmod, and modprobe to control the loading/unloading of the modules. The system calls init_module and delete_module will cause an audit record with the identifier "modules". This is important to make sure that no unauthorized user is loading or unloading a kernel module, which would potentially endanger the security. Sadly, Bailey is not set up to process this data.
+
+## 4.1.18 Ensure the audit configuration is immutable
+This will set the system audit to make sure that the audit rules aren't able to be modified with auditctl. Adding "-e 2" will make it so that the audit is in immutable mode, so any audit changes can only be made on the system reboot. This is important because it will make sure that unauthorized users can't execute any changes to the audit system.
+* Add "-e 2" to the end of /etc/audit/audit.rules file
+
+Testing:
+*  `grep "^\s*[^#]" /etc/audit/audit.rules | tail -1 -e 2`
 
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
