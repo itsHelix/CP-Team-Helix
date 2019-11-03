@@ -324,6 +324,18 @@ Turn on the `auditd` daemon to record system events. The capturing of system eve
 Testing:
 * `systemctl is-enabled auditd`: enabled
 
+## 4.1.3 Ensure auditing for processes that start prior to auditd is enabled
+### `enable_auditd`
+Configuring grub is recommended to make sure that all the processes that can be audited are capable of being audited even if they are started up before the auditd startup. This is important because the audit events need to be on processes that start up prior to the auditd start up so that all malicious activity can be detected.
+* Edit /etc/default/grub and add audit=1 to make it `GRUB_CMDLINE_LINUX="audit=1"`
+* Update the grub2 configuration using `update-grub`
+
+Testing:
+* `grep "^\s*linux" /boot/grub/grub.cfg`: audit=1
+
+## 4.1.4 Ensure events that modify date and time information are collected
+Sadly, Bailey is not set up to process this data. To do this, capture every time the date/time is being modified, which determines if the kernel clock, time of date, seconds, or clock set time have been executed, which will auto write to /var/log/audit.log with the identifier "time-change"
+
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
 The `rsyslog` software is recommended as a replacement for the `syslogd` daemon and provides improvements over `syslogd`, such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server. Configuring advanced items is not done by Bailey as it is on a per system basis (4.2.1.2 Ensure logging is configured). You would want to configure logging because a great deal of important security-related information is sent via `rsyslog` (e.g., successful and failed su attempts, failed login attempts, root login attempts, etc.).
