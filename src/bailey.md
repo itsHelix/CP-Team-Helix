@@ -8,12 +8,21 @@ Bailey is the result of work done by countless people. Notable contributions are
 * [pyllyukko](https://github.com/pyllyukko) for his work on `user.js`, which is aliased in this work
 * [Tavin Turner](https://github.com/itsTurner) for his work on `telluride.sh`, `estes.sh`, `avon.sh`, and `Bailey`
 * [Ian](https://stackoverflow.com/users/11013589/cutwow475) [Boraks](https://github.com/Cutwow) for his work on `Bailey`
+<<<<<<< HEAD
 * [Brinda Malik](https://github.com/BrindaMal) for her work on `Bailey`
+=======
+* [Brinda Malik](https://github.com/BrindaMal) for her work on `Bailey`.
+>>>>>>> cd930c75857632cff1bc20db54f2d6712689cdc8
 
 # Ecosystem
 Like other hardening tools made by Helix in the past, Bailey's primary shell script is written in Bash. Unlike other hardening tools made by Helix in the past, Bailey takes advantage of two tools to liken development in shell to that in compile languages in order to promote devops and simplify production use. Notably, it uses [shc](https://github.com/neurobin/shc) to compile shell scripts into an executable and [bats](https://github.com/sstephenson/bats) for unit tests.
 
 While some of Bailey is developed with references to previous scripts, the goal of the script is to promote reference to standardized hardening guides, notably CIS [Ubuntu Linux 16.04](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Ubuntu_16.pdf), [Ubuntu Linux 18.04](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Ubuntu_18.pdf), [Debian Linux 8](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Debian_8.pdf), [Apache HTTP Server 2.4](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Apache_2.4.pdf), and [Mozilla Firefox 38](https://github.com/Cutwow/CPXII-Team-Helix/blob/master/CIS%20Benchmarks/Firefox_38.pdf).
+
+Also, while developing this ecosystem we used some music to help:
+* [JoJos Bizarre Adventure Full OP 1-9](https://www.youtube.com/watch?v=rA4eesTbNKE)
+* [Kahoot Christmas Lobby Music 2017](https://www.youtube.com/watch?v=fRzddwmE_to&t=322s)
+* [lofi hip hop radio - beats to relax/study to](https://www.youtube.com/watch?v=hHW1oY26kxQ)
 
 ## Introduction to a `shc` environment
 ### Installing `shc`
@@ -303,6 +312,43 @@ Testing:
 ### 1.7.1.2-1.7.1.6
 Specifies 1.7.1.1-like configuration for `/etc/issue`, et cetera. These are not implemented because it is not relevant to the Cyber Patriot competition.
 
+## 1.7.2: Ensure GDM login banner is configured
+GDM is the GNOME Display Manager which handles graphical login for GNOME based systems. Warning messages inform users who are attemptint to login to the system of their legal status regarding the ysstem and must include the name of the organization that owns the system and any monitoring policies that are in place.
+* Create the `/etc/dconf/profile/gdm` with the followign contents:
+```
+user-db:user
+system-db:gdm
+file-db:/usr/share/gdm/greeter-dconf-defaults
+```
+* Create or edit the `banner-message-enable` and `banner-message-text` options in `/etc/dconf/db/gdm.d/01-banner-message`:
+```
+[org/gnome/login-screen]
+banner-message-enable=true
+banner-message-text='Authorized uses only. ALl activity may be monitored and reported'
+```
+* Update the system databases: `dconf update`
+
+Testing:
+* Verify that `/etc/dconf/profile/gdm` exists and contains the following:
+```
+user-db:user
+system-dm:gdm
+file-db:/usr/share/gdm/greeter-dconf-defaults
+```
+* Verify that the `banner-message-enable` and `banner-message-text` options are configured in one of the files in the `/etc/dconf/db/gdm.d/` (`/etc/dconf/db/gdm.d/01-banner-message`) directory:
+```
+[org/gnome/login-screen]
+banner-message-enable=true
+banner-message-test='<banner message>'
+```
+
+## 1.8: Ensure update, patches, and additional security software are installed
+Periodically patches are released for included software either due to security flaws or to include additional functionality. Newer patches may contain security enhancements that would not be available through the latest full update. As a result, it is recommended that the latest software patches be used to take advantage of the latest functionaliy. As with any software installation, organizations need to determine if a given update meets their requirements and verify the compatibility and supportability of any additional software against the update revision that is selected.
+* `apt-get update && apt-get upgrade`
+
+Testing:
+* `apt-get -s upgrade`
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:
@@ -352,7 +398,7 @@ Testing:
 To do this, capture every time the date/time is being modified, which determines if the kernel clock, time of date, seconds, or clock set time have been executed, which will auto write to /var/log/audit.log with the identifier "time-change". Sadly, Bailey is not set up to process this data.
 
 ## 4.1.5 Ensure events that modify user/group information are collected
-This will record the events that affect the group, password, shadow, and gshadow. The parameters set will see if any files have been opened to write or have had permission changes to them with the identifier "identity". Sadly, Bailey is not set up to process this data. 
+This will record the events that affect the group, password, shadow, and gshadow. The parameters set will see if any files have been opened to write or have had permission changes to them with the identifier "identity". Sadly, Bailey is not set up to process this data!
 
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
@@ -406,6 +452,10 @@ Testing:
 ## 6.1.10: Ensure no world writable files exist
 Unix-based systems support variable settings to control access to files. World writable files are the least secure. See the `chmod(2)` man page for more information. Data in world-writable files can be modified and compromised by any user on the system. World writable files may also indicate an incorrectly written script or program that could potentially be the cause of a larger compromise to the system's integrity. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
+<<<<<<< HEAD
+## 6.1.11
+Sometimes when administrators delete users from the password file they neglect to remove all files owned by those users from the system. A new user who is assigned the deleted user's user ID or group ID may then end up �owning� these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+=======
 ## 6.1.11: Ensure no unowned files or directories exist
 Sometimes when administrators delete users from the password file they neglect to remove all files owned by those users from the system. A new user who is assigned the deleted user's user ID or group ID may then end up �owning� these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
@@ -417,3 +467,4 @@ The owner of a file can set the file's permissions to run with the owner's or gr
 
 ## 6.1.14: Audit SGID executables
 The owner of a file can set the file's permissions to run with the owner's or group's permissions, even if the user running the program is not the owner or a member of the group. The most common reason for a SGID program is to enable users to perform functions (such as changing their password) that require root privileges. There are valid reasons for SGID programs, but it is important to identify and review such programs to ensure they are legitimate. Review the files returned by the action in the audit section and check to see if system binaries have a different md5 checksum than what from the package. This is an indication that the binary may have been replaced. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+>>>>>>> 9ad898fea7f630332f5048e6d6d0cddb5480e72e
