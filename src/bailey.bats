@@ -165,6 +165,12 @@ filesystem_mounting_disabled_boolean() {
   [ result1 -eq expected1 && result2 -eq expected2 ]
 }
 
+# CIS 1.8: Ensure updates, patches, and additional security software are installed
+@test "updates" {
+  result1=$(apt-get -s upgrade)
+  [ result -eq "" ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service

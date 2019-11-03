@@ -228,6 +228,11 @@ configure_gdm_login_banner() {
   dconf update
 }
 
+# CIS 1.8: Ensure update, patches, and additional security software are installed
+updates() {
+  apt-get update && apt-get upgrade
+}
+
 # CIS: 2.1 ##############################################################
 
 # CIS 2.1 inetd Services:

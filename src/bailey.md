@@ -332,6 +332,13 @@ banner-message-enable=true
 banner-message-test='<banner message>'
 ```
 
+## 1.8: Ensure update, patches, and additional security software are installed
+Periodically patches are released for included software either due to security flaws or to include additional functionality. Newer patches may contain security enhancements that would not be available through the latest full update. As a result, it is recommended that the latest software patches be used to take advantage of the latest functionaliy. As with any software installation, organizations need to determine if a given update meets their requirements and verify the compatibility and supportability of any additional software against the update revision that is selected.
+* `apt-get update && apt-get upgrade`
+
+Testing:
+* `apt-get -s upgrade`
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:
