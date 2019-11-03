@@ -240,6 +240,43 @@ To get the effects of SELinux, it must be enabled at boot time and verify that i
 Testing:
 * `grep "^\s*linux" /boot/grub/grub.cfg`: N/A
 
+### 1.6.1.2: Ensure the SELinux state is enforcing
+Set SELinux to enable when the system is booted.
+* Edit `/etc/selinux/config` to set the parameter `SELINUX=enforcing`
+
+Testing:
+* `grep SELINUX=enforcing /etc/selinux/config`: `SELINUX=enforcing`
+
+### 1.6.1.3: Ensure SELinux poly is configured
+Confgure SELinux to meet or exceed the default targeted polycy, which constrains daemons and system software only.
+* Edit `etc/selinux/config` to set the parameter `SELINUXTYPE=ubuntu`
+
+Testing:
+* `grep SELINUXTYPE= /etc/selinux/config`: `SELINUXTYPE=ubuntu`
+* `sestatus`: `policy from config file: ubuntu`
+
+### 1.6.1.4: Ensure no unconfined daemons exist
+Daemons that are not defined in SELinux policy will inherit the security context of their parent process. Since daemons are launched and descend form the `init` process, they will inherit the security context labvel `initrc_t`. This could cause the unintended consequence of giving the process more persmission than it requires.
+This suggestion is intentionally unimplemented because it could allow for confusion on the nature of certain daemons, potentitally destroying vital processes.
+* Investigate any unconfined daemons found during the audit action. They may need to have an existing security context assigned to htem or a policy built for them.
+
+Testing:
+* `ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'`: N/A
+
+## 1.6.2: Configure AppArmor
+AppArmor provides a Mandatory Access Control (MAC) system that greatly augments the default Discretionary Access Control (DAC) model. Under AppArmor MAC rules are applied by file paths instead of by security contexts as in other MAC systems. As such it does not require support in the filesystem and can be applied to network mounted filesystems for example. AppArmor security policies define what system resources applications can access and what privileges they can do so with. This automatically limits the damage that the software can do to files accessible by the calling user. The user does not need to take any action to gain this benefit. For an action to occur, both the traditional DAC permissions must be satisfied as well as the AppArmor MAC rules. The action will not be allowed if either one of these models does not permit the action. In this way, AppArmor rules can only make a system's permissions more restrictive and secure.
+
+### 1.6.2.1: Ensure AppArmor is not disabled in bootloader configuration
+Configure AppArmor to be enabled at boot time and verity that it has not been overwritten by the bootloader boot parameters. AppArmor must be enabled at boot time in your bootloader configuration to ensure that the controls it provides are not overridden.
+* Edit /etc/default/grub and remove all instances of `apparmor=0`: ```
+GRUB_CMDLINE_LINUX_DEFAULT="quiet"
+GRUB_CMDLINE_LINUX=""
+```
+* Update the grub2 configuration.
+
+Testing:
+* `grep "^\s*linux" /boot/grub/grub.cfg`: N/A
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:

@@ -180,6 +180,25 @@ enable_selinux_in_bootloader_configuration() {
   update-grub
 }
 
+# CIS 1.6.1.2: Ensure the SELinux state is enforcing
+enforcing_selinux_state() {
+  echo "SELINUX=enforcing" >> /etc/selinux/config
+}
+
+# CIS 1.6.1.3: Ensure SELinux policy is configured
+configure_selinux_policy() {
+  echo "SELINUXTYPE=ubuntu" >> /etc/selinux/config
+}
+
+# CIS 1.6.2: Configure AppArmor
+
+# CIS 1.6.2.1: Ensure AppArmor is not disabled in bootloader configuration
+enable_apparmor_in_bootloader_configuration() {
+  sed- i `s/apparmor=0//g` /etc/default/grub
+  echo -e "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\nGRUB_CMDLINE_LINUX=\"\"" >> /etc/default/grub
+  update-grub
+}
+
 # CIS: 2.1 ##############################################################
 
 # CIS 2.1 inetd Services:

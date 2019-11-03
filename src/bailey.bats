@@ -115,6 +115,24 @@ filesystem_mounting_disabled_boolean() {
   [ result1 -eq "" ]
 }
 
+# CIS 1.6.1.2: Ensure the SELinux state is enforcing
+@test "ensure selinux state is enforcing" {
+  result1=$(grep SELINUX=enforcing /etc/selinux/config)
+}
+
+# CIS 1.6.1.3: Ensure SELinux policy is configured
+@test "selinux policy is configured" {
+  result1=$(grep SELINUXTYPE= /etc/selinux/config)
+  result2=$(sestatus)
+  [ result1 -eq "SELINUXTYPE=ubuntu" && result2 -eq *ubuntu* ]
+}
+
+# CIS 1.6.2.1: Ensure AppArmor is not disabled in bootloader configuration
+@test "no `apparmor=0` in linux lines" {
+  result1=$(grep "^\s*linux" /boot/grub/grub.cfg)
+  [ result1 -eq "" ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service
