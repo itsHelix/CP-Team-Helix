@@ -228,3 +228,18 @@ file_config_cron_boolean() {
   result=`cat /etc/ssh/sshd_config`
   [ result -eq perfect_sshd]
 }
+
+# CIS 6.1: File permissions
+configuring_file_permissions_boolean() {
+  result=`stat $1`
+  [ result -eq *$2*0/*root*0/*$3* ]
+}
+
+@test "passwd_config" {configuring_file_permissions_boolean /etc/passwd 0644 root}
+@test "shadow_config" {configuring_file_permissions_boolean /etc/shadow 0640 shadow}
+@test "group_config" {configuring_file_permissions_boolean /etc/group 0644 root}
+@test "gshadow_config" {configuring_file_permissions_boolean /etc/gshadow 0640 shadow}
+@test "passwd-_config" {configuring_file_permissions_boolean /etc/passwd- 0600 root}
+@test "shadow-_config" {configuring_file_permissions_boolean /etc/shadow- 0600 root}
+@test "group-_config" {configuring_file_permissions_boolean /etc/group- 0600 root}
+@test "gshadow-_config" {configuring_file_permissions_boolean /etc/gshadow- 0600 root}

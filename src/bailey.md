@@ -357,7 +357,7 @@ Testing:
 * `stat /etc/cron.*`: Access: (0600/-rw-------) Uid: ( 0/ root) Gid: ( 0/ root)
 
 ## 5.1.8: Ensure at/cron is restricted to authorized users
-In this section we configure `/etc/cron.allow` and `/etc/at.allow` to allow specific users to use these services. If `/etc/cron.allow` or `/etc/at.allow` do not exist, then `/etc/at.deny` and `/etc/cron.deny` are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in `/etc/cron.allow` and `/etc/at.allow` are allowed to use at and cron. Note that even though a given user is not listed in `cron.allow`, cron jobs can still be run as that user. The `cron.allow` file only controls administrative access to the crontab command for scheduling and modifying cron jobs. On many systems, only the system administrator is authorized to schedule cron jobs. Using the `cron.allow` file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files. This task is not completed in Bailey as it is specific for what admins a system network has
+In this section we configure `/etc/cron.allow` and `/etc/at.allow` to allow specific users to use these services. If `/etc/cron.allow` or `/etc/at.allow` do not exist, then `/etc/at.deny` and `/etc/cron.deny` are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in `/etc/cron.allow` and `/etc/at.allow` are allowed to use at and cron. Note that even though a given user is not listed in `cron.allow`, cron jobs can still be run as that user. The `cron.allow` file only controls administrative access to the crontab command for scheduling and modifying cron jobs. On many systems, only the system administrator is authorized to schedule cron jobs. Using the `cron.allow` file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files. This task is not completed in Bailey as it is specific for what admins a system network has.
 
 ## 5.2.1-15 (excluding 5.2.14): Ensure SSH settings are setup in a secure manner
 SSH supports two different and incompatible protocols: SSH1 and SSH2. SSH1 was the original protocol and was subject to security issues. SSH2 is more advanced and secure.
@@ -379,6 +379,16 @@ Restricting which users can remotely access the system via SSH will help ensure 
 The Debian package manager has a number of useful options. One of these, the ï¿½verify option, can be used to verify that system packages are correctly installed. The ï¿½verify option can be used to verify a particular package or to verify all system packages. If no output is returned, the package is installed correctly. Sadly, Bailey is not set up to process this data. You will need to go in and run: `dpkg --verify`. Then you, the user, will need to go in and fix any problems that are happening with the packages.
 
 ## 6.1.2-9: Ensure file permissions on `/etc/*` are configured
+### `configuring_file_permissions`
 The `/etc/*` files contain user information that is used by many system utilities and security applications and therefore must be readable for these utilities to operate. For each separate file that is listed, there is a different set of recommended settings. This can be completed by running:
 * `chown root:* /etc/*`
 * `chmod * /etc/*`
+
+Testing:
+* `stat /etc/*`: `Access: (*) Uid: ( 0/ root) Gid: ( 0/ *)`
+
+## 6.1.10
+Unix-based systems support variable settings to control access to files. World writable files are the least secure. See the `chmod(2)` man page for more information. Data in world-writable files can be modified and compromised by any user on the system. World writable files may also indicate an incorrectly written script or program that could potentially be the cause of a larger compromise to the system's integrity. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+
+## 6.1.11
+Sometimes when administrators delete users from the password file they neglect to remove all files owned by those users from the system. A new user who is assigned the deleted user's user ID or group ID may then end up “owning” these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
