@@ -156,6 +156,15 @@ filesystem_mounting_disabled_boolean() {
   [ result1 -eq "" ]
 }
 
+# CIS 1.7.2: Ensure GDM login banner is configured
+@test "ensure gdm login banner is configured" {
+  result1=$(cat /etc/dconf/profile/gdm)
+  result2=$(cat /etc/dconf/db/gdm.d)
+  expected1=$(echo -e "user-db:user\nsystem-db:dgm\nfile-db:/usr/share/greeter-dconf/defaults")
+  expected2=$(echo -e "[org/gnome-login-screen]\nbanner-message-enabled=true\nbanner-message-text='Authorized uses only. All activity may be monitored and reported'")
+  [ result1 -eq expected1 && result2 -eq expected2 ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service

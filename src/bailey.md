@@ -302,6 +302,36 @@ Testing:
 ### 1.7.1.2-1.7.1.6
 Specifies 1.7.1.1-like configuration for `/etc/issue`, et cetera. These are not implemented because it is not relevant to the Cyber Patriot competition.
 
+## 1.7.2: Ensure GDM login banner is configured
+GDM is the GNOME Display Manager which handles graphical login for GNOME based systems. Warning messages inform users who are attemptint to login to the system of their legal status regarding the ysstem and must include the name of the organization that owns the system and any monitoring policies that are in place.
+* Create the `/etc/dconf/profile/gdm` with the followign contents:
+```
+user-db:user
+system-db:gdm
+file-db:/usr/share/gdm/greeter-dconf-defaults
+```
+* Create or edit the `banner-message-enable` and `banner-message-text` options in `/etc/dconf/db/gdm.d/01-banner-message`:
+```
+[org/gnome/login-screen]
+banner-message-enable=true
+banner-message-text='Authorized uses only. ALl activity may be monitored and reported'
+```
+* Update the system databases: `dconf update`
+
+Testing:
+* Verify that `/etc/dconf/profile/gdm` exists and contains the following:
+```
+user-db:user
+system-dm:gdm
+file-db:/usr/share/gdm/greeter-dconf-defaults
+```
+* Verify that the `banner-message-enable` and `banner-message-text` options are configured in one of the files in the `/etc/dconf/db/gdm.d/` (`/etc/dconf/db/gdm.d/01-banner-message`) directory:
+```
+[org/gnome/login-screen]
+banner-message-enable=true
+banner-message-test='<banner message>'
+```
+
 ## 2.1: inetd Services
 ### `disable_inetd_services`
 inetd is a super-server daemon that provides internet services and passes connections to configured services. While not commonly used inetd and any unneeded inetd based services should be disabled if possible. To fix this we run:
@@ -391,4 +421,4 @@ Testing:
 Unix-based systems support variable settings to control access to files. World writable files are the least secure. See the `chmod(2)` man page for more information. Data in world-writable files can be modified and compromised by any user on the system. World writable files may also indicate an incorrectly written script or program that could potentially be the cause of a larger compromise to the system's integrity. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
 ## 6.1.11
-Sometimes when administrators delete users from the password file they neglect to remove all files owned by those users from the system. A new user who is assigned the deleted user's user ID or group ID may then end up “owning” these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+Sometimes when administrators delete users from the password file they neglect to remove all files owned by those users from the system. A new user who is assigned the deleted user's user ID or group ID may then end up ï¿½owningï¿½ these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.

@@ -221,6 +221,13 @@ motd_configured_properly() {
   sed -i `s/\v//g` /etc/motd
 }
 
+# CIS 1.7.2: Ensure GDM login banner is configured
+configure_gdm_login_banner() {
+  echo -e "user-db:user\nsystem-db:dgm\nfile-db:/usr/share/greeter-dconf/defaults" > /etc/dconf/profile/gdm
+  echo -e "[org/gnome-login-screen]\nbanner-message-enabled=true\nbanner-message-text='Authorized uses only. All activity may be monitored and reported'" > /etc/dconf/db/gdm.d/01-banner-message
+  dconf update
+}
+
 # CIS: 2.1 ##############################################################
 
 # CIS 2.1 inetd Services:
