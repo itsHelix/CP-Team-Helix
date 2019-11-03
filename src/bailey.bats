@@ -144,3 +144,18 @@ filesystem_mounting_disabled_boolean() {
   resault=`systemctl is-enabled auditd`
   [ result -eq *enabled* ]
 }
+
+
+
+
+
+# CIS 4.2.1: Configure rsyslog
+@test "Rsylog is configured" {
+  rsyslog_install=`systemctl is-enabled rsyslog`
+  if [[ $rsyslog_install != *No such* ]]; then
+    systemctl is-enabled rsyslog >> temp.txt # enabled
+    grep ^\$FileCreateMode /etc/rsyslog.conf >> temp.txt # 0640
+  else
+    [ 1 -eq 1 ]
+  fi
+}

@@ -206,3 +206,20 @@ disable_special_purpose_services() {
 enable_auditd() {
   systemctl enable auditd
 }
+
+# CIS: 4.2 ##############################################################
+
+# CIS: 4.2.1 Configure rsyslog
+
+configure_rsyslog() {
+  rsyslog_install=`systemctl is-enabled rsyslog`
+  rsyslog_FCM=`grep ^\$FileCreateMode /etc/rsyslog.conf`
+
+  if [[ $rsyslog_install != *No such* ]]; then
+    systemctl enable rsyslog # Making sure the rsyslog ser. is enabled (4.2.1.1)
+    sed -i 's/$rsyslog_FCM/$FileCreateMode 0640/g' /etc/rsyslog.conf # Ensure rsyslog default file permissions configured (4.2.1.3)
+    
+  else
+    echo "Rsyslog is not installed"
+  fi
+}

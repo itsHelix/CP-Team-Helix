@@ -254,6 +254,9 @@ Mail Transfer Agents (MTA), such as `sendmail` and `Postfix`, are used to listen
 * If there is a problem, you will need to edit `/etc/postfix/main.cf` and add the line `inet_interfaces = localhost` to the RECEIVING MAIL `section`. If the line already exists, change it so it looks like the line above.
 * Then restart postfix: `service postfix restart`
 
+## 4.1.1: Configure Data Retention
+When auditing, it is important to carefully configure the storage requirements for audit logs. By default, auditd will max out the log files at 5MB and retain only 4 copies of them. Older versions will be deleted. It is possible on a system that the 20 MBs of audit logs may fill up the system causing loss of audit data. While the recommendations here provide guidance, check your site policy for audit storage requirements. This is not done in Bailey as it will have to be done on a machine/network basis.
+
 ## 4.1.2: Ensure auditd service is enabled
 ### `enable_auditd`
 Turn on the `auditd` daemon to record system events. The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring. To fix this we run:
@@ -261,3 +264,10 @@ Turn on the `auditd` daemon to record system events. The capturing of system eve
 
 Testing:
 * `systemctl is-enabled auditd`: enabled
+
+## 4.2.1 Configure `rsyslog`
+### `configure_rsyslog`
+The `rsyslog` software is recommended as a replacement for the `syslogd` daemon and provides improvements over `syslogd`, such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server. Configuring advanced items is not done by Bailey as it is on a per system basis (4.2.1.2 Ensure logging is configured). You would want to configure logging because a great deal of important security-related information is sent via `rsyslog` (e.g., successful and failed su attempts, failed login attempts, root login attempts, etc.).
+We also edit `/etc/rsyslog.conf` so that the `FileCrateMode` is set to `0640` or more restrictive. This is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected.
+Another important item to complete is setting up a remote log host. The `rsyslog` utility supports the ability to send logs it gathers to a remote log host running `syslogd(8)` or to receive messages from remote hosts, reducing administrative overhead. Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system. But, Bailey dose not provide this service as we can't automatically identify your remote host name [or if you even have one] (4.2.1.4 Ensure `rsyslog` is configured to send logs to a remote log host).
+For the same reasons above Bailey doesn't complete `4.2.1.5`: Ensure remote `rsyslog` messages are only accepted on designated log hosts). But, this is still an important step because completing `4.2.1.5` ensures that remote log hosts are configured to only accept `rsyslog` data from hosts within the specified domain and that those systems that are not designed to be log hosts do not accept any remote `rsyslog` messages. This provides protection from spoofed log data and ensures that system administrators are reviewing reasonably complete syslog data in a central location.
