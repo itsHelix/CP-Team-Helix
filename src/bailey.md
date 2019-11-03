@@ -10,9 +10,6 @@ Bailey is the result of work done by countless people. Notable contributions are
 * [Ian](https://stackoverflow.com/users/11013589/cutwow475) [Boraks](https://github.com/Cutwow) for his work on `Bailey`
 <<<<<<< HEAD
 * [Brinda Malik](https://github.com/BrindaMal) for her work on `Bailey`
-=======
-* [Brinda Malik](https://github.com/BrindaMal) for her work on `Bailey`.
->>>>>>> cd930c75857632cff1bc20db54f2d6712689cdc8
 
 # Ecosystem
 Like other hardening tools made by Helix in the past, Bailey's primary shell script is written in Bash. Unlike other hardening tools made by Helix in the past, Bailey takes advantage of two tools to liken development in shell to that in compile languages in order to promote devops and simplify production use. Notably, it uses [shc](https://github.com/neurobin/shc) to compile shell scripts into an executable and [bats](https://github.com/sstephenson/bats) for unit tests.
