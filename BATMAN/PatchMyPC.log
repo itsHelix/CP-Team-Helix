@@ -28,3 +28,64 @@
 10/28/2019 7:00:19 PM - Downloading: https://patchmypc.com/freeupdater/applications/taskschedulerv4.0/Microsoft.Win32.TaskScheduler.dll to C:\Users\Ian\AppData\Roaming\PatchMyPC\Microsoft.Win32.TaskScheduler.dll
 10/28/2019 7:00:20 PM - Running: C:\Users\Ian\AppData\Roaming\PatchMyPC\gacutil.exe /i C:\Users\Ian\AppData\Roaming\PatchMyPC\Microsoft.Win32.TaskScheduler.dll
 10/28/2019 7:18:32 PM - CCleaner 5.47 | Latest: 5.63
+10/31/2019 5:35:00 PM - Patch My PC Started
+10/31/2019 5:35:00 PM - Checking connection to patchmypc.com
+10/31/2019 5:35:00 PM - Verified connection to patchmypc.com. Status Code: 200
+10/31/2019 5:35:00 PM - Getting latest definitions from patchmypc.com
+10/31/2019 5:35:01 PM - Definition load completed in: 0.47 seconds
+10/31/2019 5:35:01 PM - Patch My PC version 4.1.0.3 is running. The latest is 4.1.0.3
+10/31/2019 5:35:01 PM - Performing scan of installed applications
+10/31/2019 5:35:01 PM - CCleaner 5.47 | Latest: 5.63
+10/31/2019 5:35:02 PM - Scan completed in: 1.01 seconds
+10/31/2019 5:35:47 PM - CCleaner 5.47 | Latest: 5.63
+10/31/2019 5:36:29 PM - Patch My PC 4.1.0.3 | Definitions: 31-Oct-2019 | 10/31/2019 5:36:29 PM
+
+10/31/2019 5:36:30 PM - OS: Microsoft Windows 10 Pro x64
+
+10/31/2019 5:36:30 PM - 22 App(s) to install or update...
+10/31/2019 5:36:30 PM - Download URL: http://fpdownload.adobe.com/get/flashplayer/pdc/32.0.0.270/install_flash_player.exe
+10/31/2019 5:36:30 PM - Download Path: C:\PatchMyPCUpdates\Adobe Flash NPAPI 32.0.0.270.exe
+10/31/2019 5:36:30 PM - Download size: 20.33 MB
+10/31/2019 5:36:30 PM - Download Starting for: http://fpdownload.adobe.com/get/flashplayer/pdc/32.0.0.270/install_flash_player.exe
+10/31/2019 5:36:30 PM - Downloading Adobe Flash NPAPI 32.0.0.270 (20.33 MB)
+10/31/2019 5:36:33 PM - Total download time in seconds: 3.23
+10/31/2019 5:36:33 PM - Install Command: -install
+10/31/2019 5:36:33 PM - Adobe Flash NPAPI 32.0.0.270 Downloaded Successfully
+10/31/2019 5:36:33 PM - Installing Adobe Flash NPAPI 32.0.0.270 Silently
+10/31/2019 5:36:49 PM - Install Successful for Adobe Flash NPAPI 32.0.0.270
+
+10/31/2019 5:36:49 PM - Deleted file: C:\PatchMyPCUpdates\Adobe Flash NPAPI 32.0.0.270.exe
+10/31/2019 5:36:50 PM - Download URL: https://javadl.oracle.com/webapps/download/AutoDL?BundleId=240726_5b13a193868b4bf28bcb45c792fce896
+10/31/2019 5:36:51 PM - Download Path: C:\PatchMyPCUpdates\Java 8 Update 231 (x86).exe
+10/31/2019 5:36:51 PM - Download size: 64.93 MB
+10/31/2019 5:36:51 PM - Download Starting for: https://javadl.oracle.com/webapps/download/AutoDL?BundleId=240726_5b13a193868b4bf28bcb45c792fce896
+10/31/2019 5:36:51 PM - Downloading Java 8 Update 231 (x86) (64.93 MB)
+10/31/2019 5:38:43 PM - Total download time in seconds: 112.44
+10/31/2019 5:38:43 PM - Install Command: /s REMOVEOUTOFDATEJRES=1
+10/31/2019 5:38:43 PM - Java 8 Update 231 (x86) Downloaded Successfully
+10/31/2019 5:38:43 PM - Installing Java 8 Update 231 (x86) Silently
+10/31/2019 5:42:04 PM - Install Successful for Java 8 Update 231 (x86)
+
+10/31/2019 5:42:04 PM - Deleted file: C:\PatchMyPCUpdates\Java 8 Update 231 (x86).exe
+10/31/2019 5:42:04 PM - Download URL: https://javadl.oracle.com/webapps/download/AutoDL?BundleId=240728_5b13a193868b4bf28bcb45c792fce896
+10/31/2019 5:42:05 PM - Download Path: C:\PatchMyPCUpdates\Java 8 Update 231 (x64).exe
+10/31/2019 5:42:05 PM - Download size: 72.8 MB
+10/31/2019 5:42:05 PM - Download Starting for: https://javadl.oracle.com/webapps/download/AutoDL?BundleId=240728_5b13a193868b4bf28bcb45c792fce896
+10/31/2019 5:42:05 PM - Downloading Java 8 Update 231 (x64) (72.8 MB)
+10/31/2019 5:44:38 PM - Total download time in seconds: 153.39
+10/31/2019 5:44:38 PM - Install Command: /s REMOVEOUTOFDATEJRES=1
+10/31/2019 5:44:38 PM - Java 8 Update 231 (x64) Downloaded Successfully
+10/31/2019 5:44:38 PM - Installing Java 8 Update 231 (x64) Silently
+10/31/2019 5:46:45 PM - Install Successful for Java 8 Update 231 (x64)
+
+10/31/2019 5:46:45 PM - Deleted file: C:\PatchMyPCUpdates\Java 8 Update 231 (x64).exe
+10/31/2019 5:46:45 PM - Download URL: https://download.visualstudio.microsoft.com/download/pr/7afca223-55d2-470a-8edc-6a1739ae3252/abd170b4b0ec15ad0222a809b761a036/ndp48-x86-x64-allos-enu.exe
+10/31/2019 5:46:46 PM - Download Path: C:\PatchMyPCUpdates\Microsoft .NET Framework 4.8.0.exe
+10/31/2019 5:46:46 PM - Download size: 69.35 MB
+10/31/2019 5:46:46 PM - Downloading Microsoft .NET Framework 4.8.0 (69.35 MB)
+10/31/2019 5:46:46 PM - Download Starting for: https://download.visualstudio.microsoft.com/download/pr/7afca223-55d2-470a-8edc-6a1739ae3252/abd170b4b0ec15ad0222a809b761a036/ndp48-x86-x64-allos-enu.exe
+10/31/2019 5:46:55 PM - Total download time in seconds: 8.86
+10/31/2019 5:46:55 PM - Install Command: /q /norestart
+10/31/2019 5:46:55 PM - Microsoft .NET Framework 4.8.0 Downloaded Successfully
+10/31/2019 5:46:55 PM - Installing Microsoft .NET Framework 4.8.0 Silently
+10/31/2019 5:49:42 PM - Cancelling update process please wait...
