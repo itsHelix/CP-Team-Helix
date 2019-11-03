@@ -413,6 +413,11 @@ This monitors changes to the file permissions or other attributes of the file, w
 ## 4.1.11 Ensure unsuccessful unauthorized file access attempts are collected
 This monitors any unsuccessful attempts to access various files. This is important to make sure that only authorized users are getting into the files, and if there are failed instances of this, that could mean that someone who is unauthorized is trying to gain access to the system. Sadly, Bailey is not set up to process this data.
 
+## 4.1.12 Ensure use of privileged commands is collected
+This monitors the programs that required admin use to see if unauthorized users are truing to run these commands. This is important to make sure that unauthorized users aren't changing settings or getting access to the systems. Sadly, Bailey is not set up to process this data.
+
+## 4.1.13 Ensure successful file system mounts are collected
+This monitors the use of the mount system call which controls the mounting and unmounting of file systems. This is to make sure that unauthorized users aren't mounting file systems because it will give the administrator access to see if any standard users are doing this. Sadly, Bailey is not set up to process this data.
 
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
