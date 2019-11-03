@@ -384,8 +384,17 @@ The `/etc/*` files contain user information that is used by many system utilitie
 Testing:
 * `stat /etc/*`: `Access: (*) Uid: ( 0/ root) Gid: ( 0/ *)`
 
-## 6.1.10
+## 6.1.10: Ensure no world writable files exist
 Unix-based systems support variable settings to control access to files. World writable files are the least secure. See the `chmod(2)` man page for more information. Data in world-writable files can be modified and compromised by any user on the system. World writable files may also indicate an incorrectly written script or program that could potentially be the cause of a larger compromise to the system's integrity. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
-## 6.1.11
+## 6.1.11: Ensure no unowned files or directories exist
 Sometimes when administrators delete users from the password file they neglect to remove all files owned by those users from the system. A new user who is assigned the deleted user's user ID or group ID may then end up “owning” these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+
+## 6.1.12: Ensure no ungrouped files or directories exist
+Sometimes when administrators delete users or groups from the system they neglect to remove all files owned by those users or groups. A new user who is assigned the deleted user's user ID or group ID may then end up “owning” these files, and thus have more access on the system than was intended. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+
+## 6.1.13: Audit SUID executables
+The owner of a file can set the file's permissions to run with the owner's or group's permissions, even if the user running the program is not the owner or a member of the group. The most common reason for a SUID program is to enable users to perform functions (such as changing their password) that require root privileges. There are valid reasons for SUID programs, but it is important to identify and review such programs to ensure they are legitimate. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+
+## 6.1.14: Audit SGID executables
+The owner of a file can set the file's permissions to run with the owner's or group's permissions, even if the user running the program is not the owner or a member of the group. The most common reason for a SGID program is to enable users to perform functions (such as changing their password) that require root privileges. There are valid reasons for SGID programs, but it is important to identify and review such programs to ensure they are legitimate. Review the files returned by the action in the audit section and check to see if system binaries have a different md5 checksum than what from the package. This is an indication that the binary may have been replaced. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
