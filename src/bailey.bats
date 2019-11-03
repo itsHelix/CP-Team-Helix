@@ -150,6 +150,12 @@ filesystem_mounting_disabled_boolean() {
   [ result1 -ne "" ]
 }
 
+# CIS 1.7.1.1: Ensure message of the day is configured properly
+@test "ensure motd is configured properly" {
+  result1=$(egrep '(\\v|\\r|\\m|\\s)' /etc/motd)
+  [ result1 -eq "" ]
+}
+
 # CIS 2.1: inetd services
 @test "Making sure insecure inetd services are disabled" {
   # This is a test to see if the files inetd.* exists, if so this is also a test for the chargen service
@@ -222,3 +228,18 @@ file_config_cron_boolean() {
   result=`cat /etc/ssh/sshd_config`
   [ result -eq perfect_sshd]
 }
+
+# CIS 6.1: File permissions
+configuring_file_permissions_boolean() {
+  result=`stat $1`
+  [ result -eq *$2*0/*root*0/*$3* ]
+}
+
+@test "passwd_config" {configuring_file_permissions_boolean /etc/passwd 0644 root}
+@test "shadow_config" {configuring_file_permissions_boolean /etc/shadow 0640 shadow}
+@test "group_config" {configuring_file_permissions_boolean /etc/group 0644 root}
+@test "gshadow_config" {configuring_file_permissions_boolean /etc/gshadow 0640 shadow}
+@test "passwd-_config" {configuring_file_permissions_boolean /etc/passwd- 0600 root}
+@test "shadow-_config" {configuring_file_permissions_boolean /etc/shadow- 0600 root}
+@test "group-_config" {configuring_file_permissions_boolean /etc/group- 0600 root}
+@test "gshadow-_config" {configuring_file_permissions_boolean /etc/gshadow- 0600 root}
