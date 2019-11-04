@@ -448,7 +448,25 @@ For the same reasons above Bailey doesn't complete `4.2.1.5`: Ensure remote `rsy
 This is only applicable if syslog-ng is installed on the system. After installing the package, you need to activate it, which is important because if it isn't activated on the system, it will default to syslogd. To enable syslog-ng, type `update-rc.d syslog-ng enable`. To ensure loggingin is configured (4.2.2.2) the /etc/syslog-ng/syslog-ng.conf file will show the rules for logging and which files to use to log different circumstances. This is important because various security related information is sent via syslog-ng. To do this, you edit the log lines in /etc/syslog-ng/syslog-ng.conf for your environment. Sadly, Bailey is not set up to process this data. To ensure file permissions are configured (4.2.2.3), syslog-ng will create the logfiles that don't already exist on the system. The setting itself sets what permissions will be applied to the new files. To ensure syslog-ng is configured to send logs to a remove log host (4.2.2.4), you have to review the /etc/syslog-ng/syslog-ng.conf file to see that the logs are sent to a central host. This will send logs to a remote log host, which is important to protect from local attacks, because of an unauthorized attacker has root access to the system, they could remove or change log data. To do this, you need to review the /etc/syslog-ng/syslog-ng.conf to see that the logs are set to a central host, if not, then edit the file and add in the central host name. To ensure remote syslog-ng messages are only accepted on designated log hosts (4.2.2.5) you have to review the file once again and add lines to the file that will ensure that it will listen for log messages.
 
 ## 4.2.3 Ensure rsyslog or syslog-ng is installed
+### `install_rsyslog_syslog-ng`
+Both of these softwares are recommended to replace syslogd daemon, which is important because it has many security enhancements such as the encryption of log data, the trasmission of logs, and other factors.
+* To install rsyslog or syslog-ng, type `apt-get install rsyslog` or `apt-get install syslog-ng`
 
+Testing:
+* `dpkg -s rsyslog`
+* `dpkg -s syslog-ng`
+
+## 4.2.4 Ensure permissions on all logfiles are configured
+### `configure_logfiles`
+Configuring log files is important to make sure that they have the correct permissions to make sure that the data that needs to be safe is protected.
+* To set permissions, type `chmod -R g-wx,o-rwx /var/log/*`
+
+Testing:
+* `find /var/log -type f -ls`
+
+## 4.3 Ensure logrotate is configured
+### `configure_logrotate`
+This makes sure to avoid filling the system up with logs as it will rotate them to make sure that they are manageable. This is important so that administrators can easily archive the files and also look at them more efficiently to save time. To do this, you have to edit the file /etc/logrotate.conf and /etc/logrotate.d/* to make sure that they are rotated to company policy. Sadly, Bailey is not set up to process this data.
 
 ## 5.1.1-7: Ensure permissions on /etc/cron.* are configured
 ### `configure_cron`
