@@ -528,4 +528,7 @@ The owner of a file can set the file's permissions to run with the owner's or gr
 
 ## 6.1.14: Audit SGID executables
 The owner of a file can set the file's permissions to run with the owner's or group's permissions, even if the user running the program is not the owner or a member of the group. The most common reason for a SGID program is to enable users to perform functions (such as changing their password) that require root privileges. There are valid reasons for SGID programs, but it is important to identify and review such programs to ensure they are legitimate. Review the files returned by the action in the audit section and check to see if system binaries have a different md5 checksum than what from the package. This is an indication that the binary may have been replaced. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+
+## 6.2.1 Ensure password fields are not empty
+
 >>>>>>> 9ad898fea7f630332f5048e6d6d0cddb5480e72e
