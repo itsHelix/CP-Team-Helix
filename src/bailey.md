@@ -445,7 +445,28 @@ Another important item to complete is setting up a remote log host. The `rsyslog
 For the same reasons above Bailey doesn't complete `4.2.1.5`: Ensure remote `rsyslog` messages are only accepted on designated log hosts). But, this is still an important step because completing `4.2.1.5` ensures that remote log hosts are configured to only accept `rsyslog` data from hosts within the specified domain and that those systems that are not designed to be log hosts do not accept any remote `rsyslog` messages. This provides protection from spoofed log data and ensures that system administrators are reviewing reasonably complete syslog data in a central location.
 
 ## 4.2.2 Configure syslog-ng
-This is only applicable if syslog-ng is installed on the system. After installing the package, you need to activate it, which is important because if it isn't activated on the system, it will default to syslogd. To enable syslog-ng, type `update-rc.d syslog-ng enable`. To ensure loggingin is configured (4.2.2.2) the /etc/syslog-ng/syslog-ng.conf file will show the rules for logging and which files to use to log different circumstances. This is important because various security related information is sent via syslog-ng. To do this, you edit the log lines in /etc/syslog-ng/syslog-ng.conf for your environment. Sadly, Bailey is not set up to process this data. To ensure file permissions are configured (4.2.2.3), syslog-ng will create the logfiles that don't already exist on the system. It wi
+This is only applicable if syslog-ng is installed on the system. After installing the package, you need to activate it, which is important because if it isn't activated on the system, it will default to syslogd. To enable syslog-ng, type `update-rc.d syslog-ng enable`. To ensure loggingin is configured (4.2.2.2) the /etc/syslog-ng/syslog-ng.conf file will show the rules for logging and which files to use to log different circumstances. This is important because various security related information is sent via syslog-ng. To do this, you edit the log lines in /etc/syslog-ng/syslog-ng.conf for your environment. Sadly, Bailey is not set up to process this data. To ensure file permissions are configured (4.2.2.3), syslog-ng will create the logfiles that don't already exist on the system. The setting itself sets what permissions will be applied to the new files. To ensure syslog-ng is configured to send logs to a remove log host (4.2.2.4), you have to review the /etc/syslog-ng/syslog-ng.conf file to see that the logs are sent to a central host. This will send logs to a remote log host, which is important to protect from local attacks, because of an unauthorized attacker has root access to the system, they could remove or change log data. To do this, you need to review the /etc/syslog-ng/syslog-ng.conf to see that the logs are set to a central host, if not, then edit the file and add in the central host name. To ensure remote syslog-ng messages are only accepted on designated log hosts (4.2.2.5) you have to review the file once again and add lines to the file that will ensure that it will listen for log messages.
+
+## 4.2.3 Ensure rsyslog or syslog-ng is installed
+### `install_rsyslog_syslog-ng`
+Both of these softwares are recommended to replace syslogd daemon, which is important because it has many security enhancements such as the encryption of log data, the trasmission of logs, and other factors.
+* To install rsyslog or syslog-ng, type `apt-get install rsyslog` or `apt-get install syslog-ng`
+
+Testing:
+* `dpkg -s rsyslog`
+* `dpkg -s syslog-ng`
+
+## 4.2.4 Ensure permissions on all logfiles are configured
+### `configure_logfiles`
+Configuring log files is important to make sure that they have the correct permissions to make sure that the data that needs to be safe is protected.
+* To set permissions, type `chmod -R g-wx,o-rwx /var/log/*`
+
+Testing:
+* `find /var/log -type f -ls`
+
+## 4.3 Ensure logrotate is configured
+### `configure_logrotate`
+This makes sure to avoid filling the system up with logs as it will rotate them to make sure that they are manageable. This is important so that administrators can easily archive the files and also look at them more efficiently to save time. To do this, you have to edit the file /etc/logrotate.conf and /etc/logrotate.d/* to make sure that they are rotated to company policy. Sadly, Bailey is not set up to process this data.
 
 ## 5.1.1-7: Ensure permissions on /etc/cron.* are configured
 ### `configure_cron`
@@ -507,4 +528,7 @@ The owner of a file can set the file's permissions to run with the owner's or gr
 
 ## 6.1.14: Audit SGID executables
 The owner of a file can set the file's permissions to run with the owner's or group's permissions, even if the user running the program is not the owner or a member of the group. The most common reason for a SGID program is to enable users to perform functions (such as changing their password) that require root privileges. There are valid reasons for SGID programs, but it is important to identify and review such programs to ensure they are legitimate. Review the files returned by the action in the audit section and check to see if system binaries have a different md5 checksum than what from the package. This is an indication that the binary may have been replaced. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
+
+## 6.2.1 Ensure password fields are not empty
+
 >>>>>>> 9ad898fea7f630332f5048e6d6d0cddb5480e72e
