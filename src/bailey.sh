@@ -38,9 +38,13 @@ firefox_update_and_CIS() {
 }
 
 # NO CIS ################################################################
+
+# Removing dirty packages for a safer system
 purge_dirty_packages() {
   apt-get purge -y john* ophcrack minetest wireshark netcat* polari rpcbind transmission-gtk empathy mutt freeciv kismet hydra* nikto* squid minetest p0f minetest-server
   rpm -e nmap zenmap # correct way to remove nmap and zenmap
+  apt-get autoclean
+  apt-get autoremove
 }
 # CIS: 1.1 ##############################################################
 
