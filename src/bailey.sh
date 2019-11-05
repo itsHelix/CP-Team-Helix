@@ -41,8 +41,7 @@ firefox_update_and_CIS() {
 
 # Removing dirty packages for a safer system
 purge_dirty_packages() {
-  apt-get purge -y john* ophcrack minetest wireshark netcat* polari rpcbind transmission-gtk empathy mutt freeciv kismet hydra* nikto* squid minetest p0f minetest-server
-  rpm -e nmap zenmap # correct way to remove nmap and zenmap
+  apt-get purge -y john* ophcrack minetest wireshark netcat* polari rpcbind transmission-gtk empathy mutt freeciv kismet hydra* nikto* squid minetest p0f minetest-server nmap* zenmap*
   apt-get autoclean
   apt-get autoremove
 }
@@ -326,16 +325,20 @@ configure_ssh() {
 
 # CIS: 6.1 ##############################################################
 
-configuring_file_permissions() {
+configuring_file_permissions_function() {
   chown root:$3 $1
   chmod $2 $1
 }
 
-passwd_config() {configuring_file_permissions /etc/passwd 644 root}
-shadow_config() {configuring_file_permissions /etc/shadow o-rwx,g-wx shadow}
-group_config() {configuring_file_permissions /etc/group 644 root}
-gshadow_config() {configuring_file_permissions /etc/gshadow o-rwx,g-wx shadow}
-passwd-_config() {configuring_file_permissions /etc/passwd- 600 root}
-shadow-_config() {configuring_file_permissions /etc/shadow- 600 root}
-group-_config() {configuring_file_permissions /etc/group- 600 root}
-gshadow-_config() {configuring_file_permissions /etc/gshadow- 600 root}
+etc_passwd_config() {configuring_file_permissions_function /etc/passwd 644 root}
+etc_shadow_config() {configuring_file_permissions_function /etc/shadow o-rwx,g-wx shadow}
+etc_group_config() {configuring_file_permissions_function /etc/group 644 root}
+etc_gshadow_config() {configuring_file_permissions_function /etc/gshadow o-rwx,g-wx shadow}
+etc_passwd_-_config() {configuring_file_permissions_function /etc/passwd- 600 root}
+etc_shadow_-_config() {configuring_file_permissions_function /etc/shadow- 600 root}
+etc_group_-_config() {configuring_file_permissions_function /etc/group- 600 root}
+etc_gshadow_-_config() {configuring_file_permissions_function /etc/gshadow- 600 root}
+
+configure_all_etc_files() {
+  etc_passwd_config; etc_shadow_config; etc_group_config; etc_gshadow_config; etc_passwd_-_config; etc_shadow_-_config; etc_group_-_config; etc_gshadow_-_config
+}
