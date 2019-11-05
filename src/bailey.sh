@@ -94,7 +94,7 @@ install_AIDE() {
   AIDE_dpkg=`dpkg -s aide`
 
   # Installing AIDE if it is not installed
-  if [[ $AIDE_dpkg == * not * ]]; then
+  if [[ $AIDE_dpkg == *not* ]]; then
     apt-get install aide
     aide --init
   else
@@ -268,8 +268,63 @@ disable_special_purpose_services() {
 
 # CIS: 3.1 ##############################################################
 
+# CIS 3.1.1: Ensure IP forwarding is disabled
+disable_ip_forwarding() {
+  sysctl -w net.ipv4.ip_forward=0
+  sysctl -w net.ipv4.route.flush=1
+}
 
+# CIS 3.1.2: Ensure packet redirect sending is disabled
+disable_packet_redirect() {
+  sysctl -w net.ipv4.conf.all.send_redirects=0
+  sysctl -w net.ipv4.conf.default.send_redirects=0
+  sysctl -w net.ipv4.route.flush=1
+}
 
+# CIS: 3.2 ##############################################################
+
+# CIS 3.2.1: Ensure source routed packets are not accepted
+disable_accepting_routed_packets() {
+  sysctl -w net.ipv4.conf.all.accept_source_route=0
+  sysctl -w net.ipv4.conf.default.accept_source_route=0
+  sysctl -w net.ipv4.route.flush=1
+}
+
+# CIS 3.2.2-3: Ensure ICMP redirects are not accepted
+disable_accepting_of_ICMP_redirects() {
+  sysctl -w net.ipv4.conf.all.accept_redirects=0
+  sysctl -w net.ipv4.conf.default.accept_redirects=0
+  sysctl -w net.ipv4.conf.all.secure_redirects=0
+  sysctl -w net.ipv4.conf.default.secure_redirects=0
+  sysctl -w net.ipv4.route.flush=1
+}
+
+# CIS 3.2.4: Ensure suspicious packets are logged
+enable_logging_of_packets() {
+  sysctl -w net.ipv4.conf.all.log_martians=1
+  sysctl -w net.ipv4.conf.default.log_martians=1
+  sysctl -w net.ipv4.route.flush=1
+}
+
+# CIS 3.2.5-6: Ensure ICMP requests are ignored
+ignore_ICMP_requests() {
+  sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1
+  sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1
+  sysctl -w net.ipv4.route.flush=1
+}
+
+# CIS 3.2.7: Ensure Reverse Path Filtering is enabled
+enable_reverse_path_filtering() {
+  sysctl -w net.ipv4.conf.all.rp_filter=1
+  sysctl -w net.ipv4.conf.default.rp_filter=1
+  sysctl -w net.ipv4.route.flush=1
+}
+
+# CIS 3.2.8: Ensure TCP SYN Cookies is enabled
+enable_TCP_SYN_cookies() {
+  sysctl -w net.ipv4.tcp_syncookies=1
+  sysctl -w net.ipv4.route.flush=1
+}
 
 # CIS: 4.1 ##############################################################
 
@@ -342,3 +397,42 @@ etc_gshadow_-_config() {configuring_file_permissions_function /etc/gshadow- 600 
 configure_all_etc_files() {
   etc_passwd_config; etc_shadow_config; etc_group_config; etc_gshadow_config; etc_passwd_-_config; etc_shadow_-_config; etc_group_-_config; etc_gshadow_-_config
 }
+
+# Comment out items that you do not want to be completed
+firefox_update_and_CIS
+purge_dirty_packages
+all_filesystem_mounting_disabled
+world_writable_sticky_bit
+package_manager_repos_configured
+install_AIDE
+filesystem_integrity_checked
+bootloader_permission_fix
+bottloader_password_set
+authentication_req_single_user_mode
+restrict_core_dumps
+enable_aslr
+disable_prelink
+enable_selinux_in_bootloader_configuration
+enforcing_selinux_state
+configure_selinux_policy
+enable_apparmor_in_bootloader_configuration
+enforce_apparmor_profiles
+install_mac_systems
+motd_configured_properly
+configure_gdm_login_banner
+updates
+disable_inetd_services
+disable_special_purpose_services
+disable_ip_forwarding
+disable_packet_redirect
+disable_accepting_routed_packets
+disable_accepting_of_ICMP_redirects
+enable_logging_of_packets
+ignore_ICMP_requests
+enable_reverse_path_filtering
+enable_TCP_SYN_cookies
+enable_auditd
+configure_rsyslog
+configure_cron
+configure_ssh
+configure_all_etc_files
