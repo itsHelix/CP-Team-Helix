@@ -216,7 +216,7 @@ filesystem_mounting_disabled_boolean() {
 }
 
 # CIS 3.2.1: Ensure source routed packets are not accepted
-disable_accepting_routed_packets() {
+@test "disabled accepting routed packets" {
   result1=`sysctl net.ipv4.conf.all.accept_source_route`
   result2=`sysctl net.ipv4.conf.default.accept_source_route`
   [ result1 -eq *0* ]
@@ -224,7 +224,7 @@ disable_accepting_routed_packets() {
 }
 
 # CIS 3.2.2-3: Ensure ICMP redirects are not accepted
-@test "disable_accepting_of_ICMP_redirects" {
+@test "disabled accepting of ICMP redirects" {
   result1=`sysctl net.ipv4.conf.all.accept_redirects`
   result2=`sysctl net.ipv4.conf.default.accept_redirects`
   result3=`sysctl net.ipv4.conf.all.secure_redirects`
@@ -236,7 +236,7 @@ disable_accepting_routed_packets() {
 }
 
 # CIS 3.2.4: Ensure suspicious packets are logged
-@test "enable_logging_of_packets" {
+@test "enabled logging of packets" {
   result1=`sysctl net.ipv4.conf.all.log_martians`
   result2=`sysctl net.ipv4.conf.default.log_martians`
   [ result1 -eq *1* ]
@@ -244,7 +244,7 @@ disable_accepting_routed_packets() {
 }
 
 # CIS 3.2.5-6: Ensure ICMP requests are ignored
-@test "ignore_ICMP_requests" {
+@test "ignoring ICMP requests" {
   result1=`sysctl net.ipv4.icmp_echo_ignore_broadcasts`
   result2=`sysctl net.ipv4.icmp_ignore_bogus_error_responses`
   [ result1 -eq *1* ]
@@ -252,7 +252,7 @@ disable_accepting_routed_packets() {
 }
 
 # CIS 3.2.7: Ensure Reverse Path Filtering is enabled
-@test "enable_reverse_path_filtering" {
+@test "enabled reverse path filtering" {
   result1=`sysctl net.ipv4.conf.all.rp_filter`
   result2=`sysctl net.ipv4.conf.default.rp_filter`
   [ result1 -eq *1* ]
@@ -260,7 +260,7 @@ disable_accepting_routed_packets() {
 }
 
 # CIS 3.2.8: Ensure TCP SYN Cookies is enabled
-@test "enable_TCP_SYN_cookies" {
+@test "enabled TCP SYN cookies" {
   result1=`sysctl net.ipv4.tcp_syncookies`
   result2=`sysctl net.ipv4.route.flush`
   [ result1 -eq *1* ]
