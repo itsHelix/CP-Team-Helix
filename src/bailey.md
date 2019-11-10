@@ -530,5 +530,36 @@ The owner of a file can set the file's permissions to run with the owner's or gr
 The owner of a file can set the file's permissions to run with the owner's or group's permissions, even if the user running the program is not the owner or a member of the group. The most common reason for a SGID program is to enable users to perform functions (such as changing their password) that require root privileges. There are valid reasons for SGID programs, but it is important to identify and review such programs to ensure they are legitimate. Review the files returned by the action in the audit section and check to see if system binaries have a different md5 checksum than what from the package. This is an indication that the binary may have been replaced. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
 ## 6.2.1 Ensure password fields are not empty
+This is important because it will fill any empty password fields to make sure that they are not able to be used by unauthorized users.
+
+## 6.2.2 Ensure no legacy "+" entries exist in /etc/passwd
+You can insert data through the + character from NIS maps, and so these would be an entry for attackers to gain privilege on the system, so it is important to remove these points of entry.
+* Simply go through and remove any legacy "+" entries from the /etc/passwd file.
+
+Testing:
+* `grep '^+:' /etc/passwd`
+
+## 6.2.3 Ensure no legacy "+" entries exist in /etc/shadow
+You can insert data through the + character from NIS maps, and so these would be an entry for attackers to gain privilege on the system, so it is important to remove these points of entry.
+* Simply go through and remove any legacy "+" entries from the /etc/shadow file.
+
+Testing:
+* `grep '^+:' /etc/shadow`
+
+## 6.2.4 Ensure no legacy "+" entries exist in /etc/group
+You can insert data through the + character from NIS maps, and so these would be an entry for attackers to gain privilege on the system, so it is important to remove these points of entry.
+* Simply go through and remove any legacy "+" entries from the /etc/group file.
+
+Testing:
+* `grep '^+:' /etc/group`
+
+## 6.2.5 Ensure root is the only UID 0 account
+Any UID 0 account has superuser privileges on the system, so access should only be like that for the root account, otherwise an unapproved user can get onto the system and change system settings.
+* Remove any users other than the root user with UID 0 or assign them another UID
+
+Testing:
+* `cat /etc/passwd | awk -F: '($3 == 0) { print $1 }'`: root
+
+## 6.2.6 Ensure root PATH Integrity
 
 >>>>>>> 9ad898fea7f630332f5048e6d6d0cddb5480e72e
