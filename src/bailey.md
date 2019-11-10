@@ -646,5 +646,14 @@ Testing:
 * `cat /etc/passwd | awk -F: '($3 == 0) { print $1 }'`: root
 
 ## 6.2.6 Ensure root PATH Integrity
+This is important to ensure that the root user isn't fooled into executing programs unintentionally. If a current working directory or any other writables are in the executable path, it makes it really easy for an attacker to force an admin to execute a Trojan horse program. Sadly, Bailey is not set up to process this data.
+
+## 6.2.7 Ensure all users' home directories exist
+If a home directory does not exist on a user, then the user will not be able to write any files, so in /etc/passwd, users can be identified as not having a home directory. Sadly, Bailey is not set up to process this data.
+
+## 6.2.8 Ensure users' home directories permissions are 750 or more restrictive
+Having the permissions set really high for normal users may permit malicious activity, so to prevent this, you have to change the privileges to make sure that no standard user is able to steal or modify other users' data. Sadly, Bailey is not set up to process this data.
+
+## 6.2.9 Ensure users own their home directories
 
 >>>>>>> 9ad898fea7f630332f5048e6d6d0cddb5480e72e
