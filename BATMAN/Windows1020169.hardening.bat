@@ -1,3 +1,13 @@
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: Script Name	: Windows1020169.hardening.bat
+:: Description	: This is a Windows 10, 2016, and 2019 hardening script. It was designed to help security professionals implement very strong security standers into there clients systems. This is in no way a final script, just a starting point for most professionals.
+:: Users section: The :Users section of this script is made for CyberPatiot 2015-2022.
+:: Helpers      : Tavin Turner, Abhinav Vemulapalli
+:: Author      	: Ian Boraks
+:: StackOverflow: https://stackoverflow.com/users/11013589/cutwow475
+:: GitHub       : https://github.com/Cutwow
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 @echo off
 color 1f
 if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
