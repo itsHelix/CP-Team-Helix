@@ -65,6 +65,14 @@ Ensures that the README has been properly retrieved and exists as a file, with a
 			* If correct, continues script normally
 			* If not correct, asks for manual user input of content
 
+## `ncis_readme_parsing`
+Integrated in the middle of a CIS section, `ncis` represents that it is not listed in the benchmark. Creates four files from the README:
+* `users_over_1000`: a list of non-root users (i.e. UID≥1000)
+	* Should be empty with the exception of `root`. For the sake of the functions using it, appends `root` to the end to exempt it from detrimental enforcement
+* `authorized_administrators`: a list of all README-specified administrators
+* `admin_users`: a list of all users in the `sudo` group
+* `0_uid_users`: a list of all users with the UID 0 (root UID)
+
 # CIS Mozilla Firefox 38
 ### `firefox_update_and_CIS`
 

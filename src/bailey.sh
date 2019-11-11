@@ -416,6 +416,30 @@ configure_all_etc_files() {
   etc_passwd_config; etc_shadow_config; etc_group_config; etc_gshadow_config; etc_passwd_-_config; etc_shadow_-_config; etc_group_-_config; etc_gshadow_-_config
 }
 
+# CIS: 6.2 ##############################################################
+# NON-CIS: README PARSING
+ncis_readme_parsing() {
+  # Makes a list of non-root users (users over 1000, should be all but `root`)
+  cut -d: -f1,3 /etc/passwd | egrep ':[0-9]{4}$' | cut -d: -f1 > $dump/usersover1000
+  echo root >> $dump/users_over_1000
+
+  # Creates a list of authorized administrators from the README
+  cat $dump/readme | sed -n '/Authorized Administrators/,/Authorized Users/p' > $dump/authorized_administrators
+  # Creates list of current admin users by detecting users in group `sudo`
+  cat /etc/group | grep sudo | cut -c 11- | tr , '\n' > $dump/admin_users
+
+  # Creates list of users with UID 0
+  cut -d: -f1,3 /etc/passwd | egrep ':0$' | cut -d: -f1 | grep -v root > $dump/0_uid_users
+}
+
+# CIS 6.2.1: Ensure password fields are not empty
+password_fields_are_not_empty() {
+  for user in `cat $dump/users_over_1000`; do
+    echo -e "$stdpass\n$stdpass" | passwd $user
+    echo "$user: $stdpass" >> $dump/changed_passwords
+  done
+}
+
 # Comment out items that you do not want to be completed
 firefox_update_and_CIS
 purge_dirty_packages
