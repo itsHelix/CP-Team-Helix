@@ -150,7 +150,7 @@ goto %Loc%
 :Wmic_Info
 :: This simple script was made by Ruben Boonen (also known to some as b33f), and modified for use in this script.
 :: You can find this one and more like it at https://www.fuzzysecurity.com/index.html
-%~dp0\Meta\wmic_info.bat
+call %~dp0\Meta\wmic_info.bat
 echo Outputed
 
 :Auditpol
