@@ -54,6 +54,17 @@ Each time something is logged inside of the script, the message is appended to t
 
 The only existing global variable in the script is `password`, which stores the default password of the system, which will be used during automatic user management (user creation, permission correction, and password alteration).
 
+## `ensure_readme`
+Ensures that the README has been properly retrieved and exists as a file, with a variable (`readme_location`) referencing it.
+* Tests if variable `readme_location` is filled
+	* If it is, continues script normally
+	* If it is not:
+		* CURLs from user input, output into file
+		* Assign file direction to variable `readme_location`
+		* Confirms content with user
+			* If correct, continues script normally
+			* If not correct, asks for manual user input of content
+
 # CIS Mozilla Firefox 38
 ### `firefox_update_and_CIS`
 
@@ -655,5 +666,3 @@ If a home directory does not exist on a user, then the user will not be able to 
 Having the permissions set really high for normal users may permit malicious activity, so to prevent this, you have to change the privileges to make sure that no standard user is able to steal or modify other users' data. Sadly, Bailey is not set up to process this data.
 
 ## 6.2.9 Ensure users own their home directories
-
->>>>>>> 9ad898fea7f630332f5048e6d6d0cddb5480e72e

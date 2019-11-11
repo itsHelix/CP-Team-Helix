@@ -18,11 +18,29 @@ mkdir bailey bailey/log bailey/dump
 logfile=./bailey/log/bailey_$(date +%T).log
 dump=./bailey/dump
 stdpass="Spo0key_Scar3y"
+readme_location=$dump/readme
 
 # Logging
 log() {
   echo $(date +%T): $1 >> $logfile
   echo $1
+}
+
+# Ensure the existence of the README
+ensure_readme() {
+  echo >> $readme_location
+  if [ $(cat readme_location) -eq "" ]; then
+    print "Please enter the URL of the README: "
+    read readme_url
+    curl -K $readme_url -o $readme_location
+    echo $readme_location | head
+    print "Does this look right? "
+    read readme_is_correct
+    if [ $readme_is_correct -ne y ]; then
+      echo "Please enter the contents manually"
+      gedit $readme_location
+    fi
+  fi
 }
 
 # CIS: Mozilla ##########################################################
