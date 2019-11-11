@@ -40,6 +40,7 @@ ensure_readme() {
       echo "Please enter the contents manually"
       gedit $readme_location
     fi
+    ncis_readme_parsing
   fi
 }
 
@@ -434,11 +435,23 @@ ncis_readme_parsing() {
 
 # CIS 6.2.1: Ensure password fields are not empty
 password_fields_are_not_empty() {
+  ensure_readme
   for user in `cat $dump/users_over_1000`; do
     echo -e "$stdpass\n$stdpass" | passwd $user
     echo "$user: $stdpass" >> $dump/changed_passwords
   done
 }
+
+# CIS 6.2.2-4: Ensure no legacy "+" entries exist in /etc/passwd,shadow,group
+remove_plus_entry() {
+  sed '/+/d' $1
+}
+
+remove_plus_entry_passwd() { remove_plus_entry /etc/passwd }
+remove_plus_entry_shadow() { remove_plus_entry /etc/shadow }
+remove_plus_entry_group() { remove_plus_entry /etc/group }
+
+remove_plus_entries() { remove_plus_entry_passwd; remove_plus_entry_shadow; remove_plus_entry_group }
 
 # Comment out items that you do not want to be completed
 firefox_update_and_CIS

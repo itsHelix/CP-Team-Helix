@@ -634,7 +634,14 @@ The owner of a file can set the file's permissions to run with the owner's or gr
 The owner of a file can set the file's permissions to run with the owner's or group's permissions, even if the user running the program is not the owner or a member of the group. The most common reason for a SGID program is to enable users to perform functions (such as changing their password) that require root privileges. There are valid reasons for SGID programs, but it is important to identify and review such programs to ensure they are legitimate. Review the files returned by the action in the audit section and check to see if system binaries have a different md5 checksum than what from the package. This is an indication that the binary may have been replaced. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
 ## 6.2.1 Ensure password fields are not empty
-This is important because it will fill any empty password fields to make sure that they are not able to be used by unauthorized users.
+Fills empty or insecure password fields with the same password, qualifying safety standards tested by Cyber Patriot and prevent potential massive vulnerabilities, despite every single user having the same password.
+Prerequisite: `ensure_readme` (incl. `ncis_readme_parsing`)
+* For each user over UID 1000, assigns standard password.
+* Logs changed password with username and password it was changed to
+
+Testing:
+* Intentionally unimplemented to avoid user error interference. Test by hand
+	* `cat /etc/shadow | awk -f '($2 == "") { print $1 " does not have a password " }'`: N/A
 
 ## 6.2.2 Ensure no legacy "+" entries exist in /etc/passwd
 You can insert data through the + character from NIS maps, and so these would be an entry for attackers to gain privilege on the system, so it is important to remove these points of entry.

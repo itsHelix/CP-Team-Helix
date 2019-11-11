@@ -321,3 +321,14 @@ configuring_file_permissions_boolean() {
 @test "shadow-_config" {configuring_file_permissions_boolean /etc/shadow- 0600 root}
 @test "group-_config" {configuring_file_permissions_boolean /etc/group- 0600 root}
 @test "gshadow-_config" {configuring_file_permissions_boolean /etc/gshadow- 0600 root}
+
+
+# CIS 6.2.2-4: Ensure no legacy "+" entries exist in /etc/passwd,shadow,group
+no_legacy_plus_boolean() {
+  result=`grep '^\+:' $1`
+  [ result -eq "" ]
+}
+
+@test "no legacy '+' entries in /etc/passwd" { [no_legacy_plus_boolean /etc/passwd] }
+@test "no legacy '+' entries in /etc/shadow" { [no_legacy_plus_boolean /etc/shadow] }
+@test "no legacy '+' entries in /etc/group" { [no_legacy_plus_boolean /etc/group] }
