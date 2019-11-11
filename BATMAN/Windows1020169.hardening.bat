@@ -1,7 +1,7 @@
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Script Name	: Windows1020169.hardening.bat
 :: Description	: This is a Windows 10, 2016, and 2019 hardening script. It was designed to help security professionals implement very strong security standers into there clients systems. This is in no way a final script, just a starting point for most professionals.
-:: Users section: The :Users section of this script is made for CyberPatiot 2015-2022.
+:: Users section: The ":Users" section of this script is made for CyberPatiot 2015-2022.
 :: Helpers      : Tavin Turner, Abhinav Vemulapalli
 :: Author      	: Ian Boraks
 :: StackOverflow: https://stackoverflow.com/users/11013589/cutwow475
@@ -11,20 +11,13 @@
 @echo off
 color 1f
 if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
-CHOICE /M "Do you want Echo ON?"
-if %ERRORLEVEL% EQU 2 @echo off
-if %ERRORLEVEL% EQU 1 @echo on
+CHOICE /M "Do you want Echo OFF?"
+if %ERRORLEVEL% EQU 1 @echo off
+if %ERRORLEVEL% EQU 2 @echo on
 
-CHOICE /M "Do you want Breaks ON?"
-if %ERRORLEVEL% EQU 2 set Breaks=N
-if %ERRORLEVEL% EQU 1 set Breaks=Y
-
-:: Copying things from Meta to make the GUIs work
-xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h /Y
-xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h /Y
-xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h /Y
-xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h /Y
-xcopy %~dp0\Software\PatchMyPc.exe %windir%\system32 /h /Y
+CHOICE /M "Do you want Breaks OFF?"
+if %ERRORLEVEL% EQU 1 set Breaks=N
+if %ERRORLEVEL% EQU 2 set Breaks=Y
 
 setlocal enabledelayedexpansion
 
@@ -42,8 +35,16 @@ if %errorlevel%==0 (
   echo You have chose to run the script without Aministrative Rights, "Good Luck!"
 	pause
 )
-IF /i %Breaks% EQU "Y" pause
-:options
+
+:: Setting some stuff up
+MKDIR %USERPROFILE%\desktop\output
+
+:: Copying things from Meta to make the GUIs work
+xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h /Y
+xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h /Y
+xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h /Y
+xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h /Y
+xcopy %~dp0\Software\PatchMyPc.exe %windir%\system32 /h /Y
 
 :: Operating System (thank you to, Compo [user:6738015], user on stackoverflow)
 Set "_P="
@@ -56,6 +57,7 @@ If %_P% Equ 1 (If %_V% Equ 62 Set "OS=Windows8"
     If %_V% Equ 100 Set "OS=Windows10"
 ) Else If %_V% Equ 100 (Set "OS=Server2016") Else Exit /B
 IF /i %Breaks% EQU "Y" pause
+
 :: Operating System "bit" (thank you to, Iridium [user:381588], user on stackoverflow)
 if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
     if "%PROCESSOR_ARCHITEW6432%" EQU "AMD64" (
@@ -70,7 +72,8 @@ if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
     set bit=64
 )
 IF /i %Breaks% EQU "Y" pause
-:: Setup for MultipleChoiceBox
+
+:options
 set RemoteDesktop=N
 set SMB=N
 set share=N
@@ -80,9 +83,11 @@ set Software=N
 set Users=N
 set Loading=N
 set Firewall=N
+set Files=N
+set TaskKill=N
 
 ::MultipleChoiceBox runs (This add-on was made and distrubuted by Rob van der Woude [https://www.robvanderwoude.com/])
-MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Update Software with PATCHMYPC;Users;Disable features;Firewall Settings;Run Everything.exe" "What do you want?" "Batman" /C:2 > temp.txt
+MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Update Software with PATCHMYPC;Users;Disable features;Firewall Settings;Run Everything.exe;Kill sus. Services" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
 FINDSTR /C:"Disable RDP" temp.txt && IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
@@ -95,6 +100,7 @@ FINDSTR /C:"Users" temp.txt && IF NOT ERRORLEVEL 1 set Users=Y
 FINDSTR /C:"Disable features" temp.txt && IF NOT ERRORLEVEL 1 set Loading=Y
 FINDSTR /C:"Firewall Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firewall=Y
 FINDSTR /C:"Run Everything.exe" temp.txt && IF NOT ERRORLEVEL 1 set Files=Y
+FINDSTR /C:"Kill sus. Services" temp.txt && IF NOT ERRORLEVEL 1 set TaskKill=Y
 del temp.txt
 IF /i %Breaks% EQU "Y" pause
 cls
@@ -121,6 +127,7 @@ echo บ	 Update Software = %Software%
 echo บ	 Firewall Settings = %Firewall%
 echo บ	 Disable Weak Services = %Loading%
 echo บ	 Run Everything.exe = %Files%
+echo บ	 Kill sus. Services = %TaskKill%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
@@ -140,6 +147,13 @@ goto %Loc%
 
 :Everything
 
+:Wmic_Info
+:: This simple script was made by Ruben Boonen (also known to some as b33f), and modified for use in this script.
+:: You can find this one and more like it at https://www.fuzzysecurity.com/index.html
+%~dp0\Meta\wmic_info.bat
+echo Outputed
+
+:Auditpol
 ::Dose audit categorys
 auditpol /set /category:* /success:enable
 auditpol /set /category:* /failure:enable
@@ -261,6 +275,10 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Ad
 
 
 :firewall
+cls
+netsh firewall show config
+pause
+
 if /I "%Firewall%" EQU "N" goto :weak
 netsh advfirewall set allprofiles state on
 netsh advfirewall reset
@@ -466,6 +484,16 @@ goto AfterServerPol
 IF /i %Breaks% EQU "Y" pause
 :AfterServerPol
 
+:TaskKill
+if /I "%TaskKill%" EQU "Y" (
+	cls
+	tasklist /SVC
+	set /p kill="Enter PID of service you want DEAD: "
+	taskkill /F /PID %kill%
+	CHOICE /M "Any more services? (Y,N)"
+	if %ERRORLEVEL% EQU 1 goto :TaskKill
+	cls
+)
 :Software
 if /I "%Software%" EQU "Y" PatchMyPc /s
 
@@ -480,7 +508,6 @@ if /I "%Users%" EQU "Y" (
 	cls
 	color 0D
 	copy %~dp0\Meta\users.ps1 %USERPROFILE%\desktop
-	MKDIR %USERPROFILE%\desktop\output
 
 	pause
 	set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
@@ -492,3 +519,4 @@ if /I "%Users%" EQU "Y" (
 )
 IF /i %Breaks% EQU "Y" pause
 echo. & echo done
+cls
