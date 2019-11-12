@@ -353,7 +353,14 @@ enable_auditd() {
 }
 
 # CIS 4.1.3: Ensure auditing for processes that start priot to auditd is enabled
+enable_auditd() {
+  sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=“audit=1”'/etc/default/grub
+  update-grub
+}
 
+# CIS 4.1.4-4.1.17
+
+# CIS 4.1.18
 
 # CIS: 4.2 ##############################################################
 
