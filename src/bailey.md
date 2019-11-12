@@ -681,3 +681,41 @@ If a home directory does not exist on a user, then the user will not be able to 
 Having the permissions set really high for normal users may permit malicious activity, so to prevent this, you have to change the privileges to make sure that no standard user is able to steal or modify other users' data. Sadly, Bailey is not set up to process this data.
 
 ## 6.2.9 Ensure users own their home directories
+This makes sure that a users home directory is defined for that particular user. This is important because the user needs to be able to access their own folders. Sadly, Bailey is not set up to process this data.
+
+## 6.2.10 Ensure users' dot files are not group or world writables
+With current settings, users can easily override the permissions for user dot files. This makes it so that any group/world-writable files do not exist to ensure safety for the files. Sadly, Bailey is not set up to process this data.
+
+# 6.2.11 Ensure no users have .forward files
+The .forward command allows an email address to appear to forward an email to, which poses a security threat with privacy. It can also be used to execute commands that may perform unintended actions. Sadly, Bailey is not set up to process this data.
+
+## 6.2.12 Ensure no users have .netrc files
+The .netrc file has data to log into a remote host for file transfers, and it contains passwords in unencrypted form, which makes it a significant security risk. Sadly, Bailey is not set up to process this data.
+
+## 6.2.13 Ensure users' .netrc Files are not group or world accessible
+With current settings, users can easily override the permissions for .netrc files, which presents a serious security risk because it contains password information that could be used to attack the system. Sadly, Bailey is not set up to process this data.
+
+## 6.2.14 Ensure no users have .rhosts files
+It is really easy for users to create .rhosts files, and these files could possibly contain information that is useful to attack the system. Sadly, Bailey is not set up to process this data.
+
+## 6.2.15 Ensure all groups in /etc/passwd exist in /etc/group
+Errors can be made where there is a user that is in /etc/passwd but not in /etc/group, which poses a seucrity risk because all group permissions are not properly managed. Sadly, Bailey is not set up to process this data.
+
+## 6.2.16 Ensure no duplicate UIDs exist
+It is really easy for an administrator to edit the /etc/passwd file to make it so that two users have the same UID, which presents a security risk because then people need to make sure they have appropriate access protections. Sadly, Bailey is not set up to process this data.
+
+## 6.2.17 Ensure no duplicate GIDs exist
+It is really easy for an administrator to edit the /etc/passwd file to make it so that two users have the same GID, which presents a security risk because then people need to make sure they have appropriate access protections. Sadly, Bailey is not set up to process this data.
+
+## 6.2.18 Ensure no duplicate user names exist
+It is really easy for an administrator to edit the /etc/passwd file to make it so that two users share the first UID, which could pose a security issue if the first UID has more permissions than the second user. Sadly, Bailey is not set up to process this data.
+
+## 6.2.19 Ensure no duplicate group names exist
+It is really easy for an administrator to edit the /etc/passwd file to make it so that two of the same group name exist, which presents a security risk because then both groups will have the same access as the first GID, which could present a security risk. Sadly, Bailey is not set up to process this data.
+
+## 6.2.20 Ensure shadow group is empty
+Any user within the shadow group has access to read the /etc/shadow file, which presents a security risk because the /etc/shadow file makes it really easy for an attacker to user a password cracking program to get the password for admin, which will hurt the security of the device.
+* Remove all the users present in the shadow group, and make sure to change the primary group of any users with shadow as theirs.
+Testing: 
+* `grep ^shadow:[^:]*:[^:]*:[^:]+ /etc/group`: N/A
+* `awk -F: '($4 == "<shadow-gid>") { print }' /etc/passwd`: N/A
