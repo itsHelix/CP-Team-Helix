@@ -352,6 +352,9 @@ enable_auditd() {
   systemctl enable auditd
 }
 
+# CIS 4.1.3: Ensure auditing for processes that start priot to auditd is enabled
+
+
 # CIS: 4.2 ##############################################################
 
 # CIS: 4.2.1 Configure rsyslog
