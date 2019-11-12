@@ -522,6 +522,7 @@ This monitors the programs that required admin use to see if unauthorized users 
 
 ## 4.1.13 Ensure successful file system mounts are collected
 This monitors the use of the mount system call which controls the mounting and unmounting of file systems. This is to make sure that unauthorized users aren't mounting file systems because it will give the administrator access to see if any standard users are doing this. Sadly, Bailey is not set up to process this data.
+
 ## 4.1.14 Ensure file deletion events by users are collected
 This monitors any deletion/renaming of files and file attributions. This will log any instances of deletion or editing and will tag them with the identifier "delete". This is important to make sure that non-priviledged users aren't removing files or various file attributes. Sadly, Bailey is not set up to process this data.
 
@@ -535,6 +536,7 @@ This monitors the sudo log file  through /var/log/sudo.log. So any time a comman
 This monitors the loading and unloading of the kernels, so it will use insmod, rmmod, and modprobe to control the loading/unloading of the modules. The system calls init_module and delete_module will cause an audit record with the identifier "modules". This is important to make sure that no unauthorized user is loading or unloading a kernel module, which would potentially endanger the security. Sadly, Bailey is not set up to process this data.
 
 ## 4.1.18 Ensure the audit configuration is immutable
+### `configure_audit`
 This will set the system audit to make sure that the audit rules aren't able to be modified with auditctl. Adding "-e 2" will make it so that the audit is in immutable mode, so any audit changes can only be made on the system reboot. This is important because it will make sure that unauthorized users can't execute any changes to the audit system.
 * Add "-e 2" to the end of /etc/audit/audit.rules file
 
@@ -634,6 +636,7 @@ The owner of a file can set the file's permissions to run with the owner's or gr
 The owner of a file can set the file's permissions to run with the owner's or group's permissions, even if the user running the program is not the owner or a member of the group. The most common reason for a SGID program is to enable users to perform functions (such as changing their password) that require root privileges. There are valid reasons for SGID programs, but it is important to identify and review such programs to ensure they are legitimate. Review the files returned by the action in the audit section and check to see if system binaries have a different md5 checksum than what from the package. This is an indication that the binary may have been replaced. But, Bailey dose not provide this service as we can't automatically identify the settings that the user needs.
 
 ## 6.2.1 Ensure password fields are not empty
+### `fill_password_fields`
 Fills empty or insecure password fields with the same password, qualifying safety standards tested by Cyber Patriot and prevent potential massive vulnerabilities, despite every single user having the same password.
 Prerequisite: `ensure_readme` (incl. `ncis_readme_parsing`)
 * For each user over UID 1000, assigns standard password.
@@ -644,6 +647,7 @@ Testing:
 	* `cat /etc/shadow | awk -f '($2 == "") { print $1 " does not have a password " }'`: N/A
 
 ## 6.2.2 Ensure no legacy "+" entries exist in /etc/passwd
+### `remove_legacy"+"`
 You can insert data through the + character from NIS maps, and so these would be an entry for attackers to gain privilege on the system, so it is important to remove these points of entry.
 * Simply go through and remove any legacy "+" entries from the /etc/passwd file.
 
@@ -651,6 +655,7 @@ Testing:
 * `grep '^+:' /etc/passwd`
 
 ## 6.2.3 Ensure no legacy "+" entries exist in /etc/shadow
+### `remove_legacy"+"`
 You can insert data through the + character from NIS maps, and so these would be an entry for attackers to gain privilege on the system, so it is important to remove these points of entry.
 * Simply go through and remove any legacy "+" entries from the /etc/shadow file.
 
@@ -658,6 +663,7 @@ Testing:
 * `grep '^+:' /etc/shadow`
 
 ## 6.2.4 Ensure no legacy "+" entries exist in /etc/group
+### `remove_legacy"+"`
 You can insert data through the + character from NIS maps, and so these would be an entry for attackers to gain privilege on the system, so it is important to remove these points of entry.
 * Simply go through and remove any legacy "+" entries from the /etc/group file.
 
@@ -665,6 +671,7 @@ Testing:
 * `grep '^+:' /etc/group`
 
 ## 6.2.5 Ensure root is the only UID 0 account
+### `configure_UID_0`
 Any UID 0 account has superuser privileges on the system, so access should only be like that for the root account, otherwise an unapproved user can get onto the system and change system settings.
 * Remove any users other than the root user with UID 0 or assign them another UID
 
@@ -714,6 +721,7 @@ It is really easy for an administrator to edit the /etc/passwd file to make it s
 It is really easy for an administrator to edit the /etc/passwd file to make it so that two of the same group name exist, which presents a security risk because then both groups will have the same access as the first GID, which could present a security risk. Sadly, Bailey is not set up to process this data.
 
 ## 6.2.20 Ensure shadow group is empty
+### `empty_shawdow_group`
 Any user within the shadow group has access to read the /etc/shadow file, which presents a security risk because the /etc/shadow file makes it really easy for an attacker to user a password cracking program to get the password for admin, which will hurt the security of the device.
 * Remove all the users present in the shadow group, and make sure to change the primary group of any users with shadow as theirs.
 Testing:
