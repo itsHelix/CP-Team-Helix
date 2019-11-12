@@ -360,8 +360,7 @@ enable_auditd() {
 
 # CIS 4.1.18
 configure_audit() {
-sed -i 's “-e 2”'/etc/audit/audit.rules
-
+echo “-e 2” >> /etc/audit/audit.rules
 }
 # CIS: 4.2 ##############################################################
 
