@@ -151,7 +151,6 @@ goto %Loc%
 :: This simple script was made by Ruben Boonen (also known to some as b33f), and modified for use in this script.
 :: You can find this one and more like it at https://www.fuzzysecurity.com/index.html
 call %~dp0\Meta\wmic_info.bat
-echo Outputed
 
 :Auditpol
 ::Dose audit categorys
@@ -177,6 +176,7 @@ if /I "%share%" EQU "N" wmic path Win32_Share delete
 
 :InternetExp
 dism /online /enable-feature:"Internet-Explorer-Optional-amd64"
+"c:\program files\Mozilla Firefox\firefox.exe" -silent -nosplash -setDefaultBrowser
 
 :registry
 :: Shows all files even if Super Hidden
