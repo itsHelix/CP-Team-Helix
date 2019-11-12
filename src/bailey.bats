@@ -273,6 +273,14 @@ filesystem_mounting_disabled_boolean() {
   result=`systemctl is-enabled auditd`
   [ result -eq *enabled* ]
 }
+# CIS 4.1.3: Ensure auditing for processes that start priot to auditd is enabled
+@test "enable_auditd" {
+  sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=“audit=1”'/etc/default/grub
+  update-grub
+}
+
+# CIS 4.1.18: Ensure the audit configuration is immutable
+@test ""
 
 # CIS 4.2.1: Configure rsyslog
 @test "Rsylog is configured" {

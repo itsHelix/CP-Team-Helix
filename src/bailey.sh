@@ -358,7 +358,7 @@ enable_auditd() {
   update-grub
 }
 
-# CIS 4.1.18
+# CIS 4.1.18: Ensure the audit configuration is immutable
 configure_audit() {
 echo “-e 2” >> /etc/audit/audit.rules
 }
