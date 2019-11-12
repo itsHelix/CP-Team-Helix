@@ -539,7 +539,7 @@ This will set the system audit to make sure that the audit rules aren't able to 
 * Add "-e 2" to the end of /etc/audit/audit.rules file
 
 Testing:
-*  `grep `^\s*[^#]` /etc/audit/audit.rules | tail -1 -e 2`
+*  `grep `^\s*[^#]` /etc/audit/audit.rules | tail -1`: -e 2
 
 ## 4.2.1 Configure `rsyslog`
 ### `configure_rsyslog`
@@ -716,6 +716,6 @@ It is really easy for an administrator to edit the /etc/passwd file to make it s
 ## 6.2.20 Ensure shadow group is empty
 Any user within the shadow group has access to read the /etc/shadow file, which presents a security risk because the /etc/shadow file makes it really easy for an attacker to user a password cracking program to get the password for admin, which will hurt the security of the device.
 * Remove all the users present in the shadow group, and make sure to change the primary group of any users with shadow as theirs.
-Testing: 
+Testing:
 * `grep ^shadow:[^:]*:[^:]*:[^:]+ /etc/group`: N/A
 * `awk -F: '($4 == "<shadow-gid>") { print }' /etc/passwd`: N/A
