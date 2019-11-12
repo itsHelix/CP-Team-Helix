@@ -358,10 +358,11 @@ enable_auditd() {
   update-grub
 }
 
-# CIS 4.1.4-4.1.17
-
 # CIS 4.1.18
+configure_audit() {
+sed -i 's “-e 2”'/etc/audit/audit.rules
 
+}
 # CIS: 4.2 ##############################################################
 
 # CIS: 4.2.1 Configure rsyslog
