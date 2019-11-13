@@ -463,6 +463,11 @@ remove_plus_entry_group() { remove_plus_entry /etc/group }
 
 remove_plus_entries() { remove_plus_entry_passwd; remove_plus_entry_shadow; remove_plus_entry_group }
 
+# CIS 6.2.5 Ensure root is the only UID 0 account
+configure_UID_0 () {
+
+}
+
 # Comment out items that you do not want to be completed
 firefox_update_and_CIS
 purge_dirty_packages

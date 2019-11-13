@@ -280,7 +280,9 @@ filesystem_mounting_disabled_boolean() {
 }
 
 # CIS 4.1.18: Ensure the audit configuration is immutable
-@test ""
+@test "configure_audit" {
+  echo “-e 2” >> /etc/audit/audit.rules
+  }
 
 # CIS 4.2.1: Configure rsyslog
 @test "Rsylog is configured" {
