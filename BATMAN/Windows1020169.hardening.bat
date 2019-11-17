@@ -55,7 +55,12 @@ If %_V% Lss 62 Exit /B
 If %_P% Equ 1 (If %_V% Equ 62 Set "OS=Windows8"
     If %_V% Equ 63 Set "OS=Windows81"
     If %_V% Equ 100 Set "OS=Windows10"
-) Else If %_V% Equ 100 (Set "OS=Server2016") Else Exit /B
+) Else If %_V% Equ 100 (
+	Set "OS=Server2016"
+	CHOICE /M "Are you running 2016?"
+	if %ERRORLEVEL% EQU 1 set server69=Y
+	if %ERRORLEVEL% EQU 2 set server69=N
+) Else Exit /B
 IF /i %Breaks% EQU "Y" pause
 
 :: Operating System "bit" (thank you to, Iridium [user:381588], user on stackoverflow)
@@ -75,7 +80,7 @@ IF /i %Breaks% EQU "Y" pause
 
 :options
 set RemoteDesktop=N
-set SMB=N
+set SMB=Y
 set share=N
 set HPps1=N
 set Firefox=N
@@ -87,20 +92,18 @@ set Files=N
 set TaskKill=N
 
 ::MultipleChoiceBox runs (This add-on was made and distrubuted by Rob van der Woude [https://www.robvanderwoude.com/])
-MultipleChoiceBox.exe "Disable RDP;Enable SMB;Keep Shared Files;Run hardenpolicy.ps1;Firefox Settings;Update Software with PATCHMYPC;Users;Disable features;Firewall Settings;Run Everything.exe;Kill sus. Services" "What do you want?" "Batman" /C:2 > temp.txt
+MultipleChoiceBox.exe "Disable RDP;Disable SMB;Delete File Shares;Firefox Settings;Update Software with PatchMyPc;Users;Disable features;Firewall Settings;Run Everything.exe" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
 FINDSTR /C:"Disable RDP" temp.txt && IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
-FINDSTR /C:"Enable SMB" temp.txt && IF NOT ERRORLEVEL 1 set SMB=Y
-FINDSTR /C:"Keep Shared Files" temp.txt && IF NOT ERRORLEVEL 1 set share=Y
-FINDSTR /C:"Run hardenpolicy.ps1" temp.txt && IF NOT ERRORLEVEL 1 set HPps1=Y
+FINDSTR /C:"Disable SMB" temp.txt && IF NOT ERRORLEVEL 1 set SMB=N
+FINDSTR /C:"Delete File Shares" temp.txt && IF NOT ERRORLEVEL 1 set share=Y
 FINDSTR /C:"Firefox Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firefox=Y
-FINDSTR /C:"Update Software with PATCHMYPC" temp.txt && IF NOT ERRORLEVEL 1 set Software=Y
+FINDSTR /C:"Update Software with PatchMyPc" temp.txt && IF NOT ERRORLEVEL 1 set Software=Y
 FINDSTR /C:"Users" temp.txt && IF NOT ERRORLEVEL 1 set Users=Y
 FINDSTR /C:"Disable features" temp.txt && IF NOT ERRORLEVEL 1 set Loading=Y
 FINDSTR /C:"Firewall Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firewall=Y
 FINDSTR /C:"Run Everything.exe" temp.txt && IF NOT ERRORLEVEL 1 set Files=Y
-FINDSTR /C:"Kill sus. Services" temp.txt && IF NOT ERRORLEVEL 1 set TaskKill=Y
 del temp.txt
 IF /i %Breaks% EQU "Y" pause
 cls
@@ -109,18 +112,18 @@ cls
 color f0
 echo Choose An option:
 :: For this to show properly use encoding [Windows 1252] it will show as "I" when you do this. If you don't and then save+run it will break!
-echo ษอออออออออออออออออออออป
-echo บ  1. Does everything บ
-echo บ  2. Policies        บ
-echo บ  3. Users           บ
-echo บ  4. Software        บ
-echo บ  5. Input           บ
-echo ฬอออออออออออออออออออออสอออออออออออออออออออป
+echo ษออออออออออออออออออออออออป
+echo บ  1. Does everything    บ
+echo บ  2. Policies           บ
+echo บ  3. Users              บ
+echo บ  4. Software           บ
+echo บ  5. Kill Sus. Services บ
+echo บ  6. Input              บ
+echo ฬออออออออออออออออออออออออสออออออออออออออออป
 echo บCurrent options: Current OS = %OS%
 echo บ 	 Disable RemoteDesktop = %RemoteDesktop%
-echo บ	 Run hardenpolicy.ps1 = %HPps1%
-echo บ	 Enable SMB = %SMB%
-echo บ	 Keep shares = %share%
+echo บ	 Disable SMB = %SMB%
+echo บ	 Delete File Shares = %share%
 echo บ	 Run Users script = %Users%
 echo บ	 Run Firefox script = %Firefox%
 echo บ	 Update Software = %Software%
@@ -131,8 +134,9 @@ echo บ	 Kill sus. Services = %TaskKill%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
-CHOICE /C 12345 /M "Enter your choice:"
-if %ERRORLEVEL% EQU 5 goto :Input
+CHOICE /C 123456 /M "Enter your choice:"
+if %ERRORLEVEL% EQU 6 goto :Input
+if %ERRORLEVEL% EQU 5 goto :TaskKill
 if %ERRORLEVEL% EQU 4 goto :Software
 if %ERRORLEVEL% EQU 3 goto :Users
 if %ERRORLEVEL% EQU 2 goto :policies
@@ -455,12 +459,12 @@ cls
 if "%OS%" EQU "Windows10" set Operating=true
 if "%OS%" EQU "Windows81" set Operating=true
 if "%OS%" EQU "Windows8" set Operating=true
-if /I "%Operating%" EQU "false" goto Server
+if /I "%Operating%" EQU "true" (
   :: Windows 10 and Windows 8.1 and Windows8
-  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\DomainSysvol\GPO\Machine\registry.pol"
-  "%~dp0\Meta\LGPO.exe" /u "%~dp0\Meta\Perfect\DomainSysvol\GPO\User\registry.pol"
-  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
-  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_10\{C1E55664-D36A-4645-8CDB-6E6DA40EF7E9}\DomainSysvol\GPO\Machine\registry.pol"
+  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_10\{C1E55664-D36A-4645-8CDB-6E6DA40EF7E9}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
+  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_10\{C1E55664-D36A-4645-8CDB-6E6DA40EF7E9}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+
   reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /V DisableExceptionChainValidation /T REG_DWORD /D 0 /F
   reg add HKLM\SOFTWARE\Microsoft\PolicyManager\default\Settings\AllowSignInOptions /V value /T REG_DWORD /D 0 /F
   reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config /V DownloadMode /T REG_DWORD /D 0 /F
@@ -472,28 +476,28 @@ if /I "%Operating%" EQU "false" goto Server
   reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSyncNGSC /T REG_DWORD /D 1 /F
   reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSync /T REG_DWORD /D 1 /F
 
-IF /i %Breaks% EQU "Y" pause
-goto AfterServerPol
+	IF /i %Breaks% EQU "Y" pause
+	goto AfterServerPol
+	start "%~dp0\Meta\Enable_Secure_Sign-in.reg"
+)
 
 :Server
-  :: Windows Server
-  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\registry.pol"
-  "%~dp0\Meta\LGPO.exe" /u "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\User\registry.pol"
-  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
-  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\ServerDomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+if /I %server69% EQU "Y" (
+  :: Windows Server 2016
+  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\registry.pol"
+  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
+  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+	start "%~dp0\Meta\Enable_Secure_Sign-in.reg"
+) else (
+  :: Windows Server 2019
+  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\registry.pol"
+  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
+  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+	start "%~dp0\Meta\Enable_Secure_Sign-in.reg"
+)
 IF /i %Breaks% EQU "Y" pause
 :AfterServerPol
 
-:TaskKill
-if /I "%TaskKill%" EQU "Y" (
-	cls
-	tasklist /SVC
-	set /p kill="Enter PID of service you want DEAD: "
-	taskkill /F /PID %kill%
-	CHOICE /M "Any more services? (Y,N)"
-	if %ERRORLEVEL% EQU 1 goto :TaskKill
-	cls
-)
 :Software
 if /I "%Software%" EQU "Y" PatchMyPc /s
 
@@ -520,3 +524,17 @@ if /I "%Users%" EQU "Y" (
 IF /i %Breaks% EQU "Y" pause
 echo. & echo done
 cls
+pause
+exit
+
+:TaskKill
+if /I "%TaskKill%" EQU "Y" (
+	cls
+	tasklist /SVC
+	set /p kill="Enter PID of service you want DEAD: "
+	taskkill /F /PID %kill%
+	CHOICE /M "Any more services? (Y,N)"
+	if %ERRORLEVEL% EQU 1 goto :TaskKill
+	cls
+	pause kill
+)
