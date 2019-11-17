@@ -45,6 +45,9 @@ xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h /Y
 xcopy %~dp0\Software\PatchMyPc.exe %windir%\system32 /h /Y
+for %%S in ("Adobe","Google","Microsoft","Office 2013","Office 2016","OneDrive For Business","OneDrive NextGen") do (
+	xcopy /s %~dp0\Meta\Perfect\"ADMX Templates"\%%S %windir%\PolicyDefinitions /h /Y
+)
 
 :: Operating System (thank you to, Compo [user:6738015], user on stackoverflow)
 Set "_P="
@@ -57,6 +60,7 @@ If %_P% Equ 1 (If %_V% Equ 62 Set "OS=Windows8"
     If %_V% Equ 100 Set "OS=Windows10"
 ) Else If %_V% Equ 100 (
 	Set "OS=Server2016"
+	cls
 	CHOICE /M "Are you running 2016?"
 	if %ERRORLEVEL% EQU 1 set server69=Y
 	if %ERRORLEVEL% EQU 2 set server69=N
@@ -279,10 +283,6 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Ad
 
 
 :firewall
-cls
-netsh firewall show config
-pause
-
 if /I "%Firewall%" EQU "N" goto :weak
 netsh advfirewall set allprofiles state on
 netsh advfirewall reset
@@ -478,22 +478,25 @@ if /I "%Operating%" EQU "true" (
 
 	IF /i %Breaks% EQU "Y" pause
 	goto AfterServerPol
-	start "%~dp0\Meta\Enable_Secure_Sign-in.reg"
+	%~dp0\Meta\Enable_Secure_Sign-in.reg
+	gpupdate /force
 )
 
 :Server
-if /I %server69% EQU "Y" (
+if /I "%server69%" EQU "Y" (
   :: Windows Server 2016
   "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\registry.pol"
   "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
   "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
-	start "%~dp0\Meta\Enable_Secure_Sign-in.reg"
+	%~dp0\Meta\Enable_Secure_Sign-in.reg
+	gpupdate /force
 ) else (
   :: Windows Server 2019
   "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\registry.pol"
   "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
   "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
-	start "%~dp0\Meta\Enable_Secure_Sign-in.reg"
+	%~dp0\Meta\Enable_Secure_Sign-in.reg
+	gpupdate /force
 )
 IF /i %Breaks% EQU "Y" pause
 :AfterServerPol
@@ -522,8 +525,8 @@ if /I "%Users%" EQU "Y" (
 	color 1f
 )
 IF /i %Breaks% EQU "Y" pause
-echo. & echo done
 cls
+echo. & echo done
 pause
 exit
 
