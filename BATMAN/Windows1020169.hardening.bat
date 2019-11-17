@@ -53,19 +53,19 @@ for %%S in ("Adobe","Google","Microsoft","Office 2013","Office 2016","OneDrive F
 Set "_P="
 For /F "EOL=P Tokens=*" %%A In ('"WMIC OS Get ProductType,Version 2>Nul"'
 ) Do For /F "Tokens=1-3 Delims=. " %%B In ("%%A") Do Set /A _P=%%B,_V=%%C%%D
-If Not Defined _P Exit /B
-If %_V% Lss 62 Exit /B
-If %_P% Equ 1 (If %_V% Equ 62 Set "OS=Windows8"
-    If %_V% Equ 63 Set "OS=Windows81"
-    If %_V% Equ 100 Set "OS=Windows10"
-) Else If %_V% Equ 100 (
+if Not Defined _P Exit /B
+if %_V% Lss 62 Exit /B
+if %_P% Equ 1 (if %_V% Equ 62 Set "OS=Windows8"
+    if %_V% Equ 63 Set "OS=Windows81"
+    if %_V% Equ 100 Set "OS=Windows10"
+) Else if %_V% Equ 100 (
 	Set "OS=Server2016"
 	cls
 	CHOICE /M "Are you running 2016?"
 	if %ERRORLEVEL% EQU 1 set server69=Y
 	if %ERRORLEVEL% EQU 2 set server69=N
 ) Else Exit /B
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 
 :: Operating System "bit" (thank you to, Iridium [user:381588], user on stackoverflow)
 if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
@@ -80,7 +80,7 @@ if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
     :: 64 bit OS
     set bit=64
 )
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 
 :options
 set RemoteDesktop=N
@@ -99,23 +99,23 @@ set TaskKill=N
 MultipleChoiceBox.exe "Disable RDP;Disable SMB;Delete File Shares;Firefox Settings;Update Software with PatchMyPc;Users;Disable features;Firewall Settings;Run Everything.exe" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
-FINDSTR /C:"Disable RDP" temp.txt && IF NOT ERRORLEVEL 1 set RemoteDesktop=Y
-FINDSTR /C:"Disable SMB" temp.txt && IF NOT ERRORLEVEL 1 set SMB=N
-FINDSTR /C:"Delete File Shares" temp.txt && IF NOT ERRORLEVEL 1 set share=Y
-FINDSTR /C:"Firefox Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firefox=Y
-FINDSTR /C:"Update Software with PatchMyPc" temp.txt && IF NOT ERRORLEVEL 1 set Software=Y
-FINDSTR /C:"Users" temp.txt && IF NOT ERRORLEVEL 1 set Users=Y
-FINDSTR /C:"Disable features" temp.txt && IF NOT ERRORLEVEL 1 set Loading=Y
-FINDSTR /C:"Firewall Settings" temp.txt && IF NOT ERRORLEVEL 1 set Firewall=Y
-FINDSTR /C:"Run Everything.exe" temp.txt && IF NOT ERRORLEVEL 1 set Files=Y
+FINDSTR /C:"Disable RDP" temp.txt && if NOT ERRORLEVEL 1 set RemoteDesktop=Y
+FINDSTR /C:"Disable SMB" temp.txt && if NOT ERRORLEVEL 1 set SMB=N
+FINDSTR /C:"Delete File Shares" temp.txt && if NOT ERRORLEVEL 1 set share=Y
+FINDSTR /C:"Firefox Settings" temp.txt && if NOT ERRORLEVEL 1 set Firefox=Y
+FINDSTR /C:"Update Software with PatchMyPc" temp.txt && if NOT ERRORLEVEL 1 set Software=Y
+FINDSTR /C:"Users" temp.txt && if NOT ERRORLEVEL 1 set Users=Y
+FINDSTR /C:"Disable features" temp.txt && if NOT ERRORLEVEL 1 set Loading=Y
+FINDSTR /C:"Firewall Settings" temp.txt && if NOT ERRORLEVEL 1 set Firewall=Y
+FINDSTR /C:"Run Everything.exe" temp.txt && if NOT ERRORLEVEL 1 set Files=Y
 del temp.txt
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 cls
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :MENU
 color f0
 echo Choose An option:
-:: For this to show properly use encoding [Windows 1252] it will show as "I" when you do this. If you don't and then save+run it will break!
+:: For this to show properly use encoding [Windows 1252] it will show as "I" when you do this. if you don't and then save+run it will break!
 echo ษออออออออออออออออออออออออป
 echo บ  1. Does everything    บ
 echo บ  2. Policies           บ
@@ -134,7 +134,6 @@ echo บ	 Update Software = %Software%
 echo บ	 Firewall Settings = %Firewall%
 echo บ	 Disable Weak Services = %Loading%
 echo บ	 Run Everything.exe = %Files%
-echo บ	 Kill sus. Services = %TaskKill%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
@@ -158,7 +157,7 @@ goto %Loc%
 :Wmic_Info
 :: This simple script was made by Ruben Boonen (also known to some as b33f), and modified for use in this script.
 :: You can find this one and more like it at https://www.fuzzysecurity.com/index.html
-call %~dp0\Meta\wmic_info.bat
+call %~dp0\Meta\Sub_Scripts\wmic_info.bat
 
 :Auditpol
 ::Dose audit categorys
@@ -233,7 +232,7 @@ reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /V Enable
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /V EnableLUA /T REG_DWORD /D 1 /F >> nul 2>&1
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /V EnableVirtualization /T REG_DWORD /D 1 /F
 
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 :SMB
 :: https://www.alibabacloud.com/help/faq-detail/57499.htm
 Dism /online /Get-Features /format:table | find "SMB1Protocol"
@@ -253,7 +252,7 @@ if /I "%SMB%" EQU "Y" (
   sc.exe config mrxsmb20 start= disabled
 )
 
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 :RemoteDesktop
 if /I "%RemoteDesktop%" EQU "Y" (
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /V fDenyTSConnections /T REG_DWORD /D 1 /F
@@ -275,7 +274,7 @@ reg add "HKLM\SYSTEM\ControlSet001\Control\Remote Assistance" /V fAllowFullContr
 reg add "HKLM\SYSTEM\ControlSet001\Control\Remote Assistance" /V fAllowToGetHelp /T REG_DWORD /D 0 /F
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /V AllowRemoteRPC /T REG_DWORD /D 0 /F
 
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 :miscellaneous
 :: Security - Do not hide extensions for know file types.
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\HideFileExt" /v "CheckedValue" /t REG_DWORD /d 0 /f
@@ -283,122 +282,27 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Ad
 
 
 :firewall
-if /I "%Firewall%" EQU "N" goto :weak
-netsh advfirewall set allprofiles state on
-netsh advfirewall reset
-netsh advfirewall show allprofiles
-netsh advfirewall firewall set rule name="Remote Assistance (DCOM-In)" new enable=no
-netsh advfirewall firewall set rule name="Remote Assistance (PNRP-In)" new enable=no
-netsh advfirewall firewall set rule name="Remote Assistance (RA Server TCP-In)" new enable=no
-netsh advfirewall firewall set rule name="Remote Assistance (SSDP TCP-In)" new enable=no
-netsh advfirewall firewall set rule name="Remote Assistance (SSDP UDP-In)" new enable=no
-netsh advfirewall firewall set rule name="Remote Assistance (TCP-In)" new enable=no
-netsh advfirewall firewall set rule name="Telnet Server" new enable=no
-netsh advfirewall firewall set rule name="netcat" new enable=no
-netsh advfirewall set allprofiles state on
-netsh advfirewall set allprofiles firewallpolicy blockinbound,allowoutbound
-netsh advfirewall firewall add rule name="Block135tout" protocol=TCP dir=out remoteport=135 action=block
-netsh advfirewall firewall add rule name="Block135uout" protocol=UDP dir=out remoteport=135 action=block
-netsh advfirewall firewall add rule name="Block135tin" protocol=TCP dir=in localport=135 action=block
-netsh advfirewall firewall add rule name="Block135tout" protocol=UDP dir=in localport=135 action=block
-netsh advfirewall firewall add rule name="Block137tout" protocol=TCP dir=out remoteport=137 action=block
-netsh advfirewall firewall add rule name="Block137uout" protocol=UDP dir=out remoteport=137 action=block
-netsh advfirewall firewall add rule name="Block137tin" protocol=TCP dir=in localport=137 action=block
-netsh advfirewall firewall add rule name="Block137tout" protocol=UDP dir=in localport=137 action=block
-netsh advfirewall firewall add rule name="Block138tout" protocol=TCP dir=out remoteport=138 action=block
-netsh advfirewall firewall add rule name="Block138uout" protocol=UDP dir=out remoteport=138 action=block
-netsh advfirewall firewall add rule name="Block138tin" protocol=TCP dir=in localport=138 action=block
-netsh advfirewall firewall add rule name="Block138tout" protocol=UDP dir=in localport=138 action=block
-netsh advfirewall firewall add rule name="Block139tout" protocol=TCP dir=out remoteport=139 action=block
-netsh advfirewall firewall add rule name="Block139uout" protocol=UDP dir=out remoteport=139 action=block
-netsh advfirewall firewall add rule name="Block139tin" protocol=TCP dir=in localport=139 action=block
-netsh advfirewall firewall add rule name="Block139tout" protocol=UDP dir=in localport=139 action=block
+if /I "%Firewall%" EQU "Y" start %~dp0\Meta\Sub_Scripts\Firewall.bat
+if /I %Breaks% EQU "Y" pause
 
-:: Disable default rules.
-netsh advfirewall firewall set rule group="Connect" new enable=no
-netsh advfirewall firewall set rule group="Contact Support" new enable=no
-netsh advfirewall firewall set rule group="Cortana" new enable=no
-netsh advfirewall firewall set rule group="DiagTrack" new enable=no
-netsh advfirewall firewall set rule group="Feedback Hub" new enable=no
-netsh advfirewall firewall set rule group="Microsoft Photos" new enable=no
-netsh advfirewall firewall set rule group="OneNote" new enable=no
-netsh advfirewall firewall set rule group="Remote Assistance" new enable=no
-netsh advfirewall firewall set rule group="Windows Spotlight" new enable=no
-
-:: Delete custom rules in case script has previously run.
-netsh advfirewall firewall delete rule name="block_Connect_in"
-netsh advfirewall firewall delete rule name="block_Connect_out"
-netsh advfirewall firewall delete rule name="block_ContactSupport_in"
-netsh advfirewall firewall delete rule name="block_ContactSupport_out"
-netsh advfirewall firewall delete rule name="block_Cortana_in"
-netsh advfirewall firewall delete rule name="block_Cortana_out"
-netsh advfirewall firewall delete rule name="block_DiagTrack_in"
-netsh advfirewall firewall delete rule name="block_DiagTrack_out"
-netsh advfirewall firewall delete rule name="block_dmwappushservice_in"
-netsh advfirewall firewall delete rule name="block_dmwappushservice_out"
-netsh advfirewall firewall delete rule name="block_FeedbackHub_in"
-netsh advfirewall firewall delete rule name="block_FeedbackHub_out"
-netsh advfirewall firewall delete rule name="block_OneNote_in"
-netsh advfirewall firewall delete rule name="block_OneNote_out"
-netsh advfirewall firewall delete rule name="block_Photos_in"
-netsh advfirewall firewall delete rule name="block_Photos_out"
-netsh advfirewall firewall delete rule name="block_RemoteRegistry_in"
-netsh advfirewall firewall delete rule name="block_RemoteRegistry_out"
-netsh advfirewall firewall delete rule name="block_RetailDemo_in"
-netsh advfirewall firewall delete rule name="block_RetailDemo_out"
-netsh advfirewall firewall delete rule name="block_WMPNetworkSvc_in"
-netsh advfirewall firewall delete rule name="block_WMPNetworkSvc_out"
-netsh advfirewall firewall delete rule name="block_WSearch_in"
-netsh advfirewall firewall delete rule name="block_WSearch_out"
-
-:: Add custom blocking rules.
-netsh advfirewall firewall add rule name="block_Connect_in" dir=in program="%WINDIR%\SystemApps\Microsoft.PPIProjection_cw5n1h2txyewy\Receiver.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_Connect_out" dir=out program="%WINDIR%\SystemApps\Microsoft.PPIProjection_cw5n1h2txyewy\Receiver.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_ContactSupport_in" dir=in program="%WINDIR%\SystemApps\ContactSupport_cw5n1h2txyewy\ContactSupport.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_ContactSupport_out" dir=out program="%WINDIR%\SystemApps\ContactSupport_cw5n1h2txyewy\ContactSupport.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_Cortana_in" dir=in program="%WINDIR%\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy\SearchUI.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_Cortana_out" dir=out program="%WINDIR%\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy\SearchUI.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_DiagTrack_in" dir=in service="DiagTrack" action=block enable=yes
-netsh advfirewall firewall add rule name="block_DiagTrack_out" dir=out service="DiagTrack" action=block enable=yes
-netsh advfirewall firewall add rule name="block_dmwappushservice_in" dir=in service="dmwappushservice" action=block enable=yes
-netsh advfirewall firewall add rule name="block_dmwappushservice_out" dir=out service="dmwappushservice" action=block enable=yes
-netsh advfirewall firewall add rule name="block_FeedbackHub_in" dir=in program="%ProgramFiles%\WindowsApps\Microsoft.WindowsFeedbackHub_1.1708.2831.0_x64__8wekyb3d8bbwe\PilotshubApp.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_FeedbackHub_out" dir=out program="%ProgramFiles%\WindowsApps\Microsoft.WindowsFeedbackHub_1.1708.2831.0_x64__8wekyb3d8bbwe\PilotshubApp.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_OneNote_in" dir=in program="%ProgramFiles%\WindowsApps\Microsoft.Office.OneNote_17.8625.21151.0_x64__8wekyb3d8bbwe\onenoteim.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_OneNote_out" dir=out program="%ProgramFiles%\WindowsApps\Microsoft.Office.OneNote_17.8625.21151.0_x64__8wekyb3d8bbwe\onenoteim.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_Photos_in" dir=in program="%ProgramFiles%\WindowsApps\Microsoft.Windows.Photos_2017.39091.16340.0_x64__8wekyb3d8bbwe\Microsoft.Photos.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_Photos_out" dir=out program="%ProgramFiles%\WindowsApps\Microsoft.Windows.Photos_2017.39091.16340.0_x64__8wekyb3d8bbwe\Microsoft.Photos.exe" action=block enable=yes
-netsh advfirewall firewall add rule name="block_RemoteRegistry_in" dir=in service="RemoteRegistry" action=block enable=yes
-netsh advfirewall firewall add rule name="block_RemoteRegistry_out" dir=out service="RemoteRegistry" action=block enable=yes
-netsh advfirewall firewall add rule name="block_RetailDemo_in" dir=in service="RetailDemo" action=block enable=yes
-netsh advfirewall firewall add rule name="block_RetailDemo_out" dir=out service="RetailDemo" action=block enable=yes
-netsh advfirewall firewall add rule name="block_WMPNetworkSvc_in" dir=in service="WMPNetworkSvc" action=block enable=yes
-netsh advfirewall firewall add rule name="block_WMPNetworkSvc_out" dir=out service="WMPNetworkSvc" action=block enable=yes
-netsh advfirewall firewall add rule name="block_WSearch_in" dir=in service="WSearch" action=block enable=yes
-netsh advfirewall firewall add rule name="block_WSearch_out" dir=out service="WSearch" action=block enable=yes
-
-IF /i %Breaks% EQU "Y" pause
 :weak
 :: Weak services
-if /I "%Loading%" EQU "N" goto :NoLoad
-echo "DISABLING WEAK SERVICES"
-for %%S in (IIS-WebServerRole,IIS-WebServer,IIS-CommonHttpFeatures,IIS-HttpErrors,IIS-HttpRedirect,IIS-ApplicationDevelopment,IIS-NetFxExtensibility,IIS-NetFxExtensibility45,IIS-HealthAndDiagnostics,IIS-HttpLogging,IIS-LoggingLibraries,IIS-RequestMonitor,IIS-HttpTracin,g,IIS-Security,IIS-URLAuthorization,IIS-RequestFiltering,IIS-IPSecurity,IIS-Performance,IIS-HttpCompressionDynamic,IIS-WebServerManagementTools,IIS-ManagementScriptingTools,IIS-IIS6ManagementCompatibility,IIS-Metabase,IIS-HostableWebCore,IIS-StaticContent,IIS-DefaultDocument,IIS-DirectoryBrowsing,IIS-WebDAV,IIS-WebSockets,IIS-ApplicationInit,IIS-ASPNET,IIS-ASPNET45,IIS-ASP,IIS-CGI,IIS-ISAPIExtensions,IIS-ISAPIFilter,IIS-ServerSideIncludes,IIS-CustomLogging,IIS-BasicAuthentication,IIS-HttpCompressionStatic,IIS-ManagementConsole,IIS-ManagementService,IIS-WMICompatibility,IIS-LegacyScripts,IIS-LegacySnapIn,IIS-FTPServer,IIS-FTPSvc,IIS-FTPExtensibility,TFTP,TelnetClient,TelnetServer) do (
-	dism /online /disable-feature /featurename:%%S /NoRestart
-)
-IF /i %Breaks% EQU "Y" pause
+if /I "%Loading%" EQU "Y" start %~dp0\Meta\Sub_Scripts\Features.bat
+if /I %Breaks% EQU "Y" pause
+
 :NoLoad
 :: Privacy - Stop unneeded services.
 net stop DiagTrack
 net stop dmwappushservice
 net stop RemoteRegistry
 net stop RetailDemo
-IF /i %OS% NEQ "Server2016" net stop WinRM
+if /I %OS% NEQ "Server2016" net stop WinRM
 net stop WMPNetworkSvc
 
 :: Privacy - Delete, or disable, unneeded services.
 sc config RemoteRegistry start=disabled
 sc config RetailDemo start=disabled
-IF /i %OS% NEQ "Server2016" sc config WinRM start=disabled
+if /I %OS% NEQ "Server2016" sc config WinRM start=disabled
 sc config WMPNetworkSvc start=disabled
 sc delete DiagTrack
 sc delete dmwappushservice
@@ -433,7 +337,7 @@ for %%S in (wersvc,wecsvc) do (
 
 echo. & echo Services configured.
 
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 cls
 
 :Cleaning
@@ -452,7 +356,7 @@ dir /B "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Program
 del /S "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\*" /F /Q
 echo. & echo Startup files cleansed
 
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 cls
 
 :policies
@@ -476,9 +380,9 @@ if /I "%Operating%" EQU "true" (
   reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSyncNGSC /T REG_DWORD /D 1 /F
   reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSync /T REG_DWORD /D 1 /F
 
-	IF /i %Breaks% EQU "Y" pause
+	if /I %Breaks% EQU "Y" pause
 	goto AfterServerPol
-	%~dp0\Meta\Enable_Secure_Sign-in.reg
+	REGEDIT /S %~dp0\Meta\Enable_Secure_Sign-in.reg
 	gpupdate /force
 )
 
@@ -488,17 +392,17 @@ if /I "%server69%" EQU "Y" (
   "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\registry.pol"
   "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
   "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
-	%~dp0\Meta\Enable_Secure_Sign-in.reg
+	REGEDIT /S %~dp0\Meta\Enable_Secure_Sign-in.reg
 	gpupdate /force
 ) else (
   :: Windows Server 2019
   "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\registry.pol"
   "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
   "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
-	%~dp0\Meta\Enable_Secure_Sign-in.reg
+	REGEDIT /S %~dp0\Meta\Enable_Secure_Sign-in.reg
 	gpupdate /force
 )
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 :AfterServerPol
 
 :Software
@@ -508,13 +412,13 @@ if /I "%Software%" EQU "Y" PatchMyPc /s
 if /I "%Files%" EQU "Y" (
 	start /wait %~dp0\Software\Everything-Setup.exe
 )
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 
 :Users
 if /I "%Users%" EQU "Y" (
 	cls
 	color 0D
-	copy %~dp0\Meta\users.ps1 %USERPROFILE%\desktop
+	copy %~dp0\Meta\Sub_Scripts\users.ps1 %USERPROFILE%\desktop
 
 	pause
 	set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
@@ -524,7 +428,7 @@ if /I "%Users%" EQU "Y" (
 	del %USERPROFILE%\desktop\users.ps1
 	color 1f
 )
-IF /i %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" pause
 cls
 echo. & echo done
 pause
