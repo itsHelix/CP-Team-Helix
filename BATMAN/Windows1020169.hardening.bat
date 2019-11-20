@@ -65,7 +65,7 @@ if %_P% Equ 1 (if %_V% Equ 62 Set "OS=Windows8"
 	if %ERRORLEVEL% EQU 1 set server69=Y
 	if %ERRORLEVEL% EQU 2 set server69=N
 ) Else Exit /B
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 
 :: Operating System "bit" (thank you to, Iridium [user:381588], user on stackoverflow)
 if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
@@ -80,7 +80,7 @@ if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
     :: 64 bit OS
     set bit=64
 )
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 
 :options
 set RemoteDesktop=N
@@ -109,7 +109,7 @@ FINDSTR /C:"Disable features" temp.txt && if NOT ERRORLEVEL 1 set Loading=Y
 FINDSTR /C:"Firewall Settings" temp.txt && if NOT ERRORLEVEL 1 set Firewall=Y
 FINDSTR /C:"Run Everything.exe" temp.txt && if NOT ERRORLEVEL 1 set Files=Y
 del temp.txt
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 cls
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :MENU
@@ -166,20 +166,22 @@ auditpol /set /category:* /failure:enable
 
 :FirefoxSettings
 
-if /I "%Firefox%" EQU "N" goto SkipFF
-taskkill /IM firefox.exe /F
-cd %appdata%\Mozilla\Firefox\Profiles
-:: Below: this selects the next folder in the DIR [you have to do this becuase the folder you need to get into is generated at random]
-for /d %%F in (*) do cd "%%F" & goto :break
-:break
-copy /y /v %~dp0\Meta\Perfect\prefs.js %cd%
-cls
-echo. & echo You should be good!
-start /wait firefox about:config
-:SkipFF
+if /I "%Firefox%" EQU "Y" (
+	taskkill /IM firefox.exe /F
+	cd %appdata%\Mozilla\Firefox\Profiles
+	:: Below: this selects the next folder in the DIR [you have to do this becuase the folder you need to get into is generated at random]
+	for /d %%F in (*) do cd "%%F" & goto :break
+	:break
+	copy /y /v %~dp0\Meta\Perfect\prefs.js %cd%
+	cls
+	echo. & echo You should be good!
+	start firefox about:config
+	timeout /T 20
+	taskkill /IM firefox.exe /F
+)
 
 :share
-if /I "%share%" EQU "N" wmic path Win32_Share delete
+if /I "%share%" EQU "Y" wmic path Win32_Share delete
 
 :InternetExp
 dism /online /enable-feature:"Internet-Explorer-Optional-amd64"
@@ -232,7 +234,7 @@ reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /V Enable
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /V EnableLUA /T REG_DWORD /D 1 /F >> nul 2>&1
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /V EnableVirtualization /T REG_DWORD /D 1 /F
 
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 :SMB
 :: https://www.alibabacloud.com/help/faq-detail/57499.htm
 Dism /online /Get-Features /format:table | find "SMB1Protocol"
@@ -252,7 +254,7 @@ if /I "%SMB%" EQU "Y" (
   sc.exe config mrxsmb20 start= disabled
 )
 
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 :RemoteDesktop
 if /I "%RemoteDesktop%" EQU "Y" (
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /V fDenyTSConnections /T REG_DWORD /D 1 /F
@@ -274,7 +276,7 @@ reg add "HKLM\SYSTEM\ControlSet001\Control\Remote Assistance" /V fAllowFullContr
 reg add "HKLM\SYSTEM\ControlSet001\Control\Remote Assistance" /V fAllowToGetHelp /T REG_DWORD /D 0 /F
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /V AllowRemoteRPC /T REG_DWORD /D 0 /F
 
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 :miscellaneous
 :: Security - Do not hide extensions for know file types.
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\HideFileExt" /v "CheckedValue" /t REG_DWORD /d 0 /f
@@ -283,12 +285,12 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Ad
 
 :firewall
 if /I "%Firewall%" EQU "Y" start %~dp0\Meta\Sub_Scripts\Firewall.bat
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 
 :weak
 :: Weak services
 if /I "%Loading%" EQU "Y" start %~dp0\Meta\Sub_Scripts\Features.bat
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 
 :NoLoad
 :: Privacy - Stop unneeded services.
@@ -337,7 +339,7 @@ for %%S in (wersvc,wecsvc) do (
 
 echo. & echo Services configured.
 
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 cls
 
 :Cleaning
@@ -356,10 +358,17 @@ dir /B "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Program
 del /S "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\*" /F /Q
 echo. & echo Startup files cleansed
 
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 cls
 
 :policies
+set regfiles[0] ="clearpagefile.reg"
+set regfiles[1] ="Enable_Secure_Sign.reg"
+set regfiles[2] ="Set_SmarScreen_to_Warn.reg"
+:: set regfiles[3] =""
+:: set regfiles[4] =""
+:: set regfiles[5] =""
+
 if "%OS%" EQU "Windows10" set Operating=true
 if "%OS%" EQU "Windows81" set Operating=true
 if "%OS%" EQU "Windows8" set Operating=true
@@ -380,10 +389,10 @@ if /I "%Operating%" EQU "true" (
   reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSyncNGSC /T REG_DWORD /D 1 /F
   reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSync /T REG_DWORD /D 1 /F
 
-	if /I %Breaks% EQU "Y" pause
-	goto AfterServerPol
-	REGEDIT /S %~dp0\Meta\Enable_Secure_Sign-in.reg
+	if /I %Breaks% EQU "Y" timeout /T 40
+	for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
 	gpupdate /force
+	goto AfterServerPol
 )
 
 :Server
@@ -392,17 +401,17 @@ if /I "%server69%" EQU "Y" (
   "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\registry.pol"
   "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
   "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
-	REGEDIT /S %~dp0\Meta\Enable_Secure_Sign-in.reg
+	for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
 	gpupdate /force
 ) else (
   :: Windows Server 2019
   "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\registry.pol"
   "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
   "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
-	REGEDIT /S %~dp0\Meta\Enable_Secure_Sign-in.reg
+	for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
 	gpupdate /force
 )
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 :AfterServerPol
 
 :Software
@@ -412,7 +421,7 @@ if /I "%Software%" EQU "Y" PatchMyPc /s
 if /I "%Files%" EQU "Y" (
 	start /wait %~dp0\Software\Everything-Setup.exe
 )
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 
 :Users
 if /I "%Users%" EQU "Y" (
@@ -428,7 +437,7 @@ if /I "%Users%" EQU "Y" (
 	del %USERPROFILE%\desktop\users.ps1
 	color 1f
 )
-if /I %Breaks% EQU "Y" pause
+if /I %Breaks% EQU "Y" timeout /T 40
 cls
 echo. & echo done
 pause
@@ -443,5 +452,6 @@ if /I "%TaskKill%" EQU "Y" (
 	CHOICE /M "Any more services? (Y,N)"
 	if %ERRORLEVEL% EQU 1 goto :TaskKill
 	cls
-	pause kill
+	pause
+	exit
 )
