@@ -83,31 +83,16 @@ if "%PROCESSOR_ARCHITECTURE%" EQU "x86" (
 if /I %Breaks% EQU "Y" timeout /T 40
 
 :options
-set RemoteDesktop=N
-set SMB=Y
-set share=N
-set HPps1=N
-set Firefox=N
-set Software=N
-set Users=N
-set Loading=N
-set Firewall=N
-set Files=N
-set TaskKill=N
 
 ::MultipleChoiceBox runs (This add-on was made and distrubuted by Rob van der Woude [https://www.robvanderwoude.com/])
-MultipleChoiceBox.exe "Disable RDP;Disable SMB;Delete File Shares;Firefox Settings;Update Software with PatchMyPc;Users;Disable features;Firewall Settings;Run Everything.exe" "What do you want?" "Batman" /C:2 > temp.txt
+MultipleChoiceBox.exe "Disable_RDP;Disable_SMB;Delete_File_Shares;Firefox_Settings;Update_Software_with_PatchMyPc;Users;Disable_features;Firewall_Settings;Run_Everything.exe" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
-FINDSTR /C:"Disable RDP" temp.txt && if NOT ERRORLEVEL 1 set RemoteDesktop=Y
-FINDSTR /C:"Disable SMB" temp.txt && if NOT ERRORLEVEL 1 set SMB=N
-FINDSTR /C:"Delete File Shares" temp.txt && if NOT ERRORLEVEL 1 set share=Y
-FINDSTR /C:"Firefox Settings" temp.txt && if NOT ERRORLEVEL 1 set Firefox=Y
-FINDSTR /C:"Update Software with PatchMyPc" temp.txt && if NOT ERRORLEVEL 1 set Software=Y
-FINDSTR /C:"Users" temp.txt && if NOT ERRORLEVEL 1 set Users=Y
-FINDSTR /C:"Disable features" temp.txt && if NOT ERRORLEVEL 1 set Loading=Y
-FINDSTR /C:"Firewall Settings" temp.txt && if NOT ERRORLEVEL 1 set Firewall=Y
-FINDSTR /C:"Run Everything.exe" temp.txt && if NOT ERRORLEVEL 1 set Files=Y
+for %%S in (Disable_RDP,Disable_SMB,Delete_File_Shares,Firefox_Settings,Update_Software_with_PatchMyPc,Users,Disable_features,Firewall_Settings,Run_Everything.exe) do (
+  set %%S = N
+  FINDSTR /C:%%S temp.txt && if NOT ERRORLEVEL 1 set %%S=Y
+)
+
 del temp.txt
 if /I %Breaks% EQU "Y" timeout /T 40
 cls
@@ -124,16 +109,16 @@ echo บ  4. Software           บ
 echo บ  5. Kill Sus. Services บ
 echo บ  6. Input              บ
 echo ฬออออออออออออออออออออออออสออออออออออออออออป
-echo บCurrent options: Current OS = %OS%
-echo บ 	 Disable RemoteDesktop = %RemoteDesktop%
-echo บ	 Disable SMB = %SMB%
-echo บ	 Delete File Shares = %share%
-echo บ	 Run Users script = %Users%
-echo บ	 Run Firefox script = %Firefox%
-echo บ	 Update Software = %Software%
-echo บ	 Firewall Settings = %Firewall%
-echo บ	 Disable Weak Services = %Loading%
-echo บ	 Run Everything.exe = %Files%
+echo บ	Current options: Current OS = %OS%
+echo บ	Disable Disable_RDP = %Disable_RDP%
+echo บ	Disable SMB = %Disable_SMB%
+echo บ	Delete File Shares = %Delete_File_Shares%
+echo บ	Run Users script = %Users%
+echo บ	Run Firefox script = %Firefox_Settings%
+echo บ	Update Software = %Update_Software_with_PatchMyPc%
+echo บ	Firewall Settings = %Firewall_Settings%
+echo บ	Disable Weak Services = %Disable_features%
+echo บ	Run Everything.exe = %Run_Everything.exe%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
@@ -166,7 +151,7 @@ auditpol /set /category:* /failure:enable
 
 :FirefoxSettings
 
-if /I "%Firefox%" EQU "Y" (
+if /I "%Firefox_Settings%" EQU "Y" (
 	taskkill /IM firefox.exe /F
 	cd %appdata%\Mozilla\Firefox\Profiles
 	:: Below: this selects the next folder in the DIR [you have to do this becuase the folder you need to get into is generated at random]
@@ -181,7 +166,7 @@ if /I "%Firefox%" EQU "Y" (
 )
 
 :share
-if /I "%share%" EQU "Y" wmic path Win32_Share delete
+if /I "%Delete_File_Shares%" EQU "Y" wmic path Win32_Share delete
 
 :InternetExp
 dism /online /enable-feature:"Internet-Explorer-Optional-amd64"
@@ -238,7 +223,7 @@ if /I %Breaks% EQU "Y" timeout /T 40
 :SMB
 :: https://www.alibabacloud.com/help/faq-detail/57499.htm
 Dism /online /Get-Features /format:table | find "SMB1Protocol"
-if /I "%SMB%" EQU "Y" (
+if /I "%Disable_SMB%" EQU "N" (
   :: Disable SMB1
   sc.exe config lanmanworkstation depend= bowser/mrxsmb20/nsi
   sc.exe config mrxsmb10 start= disabled
@@ -255,8 +240,8 @@ if /I "%SMB%" EQU "Y" (
 )
 
 if /I %Breaks% EQU "Y" timeout /T 40
-:RemoteDesktop
-if /I "%RemoteDesktop%" EQU "Y" (
+:Disable_RDP
+if /I "%Disable_RDP%" EQU "Y" (
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /V fDenyTSConnections /T REG_DWORD /D 1 /F
 	sc config iphlpsvc start= disabled
 	sc stop iphlpsvc
@@ -284,12 +269,12 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Ad
 
 
 :firewall
-if /I "%Firewall%" EQU "Y" start %~dp0\Meta\Sub_Scripts\Firewall.bat
+if /I "%Firewall_Settings%" EQU "Y" start %~dp0\Meta\Sub_Scripts\Firewall.bat
 if /I %Breaks% EQU "Y" timeout /T 40
 
 :weak
 :: Weak services
-if /I "%Loading%" EQU "Y" start %~dp0\Meta\Sub_Scripts\Features.bat
+if /I "%Disable_features%" EQU "Y" start %~dp0\Meta\Sub_Scripts\Features.bat
 if /I %Breaks% EQU "Y" timeout /T 40
 
 :NoLoad
@@ -415,10 +400,10 @@ if /I %Breaks% EQU "Y" timeout /T 40
 :AfterServerPol
 
 :Software
-if /I "%Software%" EQU "Y" PatchMyPc /s
+if /I "%Update_Software_with_PatchMyPc%" EQU "Y" PatchMyPc /s
 
 :Files
-if /I "%Files%" EQU "Y" (
+if /I "%Run_Everything.exe%" EQU "Y" (
 	start /wait %~dp0\Software\Everything-Setup.exe
 )
 if /I %Breaks% EQU "Y" timeout /T 40
