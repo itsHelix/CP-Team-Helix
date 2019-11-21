@@ -415,7 +415,7 @@ configuring_file_permissions_function() {
 }
 
 etc_passwd_config() {configuring_file_permissions_function /etc/passwd 644 root}
-etc_shadow_config_16() {configuring_file_permissions_function /etc/shadow o-rwx,g-rwx shadow}
+etc_shadow_config() {configuring_file_permissions_function /etc/shadow o-rwx,g-rwx shadow}
 etc_group_config() {configuring_file_permissions_function /etc/group 644 root}
 etc_gshadow_config() {configuring_file_permissions_function /etc/gshadow o-rwx,g-rwx shadow}
 etc_passwd_-_config() {configuring_file_permissions_function /etc/passwd- 600 root}
