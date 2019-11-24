@@ -44,6 +44,7 @@ xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h /Y
 xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h /Y
+xcopy %~dp0\Meta\ntright.exe %windir%\system32 /h /Y
 xcopy %~dp0\Software\PatchMyPc.exe %windir%\system32 /h /Y
 for %%S in ("Adobe","Google","Microsoft","Office 2013","Office 2016","OneDrive For Business","OneDrive NextGen") do (
 	xcopy /s %~dp0\Meta\Perfect\"ADMX Templates"\%%S %windir%\PolicyDefinitions /h /Y
@@ -109,16 +110,16 @@ echo บ  4. Software           บ
 echo บ  5. Kill Sus. Services บ
 echo บ  6. Input              บ
 echo ฬออออออออออออออออออออออออสออออออออออออออออป
-echo บ	Current options: Current OS = %OS%
-echo บ	Disable Disable_RDP = %Disable_RDP%
-echo บ	Disable SMB = %Disable_SMB%
-echo บ	Delete File Shares = %Delete_File_Shares%
-echo บ	Run Users script = %Users%
-echo บ	Run Firefox script = %Firefox_Settings%
-echo บ	Update Software = %Update_Software_with_PatchMyPc%
-echo บ	Firewall Settings = %Firewall_Settings%
-echo บ	Disable Weak Services = %Disable_features%
-echo บ	Run Everything.exe = %Run_Everything.exe%
+echo บ Current options: Current OS = %OS%
+echo บ Disable Disable_RDP = %Disable_RDP%
+echo บ Disable SMB = %Disable_SMB%
+echo บ Delete File Shares = %Delete_File_Shares%
+echo บ Run Users script = %Users%
+echo บ Run Firefox script = %Firefox_Settings%
+echo บ Update Software = %Update_Software_with_PatchMyPc%
+echo บ Firewall Settings = %Firewall_Settings%
+echo บ Disable Weak Services = %Disable_features%
+echo บ Run Everything.exe = %Run_Everything.exe%
 echo ศอออออออออออออออออออออออออออออออออออออออออผ
 
 :: Fetch option
@@ -346,6 +347,83 @@ echo. & echo Startup files cleansed
 if /I %Breaks% EQU "Y" timeout /T 40
 cls
 
+:Software
+if /I "%Update_Software_with_PatchMyPc%" EQU "Y" PatchMyPc /s
+
+:Files
+if /I "%Run_Everything.exe%" EQU "Y" (
+	start /wait %~dp0\Software\Everything-Setup.exe
+)
+if /I %Breaks% EQU "Y" timeout /T 40
+
+:Users
+if /I "%Users%" EQU "Y" (
+	cls
+	color 0D
+	copy %~dp0\Meta\Sub_Scripts\users.ps1 %USERPROFILE%\desktop
+
+	pause
+	set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
+	powershell.exe -executionpolicy bypass -file %USERPROFILE%\desktop\users.ps1
+	cd C:\Windows\System32
+	set path=C:\Windows\System32
+	del %USERPROFILE%\desktop\users.ps1
+	color 1
+	if exist C:\Windows\System32\ntrights.exe (
+		echo Installation succeeded, managing user rights..
+		set remove=("Backup Operators" "Everyone" "Power Users" "Users" "NETWORK SERVICE" "LOCAL SERVICE" "Remote Desktop User" "ANONOYMOUS LOGON" "Guest" "Performance Log Users")
+		for %%a in (%remove%) do (
+				ntrights -U %%a -R SeNetworkLogonRight
+				ntrights -U %%a -R SeIncreaseQuotaPrivilege
+				ntrights -U %%a -R SeInteractiveLogonRight
+				ntrights -U %%a -R SeRemoteInteractiveLogonRight
+				ntrights -U %%a -R SeSystemtimePrivilege
+				ntrights -U %%a +R SeDenyNetworkLogonRight
+				ntrights -U %%a +R SeDenyRemoteInteractiveLogonRight
+				ntrights -U %%a -R SeProfileSingleProcessPrivilege
+				ntrights -U %%a -R SeBatchLogonRight
+				ntrights -U %%a -R SeUndockPrivilege
+				ntrights -U %%a -R SeRestorePrivilege
+				ntrights -U %%a -R SeShutdownPrivilege
+			)
+			ntrights -U "Administrators" -R SeImpersonatePrivilege
+			ntrights -U "Administrator" -R SeImpersonatePrivilege
+			ntrights -U "SERVICE" -R SeImpersonatePrivilege
+			ntrights -U "LOCAL SERVICE" +R SeImpersonatePrivilege
+			ntrights -U "NETWORK SERVICE" +R SeImpersonatePrivilege
+			ntrights -U "Administrators" +R SeMachineAccountPrivilege
+			ntrights -U "Administrator" +R SeMachineAccountPrivilege
+			ntrights -U "Administrators" -R SeIncreaseQuotaPrivilege
+			ntrights -U "Administrator" -R SeIncreaseQuotaPrivilege
+			ntrights -U "Administrators" -R SeDebugPrivilege
+			ntrights -U "Administrator" -R SeDebugPrivilege
+			ntrights -U "Administrators" +R SeLockMemoryPrivilege
+			ntrights -U "Administrator" +R SeLockMemoryPrivilege
+			ntrights -U "Administrators" -R SeBatchLogonRight
+			ntrights -U "Administrator" -R SeBatchLogonRight
+			echo Managed User Rights
+	)
+)
+if /I %Breaks% EQU "Y" timeout /T 40
+cls
+
+:flushDNS
+echo Flushing DNS
+ipconfig /flushdns
+echo Flushed DNS
+echo Clearing contents of: C:\Windows\System32\drivers\etc\hosts
+attrib -r -s C:\WINDOWS\system32\drivers\etc\hosts
+echo > C:\Windows\System32\drivers\etc\hosts
+attrib +r +s C:\WINDOWS\system32\drivers\etc\hosts
+echo Cleared hosts file
+
+
+
+
+
+
+
+
 :policies
 set regfiles[0] ="clearpagefile.reg"
 set regfiles[1] ="Enable_Secure_Sign.reg"
@@ -399,31 +477,6 @@ if /I "%server69%" EQU "Y" (
 if /I %Breaks% EQU "Y" timeout /T 40
 :AfterServerPol
 
-:Software
-if /I "%Update_Software_with_PatchMyPc%" EQU "Y" PatchMyPc /s
-
-:Files
-if /I "%Run_Everything.exe%" EQU "Y" (
-	start /wait %~dp0\Software\Everything-Setup.exe
-)
-if /I %Breaks% EQU "Y" timeout /T 40
-
-:Users
-if /I "%Users%" EQU "Y" (
-	cls
-	color 0D
-	copy %~dp0\Meta\Sub_Scripts\users.ps1 %USERPROFILE%\desktop
-
-	pause
-	set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
-	powershell.exe -executionpolicy bypass -file %USERPROFILE%\desktop\users.ps1
-	cd C:\Windows\System32
-	set path=C:\Windows\System32
-	del %USERPROFILE%\desktop\users.ps1
-	color 1f
-)
-if /I %Breaks% EQU "Y" timeout /T 40
-cls
 echo. & echo done
 pause
 exit
