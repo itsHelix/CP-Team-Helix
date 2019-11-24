@@ -414,14 +414,14 @@ configuring_file_permissions_function() {
   chmod $2 $1
 }
 
-etc_passwd_config() {configuring_file_permissions_function /etc/passwd 644 root}
+etc_passwd_config() {configuring_file_permissions_function /etc/passwd 444 root}
 etc_shadow_config() {configuring_file_permissions_function /etc/shadow o-rwx,g-wx shadow}
-etc_group_config() {configuring_file_permissions_function /etc/group 644 root}
+etc_group_config() {configuring_file_permissions_function /etc/group 444 root}
 etc_gshadow_config() {configuring_file_permissions_function /etc/gshadow o-rwx,g-wx shadow}
 etc_passwd_-_config() {configuring_file_permissions_function /etc/passwd- 600 root}
-etc_shadow_-_config() {configuring_file_permissions_function /etc/shadow- 600 root}
+etc_shadow_-_config() {configuring_file_permissions_function /etc/shadow- 400 root}
 etc_group_-_config() {configuring_file_permissions_function /etc/group- 600 root}
-etc_gshadow_-_config() {configuring_file_permissions_function /etc/gshadow- 600 root}
+etc_gshadow_-_config() {configuring_file_permissions_function /etc/gshadow- 400 root}
 
 configure_all_etc_files() {
   etc_passwd_config; etc_shadow_config; etc_group_config; etc_gshadow_config; etc_passwd_-_config; etc_shadow_-_config; etc_group_-_config; etc_gshadow_-_config
