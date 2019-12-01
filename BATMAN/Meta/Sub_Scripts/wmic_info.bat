@@ -13,3 +13,5 @@ wmic startup get Caption,Command,Location,User /format:"%var%" >> %USERPROFILE%\
 wmic PRODUCT get Description,InstallDate,InstallLocation,PackageCache,Vendor,Version /format:"%var%" >> %USERPROFILE%\desktop\output\wmic_out.html
 wmic os get name,version,InstallDate,LastBootUpTime,LocalDateTime,Manufacturer,RegisteredUser,ServicePackMajorVersion,SystemDirectory /format:"%var%" >> %USERPROFILE%\desktop\output\wmic_out.html
 wmic Timezone get DaylightName,Description,StandardName /format:"%var%" >> %USERPROFILE%\desktop\output\wmic_out.html
+
+wmic product get name,version /output:%USERPROFILE%\desktop\output\InstallList.htm product get /format:hform.xsl

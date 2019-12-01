@@ -37,17 +37,18 @@ if %errorlevel%==0 (
 )
 
 :: Setting some stuff up
-MKDIR %USERPROFILE%\desktop\output
+MKDIR %USERPROFILE%\desktop\output > nul 2>&1
 
 :: Copying things from Meta to make the GUIs work
-xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h /Y
-xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h /Y
-xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h /Y
-xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h /Y
-xcopy %~dp0\Meta\ntright.exe %windir%\system32 /h /Y
-xcopy %~dp0\Software\PatchMyPc.exe %windir%\system32 /h /Y
+xcopy %~dp0\Meta\dialogboxes\InputBox.exe %windir%\system32 /h /Y > nul 2>&1
+xcopy %~dp0\Meta\dialogboxes\InputBox.cs %windir%\system32 /h /Y > nul 2>&1
+xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.exe %windir%\system32 /h /Y > nul 2>&1
+xcopy %~dp0\Meta\dialogboxes\MultipleChoiceBox.cs %windir%\system32 /h /Y > nul 2>&1
+xcopy %~dp0\Meta\ntright.exe %windir%\system32 /h /Y > nul 2>&1
+xcopy %~dp0\Software\PatchMyPc.exe %windir%\system32 /h /Y > nul 2>&1
+xcopy %~dp0\Meta\LGPO.exe %windir%\system32 /h /Y > nul 2>&1
 for %%S in ("Adobe","Google","Microsoft","Office 2013","Office 2016","OneDrive For Business","OneDrive NextGen") do (
-	xcopy /s %~dp0\Meta\Perfect\"ADMX Templates"\%%S %windir%\PolicyDefinitions /h /Y
+	xcopy /s %~dp0\Meta\Perfect\"ADMX Templates"\%%S %windir%\PolicyDefinitions /h /Y > nul 2>&1
 )
 
 :: Operating System (thank you to, Compo [user:6738015], user on stackoverflow)
@@ -90,8 +91,8 @@ MultipleChoiceBox.exe "Disable_RDP;Disable_SMB;Delete_File_Shares;Firefox_Settin
 
 ::Parsing MultipleChoiceBox
 for %%S in (Disable_RDP,Disable_SMB,Delete_File_Shares,Firefox_Settings,Update_Software_with_PatchMyPc,Users,Disable_features,Firewall_Settings,Run_Everything.exe) do (
-  set %%S = N
-  FINDSTR /C:%%S temp.txt && if NOT ERRORLEVEL 1 set %%S=Y
+  set %%S = N > nul 2>&1
+  FINDSTR /C:%%S temp.txt && if NOT ERRORLEVEL 1 set %%S=Y > nul 2>&1
 )
 
 del temp.txt
@@ -302,8 +303,8 @@ echo. & echo Configuring services advanced
 
 :: Services that should be burned at the stake.
 for %%S in (tapisrv,bthserv,mcx2svc,remoteregistry,seclogon,telnet,tlntsvr,p2pimsvc,simptcp,fax,msftpsvc,nettcpportsharing,iphlpsvc,lfsvc,bthhfsrv,irmon,sharedaccess,xblauthmanager,xblgamesave,xboxnetapisvc) do (
-	sc config %%S start= disabled
-	sc stop %%S
+	sc config %%S start= disabled > nul 2>&1
+	sc stop %%S > nul 2>&1
 )
 
 :: Services that are an automatic start.
@@ -437,9 +438,7 @@ if "%OS%" EQU "Windows81" set Operating=true
 if "%OS%" EQU "Windows8" set Operating=true
 if /I "%Operating%" EQU "true" (
   :: Windows 10 and Windows 8.1 and Windows8
-  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_10\{C1E55664-D36A-4645-8CDB-6E6DA40EF7E9}\DomainSysvol\GPO\Machine\registry.pol"
-  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_10\{C1E55664-D36A-4645-8CDB-6E6DA40EF7E9}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
-  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_10\{C1E55664-D36A-4645-8CDB-6E6DA40EF7E9}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+  lgpo /g "%~dp0\Meta\Perfect\October 2019 STIG\_Win10"
 
   reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /V DisableExceptionChainValidation /T REG_DWORD /D 0 /F
   reg add HKLM\SOFTWARE\Microsoft\PolicyManager\default\Settings\AllowSignInOptions /V value /T REG_DWORD /D 0 /F
@@ -454,28 +453,26 @@ if /I "%Operating%" EQU "true" (
 
 	if /I %Breaks% EQU "Y" timeout /T 40
 	for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
-	gpupdate /force
 	goto AfterServerPol
+) else (
+	CHOICE /M "Are you running 2016?"
+	if %ERRORLEVEL% EQU 1 set server69=Y
+	if %ERRORLEVEL% EQU 2 set server69=N
 )
 
 :Server
 if /I "%server69%" EQU "Y" (
   :: Windows Server 2016
-  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\registry.pol"
-  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
-  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2016\{89ABC832-EBD7-423F-A345-0457D99EA329}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+  lgpo /g "%~dp0\Meta\Perfect\October 2019 STIG\_Ser16"
 	for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
-	gpupdate /force
 ) else (
   :: Windows Server 2019
-  "%~dp0\Meta\LGPO.exe" /m "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\registry.pol"
-  "%~dp0\Meta\LGPO.exe" /s "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
-  "%~dp0\Meta\LGPO.exe" /ac "%~dp0\Meta\Perfect\GPOs_2019\{E2BBA769-DA8E-4FD4-BFB3-F814034C83AA}\DomainSysvol\GPO\Machine\microsoft\windows nt\Audit\audit.csv"
+  lgpo /g "%~dp0\Meta\Perfect\October 2019 STIG\_Ser19"
 	for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
-	gpupdate /force
 )
 if /I %Breaks% EQU "Y" timeout /T 40
 :AfterServerPol
+gpupdate /force
 
 echo. & echo done
 pause
