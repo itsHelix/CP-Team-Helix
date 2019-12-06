@@ -19,7 +19,7 @@ CHOICE /M "Do you want Breaks OFF?"
 if %ERRORLEVEL% EQU 1 set Breaks=N
 if %ERRORLEVEL% EQU 2 set Breaks=Y
 
-setlocal enabledelayedexpansion
+setlocal EnableExtensions enabledelayedexpansion
 
 :: Check for admin rights
 echo Checking if script contains Administrative rights...
@@ -62,10 +62,8 @@ if %_P% Equ 1 (if %_V% Equ 62 Set "OS=Windows8"
     if %_V% Equ 100 Set "OS=Windows10"
 ) Else if %_V% Equ 100 (
 	Set "OS=Server2016"
+	set server69=Y
 	cls
-	CHOICE /M "Are you running 2016?"
-	if %ERRORLEVEL% EQU 1 set server69=Y
-	if %ERRORLEVEL% EQU 2 set server69=N
 ) Else Exit /B
 if /I %Breaks% EQU "Y" timeout /T 40
 
@@ -305,23 +303,27 @@ echo. & echo Configuring services advanced
 for %%S in (tapisrv,bthserv,mcx2svc,remoteregistry,seclogon,telnet,tlntsvr,p2pimsvc,simptcp,fax,msftpsvc,nettcpportsharing,iphlpsvc,lfsvc,bthhfsrv,irmon,sharedaccess,xblauthmanager,xblgamesave,xboxnetapisvc) do (
 	sc config %%S start= disabled > nul 2>&1
 	sc stop %%S > nul 2>&1
+	echo -
 )
 
 :: Services that are an automatic start.
 for %%S in (eventlog,mpssvc) do (
-	sc config %%S start= auto
-	sc start %%S
+	sc config %%S start= auto > nul 2>&1
+	sc start %%S > nul 2>&1
+	echo -
 )
 
 :: Services that are an automatic (delayed) start.
 for %%S in (windefend,sppsvc,wuauserv) do (
-	sc config %%S start= delayed-auto
-	sc start %%S
+	sc config %%S start= delayed-auto > nul 2>&1
+	sc start %%S > nul 2>&1
+	echo -
 )
 
 :: Services that are a manual start.
 for %%S in (wersvc,wecsvc) do (
-	sc config %%S start= demand
+	sc config %%S start= demand > nul 2>&1
+	echo -
 )
 
 echo. & echo Services configured.
@@ -418,13 +420,6 @@ echo > C:\Windows\System32\drivers\etc\hosts
 attrib +r +s C:\WINDOWS\system32\drivers\etc\hosts
 echo Cleared hosts file
 
-
-
-
-
-
-
-
 :policies
 set regfiles[0] ="clearpagefile.reg"
 set regfiles[1] ="Enable_Secure_Sign.reg"
@@ -456,8 +451,8 @@ if /I "%Operating%" EQU "true" (
 	goto AfterServerPol
 ) else (
 	CHOICE /M "Are you running 2016?"
-	if %ERRORLEVEL% EQU 1 set server69=Y
-	if %ERRORLEVEL% EQU 2 set server69=N
+	if %ERRORLEVEL% EQU 2 set server69=Y
+	if %ERRORLEVEL% EQU 1 set server69=N
 )
 
 :Server
