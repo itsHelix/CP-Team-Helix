@@ -19,7 +19,7 @@ CHOICE /M "Do you want Breaks OFF?"
 if %ERRORLEVEL% EQU 1 set Breaks=N
 if %ERRORLEVEL% EQU 2 set Breaks=Y
 
-setlocal EnableExtensions enabledelayedexpansion
+setlocal enabledelayedexpansion
 
 :: Check for admin rights
 echo Checking if script contains Administrative rights...
@@ -85,10 +85,10 @@ if /I %Breaks% EQU "Y" timeout /T 40
 :options
 
 ::MultipleChoiceBox runs (This add-on was made and distrubuted by Rob van der Woude [https://www.robvanderwoude.com/])
-MultipleChoiceBox.exe "Disable_RDP;Disable_SMB;Delete_File_Shares;Firefox_Settings;Update_Software_with_PatchMyPc;Users;Disable_features;Firewall_Settings;Run_Everything.exe" "What do you want?" "Batman" /C:2 > temp.txt
+MultipleChoiceBox.exe "Disable_RDP;Disable_SMB;Delete_File_Shares;Firefox_Settings;Users;Disable_features;Firewall_Settings" "What do you want?" "Batman" /C:2 > temp.txt
 
 ::Parsing MultipleChoiceBox
-for %%S in (Disable_RDP,Disable_SMB,Delete_File_Shares,Firefox_Settings,Update_Software_with_PatchMyPc,Users,Disable_features,Firewall_Settings,Run_Everything.exe) do (
+for %%S in (Disable_RDP,Disable_SMB,Delete_File_Shares,Firefox_Settings,Users,Disable_features,Firewall_Settings) do (
   set %%S = N > nul 2>&1
   FINDSTR /C:%%S temp.txt && if NOT ERRORLEVEL 1 set %%S=Y > nul 2>&1
 )
@@ -345,18 +345,7 @@ dir /B "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\" >> %~dp0\
 del /S "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\*" /F /Q
 dir /B "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\" >> %~dp0\Output\deletedfiles.txt
 del /S "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\*" /F /Q
-echo. & echo Startup files cleansed
-
-if /I %Breaks% EQU "Y" timeout /T 40
-cls
-
-:Software
-if /I "%Update_Software_with_PatchMyPc%" EQU "Y" PatchMyPc /s
-
-:Files
-if /I "%Run_Everything.exe%" EQU "Y" (
-	start /wait %~dp0\Software\Everything-Setup.exe
-)
+echo. & echo Startup files cleanse
 if /I %Breaks% EQU "Y" timeout /T 40
 
 :Users
@@ -366,46 +355,47 @@ if /I "%Users%" EQU "Y" (
 	copy %~dp0\Meta\Sub_Scripts\users.ps1 %USERPROFILE%\desktop
 
 	pause
-	set PATH=%PATH%;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
+	set PATH=%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
 	powershell.exe -executionpolicy bypass -file %USERPROFILE%\desktop\users.ps1
 	cd C:\Windows\System32
 	set path=C:\Windows\System32
 	del %USERPROFILE%\desktop\users.ps1
-	color 1
-	if exist C:\Windows\System32\ntrights.exe (
-		echo Installation succeeded, managing user rights..
-		set remove=("Backup Operators" "Everyone" "Power Users" "Users" "NETWORK SERVICE" "LOCAL SERVICE" "Remote Desktop User" "ANONOYMOUS LOGON" "Guest" "Performance Log Users")
-		for %%a in (%remove%) do (
-				ntrights -U %%a -R SeNetworkLogonRight
-				ntrights -U %%a -R SeIncreaseQuotaPrivilege
-				ntrights -U %%a -R SeInteractiveLogonRight
-				ntrights -U %%a -R SeRemoteInteractiveLogonRight
-				ntrights -U %%a -R SeSystemtimePrivilege
-				ntrights -U %%a +R SeDenyNetworkLogonRight
-				ntrights -U %%a +R SeDenyRemoteInteractiveLogonRight
-				ntrights -U %%a -R SeProfileSingleProcessPrivilege
-				ntrights -U %%a -R SeBatchLogonRight
-				ntrights -U %%a -R SeUndockPrivilege
-				ntrights -U %%a -R SeRestorePrivilege
-				ntrights -U %%a -R SeShutdownPrivilege
-			)
-			ntrights -U "Administrators" -R SeImpersonatePrivilege
-			ntrights -U "Administrator" -R SeImpersonatePrivilege
-			ntrights -U "SERVICE" -R SeImpersonatePrivilege
-			ntrights -U "LOCAL SERVICE" +R SeImpersonatePrivilege
-			ntrights -U "NETWORK SERVICE" +R SeImpersonatePrivilege
-			ntrights -U "Administrators" +R SeMachineAccountPrivilege
-			ntrights -U "Administrator" +R SeMachineAccountPrivilege
-			ntrights -U "Administrators" -R SeIncreaseQuotaPrivilege
-			ntrights -U "Administrator" -R SeIncreaseQuotaPrivilege
-			ntrights -U "Administrators" -R SeDebugPrivilege
-			ntrights -U "Administrator" -R SeDebugPrivilege
-			ntrights -U "Administrators" +R SeLockMemoryPrivilege
-			ntrights -U "Administrator" +R SeLockMemoryPrivilege
-			ntrights -U "Administrators" -R SeBatchLogonRight
-			ntrights -U "Administrator" -R SeBatchLogonRight
-			echo Managed User Rights
-	)
+	color 1D
+
+	REM if exist C:\Windows\System32\ntrights.exe (
+	REM 	echo Installation succeeded, managing user rights..
+	REM 	set remove=("Backup Operators" "Everyone" "Power Users" "Users" "NETWORK SERVICE" "LOCAL SERVICE" "Remote Desktop User" "ANONOYMOUS LOGON" "Guest" "Performance Log Users")
+	REM 	for %%a in (%remove%) do (
+	REM 			ntrights -U %%a -R SeNetworkLogonRight
+	REM 			ntrights -U %%a -R SeIncreaseQuotaPrivilege
+	REM 			ntrights -U %%a -R SeInteractiveLogonRight
+	REM 			ntrights -U %%a -R SeRemoteInteractiveLogonRight
+	REM 			ntrights -U %%a -R SeSystemtimePrivilege
+	REM 			ntrights -U %%a +R SeDenyNetworkLogonRight
+	REM 			ntrights -U %%a +R SeDenyRemoteInteractiveLogonRight
+	REM 			ntrights -U %%a -R SeProfileSingleProcessPrivilege
+	REM 			ntrights -U %%a -R SeBatchLogonRight
+	REM 			ntrights -U %%a -R SeUndockPrivilege
+	REM 			ntrights -U %%a -R SeRestorePrivilege
+	REM 			ntrights -U %%a -R SeShutdownPrivilege
+	REM 		)
+	REM 		ntrights -U "Administrators" -R SeImpersonatePrivilege
+	REM 		ntrights -U "Administrator" -R SeImpersonatePrivilege
+	REM 		ntrights -U "SERVICE" -R SeImpersonatePrivilege
+	REM 		ntrights -U "LOCAL SERVICE" +R SeImpersonatePrivilege
+	REM 		ntrights -U "NETWORK SERVICE" +R SeImpersonatePrivilege
+	REM 		ntrights -U "Administrators" +R SeMachineAccountPrivilege
+	REM 		ntrights -U "Administrator" +R SeMachineAccountPrivilege
+	REM 		ntrights -U "Administrators" -R SeIncreaseQuotaPrivilege
+	REM 		ntrights -U "Administrator" -R SeIncreaseQuotaPrivilege
+	REM 		ntrights -U "Administrators" -R SeDebugPrivilege
+	REM 		ntrights -U "Administrator" -R SeDebugPrivilege
+	REM 		ntrights -U "Administrators" +R SeLockMemoryPrivilege
+	REM 		ntrights -U "Administrator" +R SeLockMemoryPrivilege
+	REM 		ntrights -U "Administrators" -R SeBatchLogonRight
+	REM 		ntrights -U "Administrator" -R SeBatchLogonRight
+	REM 		echo Managed User Rights
+	REM )
 )
 if /I %Breaks% EQU "Y" timeout /T 40
 cls
@@ -421,9 +411,9 @@ attrib +r +s C:\WINDOWS\system32\drivers\etc\hosts
 echo Cleared hosts file
 
 :policies
-set regfiles[0] ="clearpagefile.reg"
-set regfiles[1] ="Enable_Secure_Sign.reg"
-set regfiles[2] ="Set_SmarScreen_to_Warn.reg"
+:: set regfiles[0] ="clearpagefile.reg"
+:: set regfiles[1] ="Enable_Secure_Sign.reg"
+:: set regfiles[2] ="Set_SmarScreen_to_Warn.reg"
 :: set regfiles[3] =""
 :: set regfiles[4] =""
 :: set regfiles[5] =""
@@ -447,7 +437,12 @@ if /I "%Operating%" EQU "true" (
   reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSync /T REG_DWORD /D 1 /F
 
 	if /I %Breaks% EQU "Y" timeout /T 40
-	for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
+	:: for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
+	REGEDIT /S %~dp0\Meta\regfiles\everything.reg
+	auditpol /set /category:* /success:enable
+	auditpol /set /category:* /failure:enable
+	net accounts /lockoutthreshold:5
+	gpupdate /force
 	goto AfterServerPol
 ) else (
 	CHOICE /M "Are you running 2016?"
@@ -459,15 +454,47 @@ if /I "%Operating%" EQU "true" (
 if /I "%server69%" EQU "Y" (
   :: Windows Server 2016
   lgpo /g "%~dp0\Meta\Perfect\October 2019 STIG\_Ser16"
-	for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /V DisableExceptionChainValidation /T REG_DWORD /D 0 /F
+	reg add HKLM\SOFTWARE\Microsoft\PolicyManager\default\Settings\AllowSignInOptions /V value /T REG_DWORD /D 0 /F
+	reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config /V DownloadMode /T REG_DWORD /D 0 /F
+	reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config /V DODownloadMode /T REG_DWORD /D 0 /F
+
+	:: They kept changing the value name for this, so I'm just doing all of them.
+	reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V AllowCortana /T REG_DWORD /D 0 /F
+	reg add HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config /V AutoConnectAllowedOEM /T REG_DWORD /D 0 /F
+	reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSyncNGSC /T REG_DWORD /D 1 /F
+	reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSync /T REG_DWORD /D 1 /F
+
+	:: for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
+	REGEDIT /S %~dp0\Meta\regfiles\everything.reg
+	auditpol /set /category:* /success:enable
+	auditpol /set /category:* /failure:enable
+	net accounts /lockoutthreshold:5
+	gpupdate /force
 ) else (
   :: Windows Server 2019
   lgpo /g "%~dp0\Meta\Perfect\October 2019 STIG\_Ser19"
-	for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /V DisableExceptionChainValidation /T REG_DWORD /D 0 /F
+	reg add HKLM\SOFTWARE\Microsoft\PolicyManager\default\Settings\AllowSignInOptions /V value /T REG_DWORD /D 0 /F
+	reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config /V DownloadMode /T REG_DWORD /D 0 /F
+	reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config /V DODownloadMode /T REG_DWORD /D 0 /F
+
+	:: They kept changing the value name for this, so I'm just doing all of them.
+	reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V AllowCortana /T REG_DWORD /D 0 /F
+	reg add HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config /V AutoConnectAllowedOEM /T REG_DWORD /D 0 /F
+	reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSyncNGSC /T REG_DWORD /D 1 /F
+	reg add HKLM\Software\Policies\Microsoft\Windows\OneDrive /V DisableFileSync /T REG_DWORD /D 1 /F
+
+	:: for /F "tokens=2 delims==" %%s in ('set regfiles[') do REGEDIT /S %~dp0\Meta\regfiles\%%s
+	REGEDIT /S %~dp0\Meta\regfiles\everything.reg
+	auditpol /set /category:* /success:enable
+	auditpol /set /category:* /failure:enable
+	net accounts /lockoutthreshold:5
+	gpupdate /force
 )
 if /I %Breaks% EQU "Y" timeout /T 40
 :AfterServerPol
-gpupdate /force
+
 
 echo. & echo done
 pause
