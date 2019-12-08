@@ -138,35 +138,20 @@ goto %Loc%
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :Everything
 if /I "Run Wmic.bat" EQU "Run Wmic.bat" CALL :Run_Wmic_Info
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "Set Auditpol" EQU "Set Auditpol" CALL :Set_Auditpol
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Firefox_Settings%" EQU "Y" CALL :Change_Firefox_Settings
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Delete_File_Shares%" EQU "Y" CALL :Delete_File_Shares
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Install_IE%" EQU "%Install_IE%" CALL :Install_InternetExp
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Update_Policies%" EQU "Y" CALL :Install_LGPO_STIG
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Update_Policies%" EQU "Y" CALL :Update_Registry
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Disable_SMB%" EQU "%Disable_SMB%" CALL :SMB
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Disable_RDP%" EQU "%Disable_RDP%" CALL :RDP
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Firewall_Settings%" EQU "Y" CALL :Fix_Firewall_Settings
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Disable_features%" EQU "Y" CALL :Disable_Weak_Services
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Disable_features%" EQU "Y" CALL :Disable_Services
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "Cleaning Files" EQU "Cleaning Files" CALL :Cleaning_Files
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Users%" EQU "Y" CALL :User_Auditing
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "Flush DNS" EQU "Flush DNS" CALL :Flush_DNS
-if /I "%Breaks%" EQU "Y" timeout /T 40
 
 goto :MENU
 
@@ -511,6 +496,8 @@ echo > C:\Windows\System32\drivers\etc\hosts
 attrib +r +s C:\WINDOWS\system32\drivers\etc\hosts
 echo Cleared hosts file
 EXIT /B 0
+
+
 
 :Task_Kill
 cls
