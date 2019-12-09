@@ -1,0 +1,7 @@
+! 
+service password-encryption 
+! 
+hostname swithcit_01 
+! 
+! 
+! 
