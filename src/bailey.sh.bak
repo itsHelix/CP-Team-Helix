@@ -155,7 +155,7 @@ bottloader_password_set() {
   passwordHash=`echo -e "$stdpass\n$stdpass" | grub-mkpasswd-pbkdf2 | grep -o "grub.*"`
 
   # Changing password
-  echo -e '\ncat <<EOF\nset superusers="Admin"\npassword_pbkdf2 Admin'$passwordHash'\nEOF' >> /etc/grub.d/00_heade
+  echo -e '\ncat <<EOF\nset superusers="Admin"\npassword_pbkdf2 Admin'$passwordHash'\nEOF' >> /etc/grub.d/00_header
 
   # Updating grub configuration
   update-grub
@@ -217,7 +217,7 @@ configure_selinux_policy() {
   echo "SELINUXTYPE=ubuntu" >> /etc/selinux/config
 }
 
-# CIS 1.6.2: Configure AppArmo
+# CIS 1.6.2: Configure AppArmor
 
 # CIS 1.6.2.1: Ensure AppArmor is not disabled in bootloader configuration
 enable_apparmor_in_bootloader_configuration() {
@@ -233,7 +233,7 @@ enforce_apparmor_profiles() {
 
 # CIS 1.6.3: Ensure SELinux or AppArmor are installed
 install_mac_systems() {
-  apt-get install selinux apparmo
+  apt-get install selinux apparmor
 }
 
 # CIS: 1.7 ##############################################################
@@ -268,7 +268,7 @@ disable_inetd_services() {
 
   # Disabling services in array
   systemctl disable xinetd
-  for i in "${services[@]}"; do
+  for (i in "${services[@]}"); do
     update-inetd --disable "$i"
   done
   update-inetd --multi --remove [$services_comma]
@@ -370,7 +370,7 @@ configure_rsyslog() {
   rsyslog_install=`systemctl is-enabled rsyslog`
   rsyslog_FCM=`grep ^\$FileCreateMode /etc/rsyslog.conf`
 
-  if [[ $rsyslog_install != "*No such*" ]]; then
+  if [[ $rsyslog_install != *No such* ]]; then
     systemctl enable rsyslog # Making sure the rsyslog ser. is enabled (4.2.1.1)
     sed -i 's/$rsyslog_FCM/$FileCreateMode 0640/g' /etc/rsyslog.conf # Ensure rsyslog default file permissions configured (4.2.1.3)
 
@@ -447,7 +447,7 @@ ncis_readme_parsing() {
 password_fields_are_not_empty() {
   ensure_readme
   for user in `cat $dump/users_over_1000`; do
-    echo -e "$stdpass\n$stdpass" | passwd $use
+    echo -e "$stdpass\n$stdpass" | passwd $user
     echo "$user: $stdpass" >> $dump/changed_passwords
   done
 }
@@ -463,6 +463,10 @@ remove_plus_entry_group() { remove_plus_entry /etc/group }
 
 remove_plus_entries() { remove_plus_entry_passwd; remove_plus_entry_shadow; remove_plus_entry_group }
 
+# CIS 6.2.5 Ensure root is the only UID 0 account
+configure_UID_0 () {
+
+}
 
 # Comment out items that you do not want to be completed
 firefox_update_and_CIS
@@ -476,7 +480,7 @@ bootloader_permission_fix
 bottloader_password_set
 authentication_req_single_user_mode
 restrict_core_dumps
-enable_asl
+enable_aslr
 disable_prelink
 enable_selinux_in_bootloader_configuration
 enforcing_selinux_state
@@ -485,7 +489,7 @@ enable_apparmor_in_bootloader_configuration
 enforce_apparmor_profiles
 install_mac_systems
 motd_configured_properly
-configure_gdm_login_banne
+configure_gdm_login_banner
 updates
 disable_inetd_services
 disable_special_purpose_services
