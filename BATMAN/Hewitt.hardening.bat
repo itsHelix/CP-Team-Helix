@@ -1,7 +1,6 @@
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Script Name	: Hewitt.hardening.bat
-:: Description	: This is a Windows 10, 2016, and 2019 hardening script. It was designed to help security professionals implement very strong security standers into there clients systems. This is in no way a final script, just a starting point for most professi
-onals.
+:: Description	: This is a Windows 10, 2016, and 2019 hardening script. It was designed to help security professionals implement very strong security standers into there clients systems. This is in no way a final script, just a starting point for most professionals.
 :: Users section: The ":Users" section of this script is made for CyberPatiot 2015-2022.
 :: Helpers      : Tavin Turner, Abhinav Vemulapalli
 :: Author      	: Ian Boraks
@@ -102,25 +101,25 @@ cls
 color f0
 echo Choose An option:
 :: For this to show properly use encoding [Windows 1252] it will show as "I" when you do this. if you don't and then save+run it will break!
-echo ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
-echo º  1. Does everything    º
-echo º  2. Policies           º
-echo º  3. Users              º
-echo º  4. Software           º
-echo º  5. Kill Sus. Services º
-echo º  6. Input              º
-echo ÌÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
-echo º Current options: Current OS = %OS%
-echo º Disable Disable_RDP = %Disable_RDP%
-echo º Disable SMB = %Disable_SMB%
-echo º Delete File Shares = %Delete_File_Shares%
-echo º Run Users script = %Users%
-echo º Run Firefox script = %Firefox_Settings%
-echo º Update Software = %Update_Software_with_PatchMyPc%
-echo º Firewall Settings = %Firewall_Settings%
-echo º Disable Weak Services = %Disable_features%
-echo º Run Everything.exe = %Run_Everything.exe%
-echo ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼
+echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»
+echo ï¿½  1. Does everything    ï¿½
+echo ï¿½  2. Policies           ï¿½
+echo ï¿½  3. Users              ï¿½
+echo ï¿½  4. Software           ï¿½
+echo ï¿½  5. Kill Sus. Services ï¿½
+echo ï¿½  6. Input              ï¿½
+echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»
+echo ï¿½ Current options: Current OS = %OS%
+echo ï¿½ Disable Disable_RDP = %Disable_RDP%
+echo ï¿½ Disable SMB = %Disable_SMB%
+echo ï¿½ Delete File Shares = %Delete_File_Shares%
+echo ï¿½ Run Users script = %Users%
+echo ï¿½ Run Firefox script = %Firefox_Settings%
+echo ï¿½ Update Software = %Update_Software_with_PatchMyPc%
+echo ï¿½ Firewall Settings = %Firewall_Settings%
+echo ï¿½ Disable Weak Services = %Disable_features%
+echo ï¿½ Run Everything.exe = %Run_Everything.exe%
+echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼
 
 :: Fetch option
 CHOICE /C 123456 /M "Enter your choice:"

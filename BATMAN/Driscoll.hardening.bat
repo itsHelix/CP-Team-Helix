@@ -100,25 +100,25 @@ cls
 color f0
 echo Choose An option:
 :: For this to show properly use encoding [Windows 1252] it will show as "I" when you do this. if you don't and then save+run it will break!
-echo ษออออออออออออออออออออออออป
-echo บ  1. Does everything    บ
-echo บ  2. Policies           บ
-echo บ  3. Users              บ
-echo บ  4. ________           บ
-echo บ  5. Kill Sus. Services บ
-echo บ  6. Input              บ
-echo ฬออออออออออออออออออออออออสออออออออออออออออป
-echo บ Current options: Current OS = %OS%
-echo บ 	Disable Disable_RDP = %Disable_RDP%
-echo บ 	Disable SMB = %Disable_SMB%
-echo บ 	Delete File Shares = %Delete_File_Shares%
-echo บ 	Run Users script = %Users%
-echo บ 	Run Firefox script = %Firefox_Settings%
-echo บ 	Firewall Settings = %Firewall_Settings%
-echo บ 	Disable Weak Services = %Disable_features%
-echo บ 	Update Policies = %Update_Policies%
-echo บ 	Install Internet Explorer = %Install_IE%
-echo ศอออออออออออออออออออออออออออออออออออออออออผ
+echo ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอป
+echo ๏ฟฝ  1. Does everything    ๏ฟฝ
+echo ๏ฟฝ  2. Policies           ๏ฟฝ
+echo ๏ฟฝ  3. Users              ๏ฟฝ
+echo ๏ฟฝ  4. ________           ๏ฟฝ
+echo ๏ฟฝ  5. Kill Sus. Services ๏ฟฝ
+echo ๏ฟฝ  6. Input              ๏ฟฝ
+echo ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอป
+echo ๏ฟฝ Current options: Current OS = %OS%
+echo ๏ฟฝ 	Disable Disable_RDP = %Disable_RDP%
+echo ๏ฟฝ 	Disable SMB = %Disable_SMB%
+echo ๏ฟฝ 	Delete File Shares = %Delete_File_Shares%
+echo ๏ฟฝ 	Run Users script = %Users%
+echo ๏ฟฝ 	Run Firefox script = %Firefox_Settings%
+echo ๏ฟฝ 	Firewall Settings = %Firewall_Settings%
+echo ๏ฟฝ 	Disable Weak Services = %Disable_features%
+echo ๏ฟฝ 	Update Policies = %Update_Policies%
+echo ๏ฟฝ 	Install Internet Explorer = %Install_IE%
+echo ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอผ
 
 :: Fetch option
 CHOICE /C 123456 /M "Enter your choice:"
