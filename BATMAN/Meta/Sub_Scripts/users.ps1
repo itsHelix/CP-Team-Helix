@@ -1,10 +1,19 @@
 cd C:\Users\$env:USERNAME\Desktop
 Write-Host Stealing the Readme
-$url = "http://stuff, put in here boi!"
-if ($url -eq '"http://stuff, put in here boi!"') {
-  exit
-}
+$url = Read-Host -Prompt 'Input README url: '
+# $url = "PUT IT HERE AND UNCOMMENT"
+
 Invoke-RestMethod -Uri $url -Method Get -OutFile C:\Users\$env:USERNAME\Desktop\Output\readme.txt
+
+if ((Get-Content "C:\Users\$env:USERNAME\Desktop\Output\readme.txt") -eq $Null) {
+	Write-Host README was not extracted correctly!
+	Write-Host Please enter URL in powershell file directly.
+	pause
+}
+
+Write-Host README extracted correctly!
+
+pause
 
 Write-Host Checking Authorized Users
 

@@ -100,25 +100,25 @@ cls
 color f0
 echo Choose An option:
 :: For this to show properly use encoding [Windows 1252] it will show as "I" when you do this. if you don't and then save+run it will break!
-echo ������������������������ͻ
-echo �  1. Does everything    �
-echo �  2. Policies           �
-echo �  3. Users              �
-echo �  4. ________           �
-echo �  5. Kill Sus. Services �
-echo �  6. Input              �
-echo �����������������������������������������ͻ
-echo � Current options: Current OS = %OS%
-echo � 	Disable Disable_RDP = %Disable_RDP%
-echo � 	Disable SMB = %Disable_SMB%
-echo � 	Delete File Shares = %Delete_File_Shares%
-echo � 	Run Users script = %Users%
-echo � 	Run Firefox script = %Firefox_Settings%
-echo � 	Firewall Settings = %Firewall_Settings%
-echo � 	Disable Weak Services = %Disable_features%
-echo � 	Update Policies = %Update_Policies%
-echo � 	Install Internet Explorer = %Install_IE%
-echo �����������������������������������������ͼ
+echo 
+echo   1. Does everything    
+echo   2. Policies           
+echo   3. Users              
+echo   4. ________           
+echo   5. Kill Sus. Services 
+echo   6. Input              
+echo 
+echo  Current options: Current OS = %OS%
+echo  	Disable Disable_RDP = %Disable_RDP%
+echo  	Disable SMB = %Disable_SMB%
+echo  	Delete File Shares = %Delete_File_Shares%
+echo  	Run Users script = %Users%
+echo  	Run Firefox script = %Firefox_Settings%
+echo  	Firewall Settings = %Firewall_Settings%
+echo  	Disable Weak Services = %Disable_features%
+echo 	Update Policies = %Update_Policies%
+echo  	Install Internet Explorer = %Install_IE%
+echo 
 
 :: Fetch option
 CHOICE /C 123456 /M "Enter your choice:"
@@ -139,8 +139,6 @@ goto %Loc%
 :Everything
 if /I "Run Wmic.bat" EQU "Run Wmic.bat" CALL :Run_Wmic_Info
 if /I "%Breaks%" EQU "Y" timeout /T 40
-if /I "Set Auditpol" EQU "Set Auditpol" CALL :Set_Auditpol
-if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Firefox_Settings%" EQU "Y" CALL :Change_Firefox_Settings
 if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Delete_File_Shares%" EQU "Y" CALL :Delete_File_Shares
@@ -150,6 +148,8 @@ if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Update_Policies%" EQU "Y" CALL :Install_LGPO_STIG
 if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Update_Policies%" EQU "Y" CALL :Update_Registry
+if /I "%Breaks%" EQU "Y" timeout /T 40
+if /I "Set Auditpol" EQU "Set Auditpol" CALL :Set_Auditpol
 if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "%Disable_SMB%" EQU "%Disable_SMB%" CALL :SMB
 if /I "%Breaks%" EQU "Y" timeout /T 40
