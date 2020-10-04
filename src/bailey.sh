@@ -280,7 +280,7 @@ disable_inetd_services() {
 disable_special_purpose_services() {
   services=("avahi-daemon" "cups" "isc-dhcp-server6" "isc-dhcp-server" "slapd" "rpcbind" "nfs-kernel-server" "bind9" "vsftpd" "apache2" "dovecot" "smbd" "squid" "snmpd" "rsync" "nis")
   # apt-get remove xserver-xorg* # X Window System (commented out becuase unless you don't want a gui, you need this)
-  for (i in "${services[@]}"); do
+  for i in "${services[@]}"; do
     systemctl disable "$i"
   done
 }
@@ -373,7 +373,6 @@ configure_rsyslog() {
   if [[ $rsyslog_install != "*No such*" ]]; then
     systemctl enable rsyslog # Making sure the rsyslog ser. is enabled (4.2.1.1)
     sed -i 's/$rsyslog_FCM/$FileCreateMode 0640/g' /etc/rsyslog.conf # Ensure rsyslog default file permissions configured (4.2.1.3)
-
   else
     echo "Rsyslog is not installed"
   fi
@@ -414,14 +413,14 @@ configuring_file_permissions_function() {
   chmod $2 $1
 }
 
-etc_passwd_config() {configuring_file_permissions_function /etc/passwd 444 root}
-etc_shadow_config() {configuring_file_permissions_function /etc/shadow o-rwx,g-wx shadow}
-etc_group_config() {configuring_file_permissions_function /etc/group 444 root}
-etc_gshadow_config() {configuring_file_permissions_function /etc/gshadow o-rwx,g-wx shadow}
-etc_passwd_-_config() {configuring_file_permissions_function /etc/passwd- 600 root}
-etc_shadow_-_config() {configuring_file_permissions_function /etc/shadow- 400 root}
-etc_group_-_config() {configuring_file_permissions_function /etc/group- 600 root}
-etc_gshadow_-_config() {configuring_file_permissions_function /etc/gshadow- 400 root}
+etc_passwd_config() { configuring_file_permissions_function /etc/passwd 444 root }
+etc_shadow_config() { configuring_file_permissions_function /etc/shadow o-rwx,g-wx shadow }
+etc_group_config() { configuring_file_permissions_function /etc/group 444 root }
+etc_gshadow_config() { configuring_file_permissions_function /etc/gshadow o-rwx,g-wx shadow }
+etc_passwd_-_config() { configuring_file_permissions_function /etc/passwd- 600 root }
+etc_shadow_-_config() { configuring_file_permissions_function /etc/shadow- 400 root }
+etc_group_-_config() { configuring_file_permissions_function /etc/group- 600 root }
+etc_gshadow_-_config() { configuring_file_permissions_function /etc/gshadow- 400 root }
 
 configure_all_etc_files() {
   etc_passwd_config; etc_shadow_config; etc_group_config; etc_gshadow_config; etc_passwd_-_config; etc_shadow_-_config; etc_group_-_config; etc_gshadow_-_config
