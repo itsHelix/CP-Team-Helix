@@ -1,0 +1,72 @@
+7/29/2020 1:07:12 PM - Patch My PC Started
+7/29/2020 1:07:12 PM - Checking connection to patchmypc.com
+7/29/2020 1:07:13 PM - Verified connection to patchmypc.com. Status Code: 200
+7/29/2020 1:07:13 PM - Getting latest definitions from patchmypc.com
+7/29/2020 1:07:13 PM - Definition load completed in: 0.20 seconds
+7/29/2020 1:07:13 PM - Patch My PC version 4.1.0.5 is running. The latest is 4.1.0.5
+7/29/2020 1:07:13 PM - Performing scan of installed applications
+7/29/2020 1:07:13 PM - CCleaner 5.47 | Latest: 5.69
+7/29/2020 1:07:14 PM - Scan completed in: 0.70 seconds
+7/29/2020 1:07:58 PM - Patch My PC 4.1.0.5 | Definitions: 29-Jul-2020 | 7/29/2020 1:07:58 PM
+
+7/29/2020 1:07:58 PM - OS: Microsoft Windows 10 Pro x64
+
+7/29/2020 1:07:58 PM - 12 App(s) to install or update...
+7/29/2020 1:07:58 PM - Download URL: https://download.ccleaner.com/slim/ccsetup569_slim.exe
+7/29/2020 1:07:58 PM - Download Path: C:\PatchMyPCUpdates\CCleaner 5.69.exe
+7/29/2020 1:07:58 PM - Download size: 22.19 MB
+7/29/2020 1:07:58 PM - Download Starting for: https://download.ccleaner.com/slim/ccsetup569_slim.exe
+7/29/2020 1:07:58 PM - Downloading CCleaner 5.69 (22.19 MB)
+7/29/2020 1:08:01 PM - Total download time in seconds: 2.32
+7/29/2020 1:08:01 PM - Install Command: /S
+7/29/2020 1:08:01 PM - CCleaner 5.69 Downloaded Successfully
+7/29/2020 1:08:01 PM - Installing CCleaner 5.69 Silently
+7/29/2020 1:08:12 PM - Install Successful for CCleaner 5.69
+
+7/29/2020 1:08:12 PM - Deleted file: C:\PatchMyPCUpdates\CCleaner 5.69.exe
+7/29/2020 1:08:12 PM - Download URL: http://download.glarysoft.com/gu5setup.exe
+7/29/2020 1:08:12 PM - Download Path: C:\PatchMyPCUpdates\Glary Utilities 5.147.exe
+7/29/2020 1:08:12 PM - Download size: 17.6 MB
+7/29/2020 1:08:12 PM - Download Starting for: http://download.glarysoft.com/gu5setup.exe
+7/29/2020 1:08:12 PM - Downloading Glary Utilities 5.147 (17.6 MB)
+7/29/2020 1:08:14 PM - Total download time in seconds: 1.71
+7/29/2020 1:08:14 PM - Install Command: /S
+7/29/2020 1:08:14 PM - Glary Utilities 5.147 Downloaded Successfully
+7/29/2020 1:08:14 PM - Installing Glary Utilities 5.147 Silently
+7/29/2020 1:08:38 PM - Install Successful for Glary Utilities 5.147
+
+7/29/2020 1:08:38 PM - Deleted file: C:\PatchMyPCUpdates\Glary Utilities 5.147.exe
+7/29/2020 1:08:38 PM - Download URL: https://download01.logi.com/web/ftp/pub/techsupport/mouse/SetPoint6.69.126_64.exe
+7/29/2020 1:08:38 PM - Download Path: C:\PatchMyPCUpdates\Logitech SetPoint 6.69.126.exe
+7/29/2020 1:08:38 PM - Download size: 82.78 MB
+7/29/2020 1:08:38 PM - Download Starting for: https://download01.logi.com/web/ftp/pub/techsupport/mouse/SetPoint6.69.126_64.exe
+7/29/2020 1:08:38 PM - Downloading Logitech SetPoint 6.69.126 (82.78 MB)
+7/29/2020 1:08:46 PM - Total download time in seconds: 7.62
+7/29/2020 1:08:46 PM - Install Command: /S
+7/29/2020 1:08:46 PM - Logitech SetPoint 6.69.126 Downloaded Successfully
+7/29/2020 1:08:46 PM - Installing Logitech SetPoint 6.69.126 Silently
+7/29/2020 1:09:55 PM - Install Successful for Logitech SetPoint 6.69.126
+
+7/29/2020 1:09:55 PM - Deleted file: C:\PatchMyPCUpdates\Logitech SetPoint 6.69.126.exe
+7/29/2020 1:09:56 PM - Download URL: https://www.revouninstaller.com/download/revosetup.exe
+7/29/2020 1:09:56 PM - Download Path: C:\PatchMyPCUpdates\Revo Uninstaller 2.1.7.exe
+7/29/2020 1:09:56 PM - Download size: 7.11 MB
+7/29/2020 1:09:56 PM - Download Starting for: https://www.revouninstaller.com/download/revosetup.exe
+7/29/2020 1:09:56 PM - Downloading Revo Uninstaller 2.1.7 (7.11 MB)
+7/29/2020 1:09:58 PM - Total download time in seconds: 1.41
+7/29/2020 1:09:58 PM - Install Command: /VERYSILENT /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /NORESTART /SP- /SUPPRESSMSGBOXES
+7/29/2020 1:09:58 PM - Revo Uninstaller 2.1.7 Downloaded Successfully
+7/29/2020 1:09:58 PM - Installing Revo Uninstaller 2.1.7 Silently
+7/29/2020 1:10:03 PM - Unable to delete: C:\PatchMyPCUpdates\Revo Uninstaller 2.1.7.exe file may be in use
+7/29/2020 1:10:03 PM - Install Successful for Revo Uninstaller 2.1.7
+
+7/29/2020 1:10:04 PM - Download URL: http://update.iobit.com/dl/driver_booster_setup.exe
+7/29/2020 1:10:04 PM - Download Path: C:\PatchMyPCUpdates\Driver Booster 7.6.0.exe
+7/29/2020 1:10:04 PM - Download size: 24.64 MB
+7/29/2020 1:10:04 PM - Download Starting for: http://update.iobit.com/dl/driver_booster_setup.exe
+7/29/2020 1:10:04 PM - Downloading Driver Booster 7.6.0 (24.64 MB)
+7/29/2020 1:10:06 PM - Total download time in seconds: 2.61
+7/29/2020 1:10:06 PM - Install Command: /VERYSILENT /NOCLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /NORESTART /SP- /SUPPRESSMSGBOXES
+7/29/2020 1:10:06 PM - Driver Booster 7.6.0 Downloaded Successfully
+7/29/2020 1:10:06 PM - Installing Driver Booster 7.6.0 Silently
+7/29/2020 1:13:12 PM - Cancelling update process please wait...
