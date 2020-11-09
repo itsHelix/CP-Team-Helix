@@ -56,3 +56,4 @@ foreach($line in Get-Content .\Output\admins.txt) {
 	    $line >> .\Output\demotedAdmins.txt
     }
 }
+pause
