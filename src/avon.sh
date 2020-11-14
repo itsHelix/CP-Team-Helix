@@ -4,15 +4,21 @@
 # 1. Implement security for nginx
 # 2. Implement Bastille
 
-mkdir avon avon/log avon/dump
+mkdir -p avon/{log,dump}
 logf=./avon/log/avon_$(date +%T).log
 dump=./avon/dump
 stdpass="TiredofWork50"
 
 # Logging
+avon_section() {
+  CL='\033[1;35m' # Medium Purple
+  NC='\033[0m' # No Color
+  echo -e "\n\n${CL}[$1]${NC}"
+}
+
 log() {
   echo $(date +%T): $1 >> $logf
-  echo $1
+  avon_section $1
 }
 
 # Ensure script is running as root
