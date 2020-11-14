@@ -368,7 +368,7 @@ enable_auditd() {
 
 # CIS 4.1.18: Ensure the audit configuration is immutable
 configure_audit() {
-  echo “-e 2” >> /etc/audit/audit.rules
+  echo "-e 2" >> /etc/audit/audit.rules
 }
 # CIS: 4.2 ##############################################################
 
