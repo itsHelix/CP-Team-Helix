@@ -721,6 +721,10 @@ if [[ $currentoperatingsystem == *16.04* ]]; then
   avon_ubuntu16
 fi
 
+if [[ $currentoperatingsystem == *18.04* ]]; then
+  avon_ubuntu16
+fi
+
 if [[ $currentoperatingsystem == *Debian* ]]; then
   avon_debian
 fi
