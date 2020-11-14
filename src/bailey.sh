@@ -276,14 +276,14 @@ enable_apparmor_in_bootloader_configuration() {
 enforce_apparmor_profiles() {
   bailey_section "CIS 1.6.2.2: Ensure all AppArmor Profiles are enforcing"
 
-  aa-enforcce /etc/apparmor.d/*
+  aa-enforce /etc/apparmor.d/*
 }
 
 # CIS 1.6.3: Ensure SELinux or AppArmor are installed
 install_mac_systems() {
   bailey_section "CIS 1.6.3: Ensure SELinux or AppArmor are installed"
 
-  apt-get install selinux apparmo
+  apt-get install selinux apparmor
 }
 
 # CIS: 1.7 ##############################################################
@@ -601,7 +601,7 @@ enable_apparmor_in_bootloader_configuration
 enforce_apparmor_profiles
 install_mac_systems
 motd_configured_properly
-configure_gdm_login_banne
+configure_gdm_login_banned
 updates
 disable_inetd_services
 disable_special_purpose_services
