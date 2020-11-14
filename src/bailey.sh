@@ -30,14 +30,14 @@ log() {
 # Ensure the existence of the README
 ensure_readme() {
   echo >> $readme_location
-  if [ $(cat readme_location) -eq "" ]; then
+  if [[ $(cat readme_location) -eq "" ]]; then
     print "Please enter the URL of the README: "
     read readme_url
     curl -K $readme_url -o $readme_location
     echo $readme_location | head
     print "Does this look right? "
     read readme_is_correct
-    if [ $readme_is_correct -ne y ]; then
+    if [[ $readme_is_correct -ne y ]]; then
       echo "Please enter the contents manually"
       gedit $readme_location
     fi
@@ -80,7 +80,14 @@ hfs_mounting_disabled() { filesystem_mounting_disabled hfs }
 hfsplus_mounting_disabled() { filesystem_mounting_disabled hfsplus }
 udf_mounting_disabled() { filesystem_mounting_disabled udf }
 
-all_filesystem_mounting_disabled() { cramfs_mounting_disabled; freevxfs_mounting_disabled; jffs2_mounting_disabled; hfs_mounting_disabled; hfsplus_mounting_disabled; udf_mounting_disabled }
+all_filesystem_mounting_disabled() {
+  cramfs_mounting_disabled
+  freevxfs_mounting_disabled
+  jffs2_mounting_disabled
+  hfs_mounting_disabled
+  hfsplus_mounting_disabled
+  udf_mounting_disabled
+}
 
 # CIS 1.1.20: Ensure sticky bit is set on all world-wriable directories
 world_writable_sticky_bit() {
@@ -361,7 +368,7 @@ enable_auditd() {
 
 # CIS 4.1.18: Ensure the audit configuration is immutable
 configure_audit() {
-echo “-e 2” >> /etc/audit/audit.rules
+  echo “-e 2” >> /etc/audit/audit.rules
 }
 # CIS: 4.2 ##############################################################
 
@@ -394,7 +401,12 @@ monthly_config_cron() { file_config_cron /etc/cron.monthly }
 d_config_cron() { file_config_cron /etc/cron.d }
 
 configure_cron() {
-  crontab_config_cron; hourly_config_cron; daily_config_cron; weekly_config_cron; monthly_config_cron; d_config_cron
+  crontab_config_cron
+  hourly_config_cron
+  daily_config_cron
+  weekly_config_cron
+  monthly_config_cron
+  d_config_cron
   systemctl enable crond
 }
 
@@ -424,7 +436,14 @@ etc_group_-_config() { configuring_file_permissions_function /etc/group- 600 roo
 etc_gshadow_-_config() { configuring_file_permissions_function /etc/gshadow- 400 root }
 
 configure_all_etc_files() {
-  etc_passwd_config; etc_shadow_config; etc_group_config; etc_gshadow_config; etc_passwd_-_config; etc_shadow_-_config; etc_group_-_config; etc_gshadow_-_config
+  etc_passwd_config
+  etc_shadow_config
+  etc_group_config
+  etc_gshadow_config
+  etc_passwd_-_config
+  etc_shadow_-_config
+  etc_group_-_config
+  etc_gshadow_-_config
 }
 
 # CIS: 6.2 ##############################################################
@@ -461,7 +480,11 @@ remove_plus_entry_passwd() { remove_plus_entry /etc/passwd }
 remove_plus_entry_shadow() { remove_plus_entry /etc/shadow }
 remove_plus_entry_group() { remove_plus_entry /etc/group }
 
-remove_plus_entries() { remove_plus_entry_passwd; remove_plus_entry_shadow; remove_plus_entry_group }
+remove_plus_entries() {
+  remove_plus_entry_passwd
+  remove_plus_entry_shadow
+  remove_plus_entry_group
+}
 
 
 # Comment out items that you do not want to be completed
