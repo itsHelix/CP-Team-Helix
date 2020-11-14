@@ -73,12 +73,12 @@ filesystem_mounting_disabled() {
   rmmod ${$1}
 }
 
-cramfs_mounting_disabled() { filesystem_mounting_disabled cramfs }
-freevxfs_mounting_disabled() { filesystem_mounting_disabled freevxfs }
-jffs2_mounting_disabled() { filesystem_mounting_disabled jffs2 }
-hfs_mounting_disabled() { filesystem_mounting_disabled hfs }
-hfsplus_mounting_disabled() { filesystem_mounting_disabled hfsplus }
-udf_mounting_disabled() { filesystem_mounting_disabled udf }
+cramfs_mounting_disabled() { filesystem_mounting_disabled cramfs; }
+freevxfs_mounting_disabled() { filesystem_mounting_disabled freevxfs; }
+jffs2_mounting_disabled() { filesystem_mounting_disabled jffs2; }
+hfs_mounting_disabled() { filesystem_mounting_disabled hfs; }
+hfsplus_mounting_disabled() { filesystem_mounting_disabled hfsplus; }
+udf_mounting_disabled() { filesystem_mounting_disabled udf; }
 
 all_filesystem_mounting_disabled() {
   cramfs_mounting_disabled
@@ -393,12 +393,12 @@ file_config_cron() {
   chmod og-rwx $1
 }
 
-crontab_config_cron() { file_config_cron /etc/crontab }
-hourly_config_cron() { file_config_cron /etc/cron.hourly }
-daily_config_cron() { file_config_cron /etc/cron.daily }
-weekly_config_cron() { file_config_cron /etc/cron.weekly }
-monthly_config_cron() { file_config_cron /etc/cron.monthly }
-d_config_cron() { file_config_cron /etc/cron.d }
+crontab_config_cron() { file_config_cron /etc/crontab; }
+hourly_config_cron() { file_config_cron /etc/cron.hourly; }
+daily_config_cron() { file_config_cron /etc/cron.daily; }
+weekly_config_cron() { file_config_cron /etc/cron.weekly; }
+monthly_config_cron() { file_config_cron /etc/cron.monthly; }
+d_config_cron() { file_config_cron /etc/cron.d; }
 
 configure_cron() {
   crontab_config_cron
@@ -426,14 +426,14 @@ configuring_file_permissions_function() {
   chmod $2 $1
 }
 
-etc_passwd_config() { configuring_file_permissions_function /etc/passwd 444 root }
-etc_shadow_config() { configuring_file_permissions_function /etc/shadow o-rwx,g-wx shadow }
-etc_group_config() { configuring_file_permissions_function /etc/group 444 root }
-etc_gshadow_config() { configuring_file_permissions_function /etc/gshadow o-rwx,g-wx shadow }
-etc_passwd_-_config() { configuring_file_permissions_function /etc/passwd- 600 root }
-etc_shadow_-_config() { configuring_file_permissions_function /etc/shadow- 400 root }
-etc_group_-_config() { configuring_file_permissions_function /etc/group- 600 root }
-etc_gshadow_-_config() { configuring_file_permissions_function /etc/gshadow- 400 root }
+etc_passwd_config() { configuring_file_permissions_function /etc/passwd 444 root; }
+etc_shadow_config() { configuring_file_permissions_function /etc/shadow o-rwx,g-wx shadow; }
+etc_group_config() { configuring_file_permissions_function /etc/group 444 root; }
+etc_gshadow_config() { configuring_file_permissions_function /etc/gshadow o-rwx,g-wx shadow; }
+etc_passwd_-_config() { configuring_file_permissions_function /etc/passwd- 600 root; }
+etc_shadow_-_config() { configuring_file_permissions_function /etc/shadow- 400 root; }
+etc_group_-_config() { configuring_file_permissions_function /etc/group- 600 root; }
+etc_gshadow_-_config() { configuring_file_permissions_function /etc/gshadow- 400 root; }
 
 configure_all_etc_files() {
   etc_passwd_config
@@ -476,9 +476,9 @@ remove_plus_entry() {
   sed '/+/d' $1
 }
 
-remove_plus_entry_passwd() { remove_plus_entry /etc/passwd }
-remove_plus_entry_shadow() { remove_plus_entry /etc/shadow }
-remove_plus_entry_group() { remove_plus_entry /etc/group }
+remove_plus_entry_passwd() { remove_plus_entry /etc/passwd; }
+remove_plus_entry_shadow() { remove_plus_entry /etc/shadow; }
+remove_plus_entry_group() { remove_plus_entry /etc/group; }
 
 remove_plus_entries() {
   remove_plus_entry_passwd
