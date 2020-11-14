@@ -27,8 +27,16 @@ log() {
   echo $1
 }
 
+# Section indication
+bailey_section() {
+  CL='\033[1;35m' # Medium Purple
+  NC='\033[0m' # No Color
+  echo -e "\n\n${CL}[$1]${NC}"
+}
+
 # Ensure the existence of the README
 ensure_readme() {
+  bailey_section "Ensure the existence of the README"
   echo >> $readme_location
   if [[ $(cat readme_location) -eq "" ]]; then
     print "Please enter the URL of the README: "
@@ -49,6 +57,7 @@ ensure_readme() {
 
 # CIS: Mozilla Firefox 38
 firefox_update_and_CIS() {
+  bailey_section "Update Firefox and install syspref.js"
   killall firefox
   mv ~/.mozilla ~/.mozilla.old
   sudo apt install -y firefox
@@ -61,6 +70,7 @@ firefox_update_and_CIS() {
 
 # Removing dirty packages for a safer system
 purge_dirty_packages() {
+  bailey_section "Removing dirty packages for a safer system"
   apt-get purge -y john* ophcrack minetest wireshark netcat* polari rpcbind transmission-gtk empathy mutt freeciv kismet hydra* nikto* squid minetest p0f minetest-server nmap* zenmap*
   apt-get autoclean
   apt-get autoremove
@@ -81,6 +91,7 @@ hfsplus_mounting_disabled() { filesystem_mounting_disabled hfsplus; }
 udf_mounting_disabled() { filesystem_mounting_disabled udf; }
 
 all_filesystem_mounting_disabled() {
+  bailey_section "CIS 1.1.1: Disable unused filesystems"
   cramfs_mounting_disabled
   freevxfs_mounting_disabled
   jffs2_mounting_disabled
@@ -91,6 +102,7 @@ all_filesystem_mounting_disabled() {
 
 # CIS 1.1.20: Ensure sticky bit is set on all world-wriable directories
 world_writable_sticky_bit() {
+  bailey_section "CIS 1.1.20: Ensure sticky bit is set on all world-wriable directories"
   df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 }
 
@@ -98,6 +110,8 @@ world_writable_sticky_bit() {
 
 # CIS 1.2.1: Ensure package manager repositories are configured
 package_manager_repos_configured() {
+  bailey_section "CIS 1.2.1: Ensure package manager repositories are configured"
+
   # Var setup
   sources_loc="/etc/apt/sources.list"
   current_os=`cat /etc/*release | grep -i 'PRETTY_NAME' | grep -o '".*"' | sed 's/"//g'`
@@ -117,6 +131,8 @@ package_manager_repos_configured() {
 
 # CIS 1.3.1: Ensure AIDE is installed
 install_AIDE() {
+  bailey_section "CIS 1.3.1: Ensure AIDE is installed"
+
   # Var setup
   AIDE_dpkg=`dpkg -s aide`
 
@@ -131,6 +147,8 @@ install_AIDE() {
 
 # CIS 1.3.2: Ensure filesystem integrity is regularly checked
 filesystem_integrity_checked() {
+  bailey_section "CIS 1.3.2: Ensure filesystem integrity is regularly checked"
+
   # Var setup
   crontab=`cat /etc/crontab`
 
@@ -146,6 +164,8 @@ filesystem_integrity_checked() {
 
 # CIS 1.4.1: Ensure permissions on bootloader config are configured
 bootloader_permission_fix() {
+  bailey_section "CIS 1.4.1: Ensure permissions on bootloader config are configured"
+
   # Var setup
   grub_access=`stat /boot/gub/grub.cfg | grep -i "access: (" | grep -o "(.*)" | sed 's/"//g'`
 
@@ -159,6 +179,8 @@ bootloader_permission_fix() {
 
 # CIS 1.4.2: Ensure bootloader password is set
 bottloader_password_set() {
+  bailey_section "CIS 1.4.2: Ensure bootloader password is set"
+
   # Var setup
   passwordHash=`echo -e "$stdpass\n$stdpass" | grub-mkpasswd-pbkdf2 | grep -o "grub.*"`
 
@@ -171,6 +193,8 @@ bottloader_password_set() {
 
 # CIS 1.4.3: Ensure authentication required for single user mode
 authentication_req_single_user_mode() {
+  bailey_section "CIS 1.4.3: Ensure authentication required for single user mode"
+
   # Var setup
   rootpsw=`grep ^root:[*\!]: /etc/shadow`
 
@@ -186,6 +210,8 @@ authentication_req_single_user_mode() {
 
 # CIS 1.5.1: Ensure core dumps are restricted
 restrict_core_dumps() {
+  bailey_section "CIS 1.5.1: Ensure core dumps are restricted"
+
   echo "* hard core 0" | tee -a /etc/security/limits.conf /etc/sysctl.d/*
   echo "fs.suid_dumpable = 0" | tee -a /etc/sysctl.conf /etc/sysctl.d/*
   sysctl -w fs.suid_dumpable=0
@@ -193,12 +219,16 @@ restrict_core_dumps() {
 
 # CIS 1.5.3: Ensure address space layour randomization (ASLR) is enabled
 enable_aslr() {
+  bailey_section "CIS 1.5.3: Ensure address space layour randomization (ASLR) is enabled"
+
   echo "kernel.randomize_va_space = 2" | tee -a /etc/sysctl.conf /etc/sysctl.d/*
   sysctl -w kernel.randomize_va_space=2
 }
 
 # CIS 1.5.4: Ensure prelink is disabled
 disable_prelink() {
+  bailey_section "CIS 1.5.4: Ensure prelink is disabled"
+
   prelink -ua
   apt-get remove prelink
 }
@@ -209,6 +239,8 @@ disable_prelink() {
 
 # CIS 1.6.1.1: Ensure SELinux is not disabled in bootloader configuration
 enable_selinux_in_bootloader_configuration() {
+  bailey_section "CIS 1.6.1.1: Ensure SELinux is not disabled in bootloader configuration"
+
   sed -i `s/selinux=0//g` /etc/default/grub
   sed -i `s/enforcing=0//g` /etc/default/grub
   echo -e "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\nGRUB_CMDLINE_LINUX=\"\"" >> /etc/default/grub
@@ -217,11 +249,15 @@ enable_selinux_in_bootloader_configuration() {
 
 # CIS 1.6.1.2: Ensure the SELinux state is enforcing
 enforcing_selinux_state() {
+  bailey_section "CIS 1.6.1.2: Ensure the SELinux state is enforcing"
+
   echo "SELINUX=enforcing" >> /etc/selinux/config
 }
 
 # CIS 1.6.1.3: Ensure SELinux policy is configured
 configure_selinux_policy() {
+  bailey_section "CIS 1.6.1.3: Ensure SELinux policy is configured"
+
   echo "SELINUXTYPE=ubuntu" >> /etc/selinux/config
 }
 
@@ -229,6 +265,8 @@ configure_selinux_policy() {
 
 # CIS 1.6.2.1: Ensure AppArmor is not disabled in bootloader configuration
 enable_apparmor_in_bootloader_configuration() {
+  bailey_section "CIS 1.6.2.1: Ensure AppArmor is not disabled in bootloader configuration"
+
   sed -i `s/apparmor=0//g` /etc/default/grub
   echo -e "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\nGRUB_CMDLINE_LINUX=\"\"" >> /etc/default/grub
   update-grub
@@ -236,11 +274,15 @@ enable_apparmor_in_bootloader_configuration() {
 
 # CIS 1.6.2.2: Ensure all AppArmor Profiles are enforcing
 enforce_apparmor_profiles() {
+  bailey_section "CIS 1.6.2.2: Ensure all AppArmor Profiles are enforcing"
+
   aa-enforcce /etc/apparmor.d/*
 }
 
 # CIS 1.6.3: Ensure SELinux or AppArmor are installed
 install_mac_systems() {
+  bailey_section "CIS 1.6.3: Ensure SELinux or AppArmor are installed"
+
   apt-get install selinux apparmo
 }
 
@@ -248,6 +290,8 @@ install_mac_systems() {
 
 # CIS 1.7.1.1: Ensure message of the day is configured properly
 motd_configured_properly() {
+  bailey_section "CIS 1.7.1.1: Ensure message of the day is configured properly"
+
   sed -i `s/\m//g` /etc/motd
   sed -i `s/\r//g` /etc/motd
   sed -i `s/\s//g` /etc/motd
@@ -256,6 +300,8 @@ motd_configured_properly() {
 
 # CIS 1.7.2: Ensure GDM login banner is configured
 configure_gdm_login_banner() {
+  bailey_section "CIS 1.7.2: Ensure GDM login banner is configured"
+
   echo -e "user-db:user\nsystem-db:dgm\nfile-db:/usr/share/greeter-dconf/defaults" > /etc/dconf/profile/gdm
   echo -e "[org/gnome-login-screen]\nbanner-message-enabled=true\nbanner-message-text='Authorized uses only. All activity may be monitored and reported'" > /etc/dconf/db/gdm.d/01-banner-message
   dconf update
@@ -263,13 +309,17 @@ configure_gdm_login_banner() {
 
 # CIS 1.8: Ensure update, patches, and additional security software are installed
 updates() {
+  bailey_section "CIS 1.8: Ensure update, patches, and additional security software are installed"
+
   apt-get update && apt-get upgrade
 }
 
 # CIS: 2.1 ##############################################################
 
-# CIS 2.1 inetd Services:
+# CIS 2.1: inetd Services
 disable_inetd_services() {
+  bailey_section "CIS 2.1: inetd Services"
+
   # Var setup
   services=("chargen" "daytime" "discard" "echo" "time" "rsh" "rlogin" "rexec" "talk" "ntalk" "telnet" "tftp" "xinetd")
   services_comma=`printf "%s," "${services[@]}" | cut -d "," -f 1-${#services[@]}`
@@ -284,8 +334,10 @@ disable_inetd_services() {
 
 # CIS: 2.2 ##############################################################
 
-# CIS 2.2.2-17 (not including 2.2.15): Special Purpose Services
+# CIS 2.2.2-17 (except 2.2.15): Special Purpose Services
 disable_special_purpose_services() {
+  bailey_section "CIS 2.2.2-17 (except 2.2.15): Special Purpose Services"
+
   services=("avahi-daemon" "cups" "isc-dhcp-server6" "isc-dhcp-server" "slapd" "rpcbind" "nfs-kernel-server" "bind9" "vsftpd" "apache2" "dovecot" "smbd" "squid" "snmpd" "rsync" "nis")
   # apt-get remove xserver-xorg* # X Window System (commented out becuase unless you don't want a gui, you need this)
   for i in "${services[@]}"; do
@@ -297,12 +349,16 @@ disable_special_purpose_services() {
 
 # CIS 3.1.1: Ensure IP forwarding is disabled
 disable_ip_forwarding() {
+  bailey_section "CIS 3.1.1: Ensure IP forwarding is disabled"
+
   sysctl -w net.ipv4.ip_forward=0
   sysctl -w net.ipv4.route.flush=1
 }
 
 # CIS 3.1.2: Ensure packet redirect sending is disabled
 disable_packet_redirect() {
+  bailey_section "CIS 3.1.2: Ensure packet redirect sending is disabled"
+
   sysctl -w net.ipv4.conf.all.send_redirects=0
   sysctl -w net.ipv4.conf.default.send_redirects=0
   sysctl -w net.ipv4.route.flush=1
@@ -312,6 +368,8 @@ disable_packet_redirect() {
 
 # CIS 3.2.1: Ensure source routed packets are not accepted
 disable_accepting_routed_packets() {
+  bailey_section "CIS 3.2.1: Ensure source routed packets are not accepted"
+
   sysctl -w net.ipv4.conf.all.accept_source_route=0
   sysctl -w net.ipv4.conf.default.accept_source_route=0
   sysctl -w net.ipv4.route.flush=1
@@ -319,6 +377,8 @@ disable_accepting_routed_packets() {
 
 # CIS 3.2.2-3: Ensure ICMP redirects are not accepted
 disable_accepting_of_ICMP_redirects() {
+  bailey_section "CIS 3.2.2-3: Ensure ICMP redirects are not accepted"
+
   sysctl -w net.ipv4.conf.all.accept_redirects=0
   sysctl -w net.ipv4.conf.default.accept_redirects=0
   sysctl -w net.ipv4.conf.all.secure_redirects=0
@@ -328,6 +388,8 @@ disable_accepting_of_ICMP_redirects() {
 
 # CIS 3.2.4: Ensure suspicious packets are logged
 enable_logging_of_packets() {
+  bailey_section "CIS 3.2.4: Ensure suspicious packets are logged"
+
   sysctl -w net.ipv4.conf.all.log_martians=1
   sysctl -w net.ipv4.conf.default.log_martians=1
   sysctl -w net.ipv4.route.flush=1
@@ -335,6 +397,8 @@ enable_logging_of_packets() {
 
 # CIS 3.2.5-6: Ensure ICMP requests are ignored
 ignore_ICMP_requests() {
+  bailey_section "CIS 3.2.5-6: Ensure ICMP requests are ignored"
+
   sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1
   sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1
   sysctl -w net.ipv4.route.flush=1
@@ -342,6 +406,8 @@ ignore_ICMP_requests() {
 
 # CIS 3.2.7: Ensure Reverse Path Filtering is enabled
 enable_reverse_path_filtering() {
+  bailey_section "CIS 3.2.7: Ensure Reverse Path Filtering is enabled"
+
   sysctl -w net.ipv4.conf.all.rp_filter=1
   sysctl -w net.ipv4.conf.default.rp_filter=1
   sysctl -w net.ipv4.route.flush=1
@@ -349,6 +415,8 @@ enable_reverse_path_filtering() {
 
 # CIS 3.2.8: Ensure TCP SYN Cookies is enabled
 enable_TCP_SYN_cookies() {
+  bailey_section "CIS 3.2.8: Ensure TCP SYN Cookies is enabled"
+
   sysctl -w net.ipv4.tcp_syncookies=1
   sysctl -w net.ipv4.route.flush=1
 }
@@ -357,24 +425,32 @@ enable_TCP_SYN_cookies() {
 
 # CIS 4.1.2: Ensure auditd service is enabled
 enable_auditd() {
+  bailey_section "CIS 4.1.2: Ensure auditd service is enabled"
+
   systemctl enable auditd
 }
 
 # CIS 4.1.3: Ensure auditing for processes that start priot to auditd is enabled
 enable_auditd() {
-  sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=“audit=1”'/etc/default/grub
+  bailey_section "CIS 4.1.3: Ensure auditing for processes that start priot to auditd is enabled"
+
+  sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=“audit=1”' /etc/default/grub
   update-grub
 }
 
 # CIS 4.1.18: Ensure the audit configuration is immutable
 configure_audit() {
+  bailey_section "CIS 4.1.18: Ensure the audit configuration is immutable"
+
   echo "-e 2" >> /etc/audit/audit.rules
 }
 # CIS: 4.2 ##############################################################
 
-# CIS: 4.2.1 Configure rsyslog
+# CIS 4.2.1: Configure rsyslog
 
 configure_rsyslog() {
+  bailey_section "CIS 4.2.1: Configure rsyslog"
+
   rsyslog_install=`systemctl is-enabled rsyslog`
   rsyslog_FCM=`grep ^\$FileCreateMode /etc/rsyslog.conf`
 
@@ -401,6 +477,8 @@ monthly_config_cron() { file_config_cron /etc/cron.monthly; }
 d_config_cron() { file_config_cron /etc/cron.d; }
 
 configure_cron() {
+  bailey_section "CIS 5.1 (cron to root + start crond)"
+
   crontab_config_cron
   hourly_config_cron
   daily_config_cron
@@ -413,6 +491,8 @@ configure_cron() {
 # CIS: 5.2 ##############################################################
 
 configure_ssh() {
+  bailey_section "CIS 5.2 (sshd config)"
+
   chmod 777 /etc/ssh/sshd_config
   cat ./presets/perfect_sshd > /etc/ssh/sshd_config
   chmod 644 /etc/ssh/sshd_config
@@ -436,6 +516,8 @@ etc_group_-_config() { configuring_file_permissions_function /etc/group- 600 roo
 etc_gshadow_-_config() { configuring_file_permissions_function /etc/gshadow- 400 root; }
 
 configure_all_etc_files() {
+  bailey_section "CIS 6.1 (/etc file permissions)"
+
   etc_passwd_config
   etc_shadow_config
   etc_group_config
@@ -449,6 +531,8 @@ configure_all_etc_files() {
 # CIS: 6.2 ##############################################################
 # NON-CIS: README PARSING
 ncis_readme_parsing() {
+  bailey_section "README Parsing"
+
   # Makes a list of non-root users (users over 1000, should be all but `root`)
   cut -d: -f1,3 /etc/passwd | egrep ':[0-9]{4}$' | cut -d: -f1 > $dump/usersover1000
   echo root >> $dump/users_over_1000
@@ -464,6 +548,8 @@ ncis_readme_parsing() {
 
 # CIS 6.2.1: Ensure password fields are not empty
 password_fields_are_not_empty() {
+  bailey_section "CIS 6.2.1: Ensure password fields are not empty"
+
   ensure_readme
   for user in `cat $dump/users_over_1000`; do
     echo -e "$stdpass\n$stdpass" | passwd $use
@@ -481,6 +567,8 @@ remove_plus_entry_shadow() { remove_plus_entry /etc/shadow; }
 remove_plus_entry_group() { remove_plus_entry /etc/group; }
 
 remove_plus_entries() {
+  bailey_section "CIS 6.2.2-4: Ensure no legacy "+" entries exist in /etc/passwd,shadow,group"
+
   remove_plus_entry_passwd
   remove_plus_entry_shadow
   remove_plus_entry_group
