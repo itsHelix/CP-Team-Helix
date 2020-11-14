@@ -79,8 +79,8 @@ purge_dirty_packages() {
 
 # CIS 1.1.1: Disable unused filesystems
 filesystem_mounting_disabled() {
-  echo "install ${$1} /bin/true" >> /etc/modprobe.d/${$1}.conf
-  rmmod ${$1}
+  echo "install $1 /bin/true" >> /etc/modprobe.d/$1.conf
+  rmmod $1
 }
 
 cramfs_mounting_disabled() { filesystem_mounting_disabled cramfs; }
@@ -574,6 +574,11 @@ remove_plus_entries() {
   remove_plus_entry_group
 }
 
+# Sign off
+so_lets_go() {
+  bailey_section "Script done; make sure to run telluride.sh or avon.sh after this to cover general items. Go team!"
+}
+
 
 # Comment out items that you do not want to be completed
 firefox_update_and_CIS
@@ -613,3 +618,4 @@ configure_rsyslog
 configure_cron
 configure_ssh
 configure_all_etc_files
+so_lets_go
