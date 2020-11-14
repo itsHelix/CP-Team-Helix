@@ -1,10 +1,11 @@
 #!/bin/sh
 
 # Setup pause function
-function pause(){
+pause() {
    read -p "$*"
 }
 
+#!/bin/bash
 # Ensure script is running as root
 if [[ $EUID -ne 0 ]]; then
   pause 'Press [Enter] key to elavate Bailey...'
@@ -14,7 +15,7 @@ else
 fi
 
 # Script Utilities
-mkdir bailey bailey/log bailey/dump
+mkdir -p bailey/{log,dump}
 logfile=./bailey/log/bailey_$(date +%T).log
 dump=./bailey/dump
 stdpass="Spo0key_Scar3y"
