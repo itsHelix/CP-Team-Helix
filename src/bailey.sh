@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Setup pause function
 pause() {
