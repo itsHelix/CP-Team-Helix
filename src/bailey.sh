@@ -311,7 +311,7 @@ configure_gdm_login_banner() {
 updates() {
   bailey_section "CIS 1.8: Ensure update, patches, and additional security software are installed"
 
-  apt-get update && apt-get upgrade
+  apt-get update && apt-get upgrade && apt-get dist-upgrade
 }
 
 # CIS: 2.1 ##############################################################
