@@ -727,3 +727,56 @@ Any user within the shadow group has access to read the /etc/shadow file, which 
 Testing:
 * `grep ^shadow:[^:]*:[^:]*:[^:]+ /etc/group`: N/A
 * `awk -F: '($4 == "<shadow-gid>") { print }' /etc/passwd`: N/A
+
+# Auxiliary File Configurations
+## OpenSSH file
+### Port number
+The default port (22/tcp) is a brute force target; thus, the ssh daemon is configured to run on an alternative port (69420/tcp).
+* `Port 69420`
+
+### Compression after authentication
+To eliminate a risk of compression exploitation, compression is exploited until after authentication.
+* `Compression delayed`
+
+### Idle log out timeout interval
+To avoid an unattended ssh session, timeout after 5 minutes idle.
+* `ClientAliveInterval 300`
+* `ClientAliveCountMax 0`
+
+### Strict mode
+Using strict mode you can enforce some checks on important files inside users’ home directory have the proper privileges and ownership, SSH daemon will only allow a remote user to log on if checks pass. It is suggested to enable strict mode editing sshd_config file and enabling StrictModes.
+* `StrictModes yes`
+
+### Disable rhosts
+`rsh` is historically unsafe, so disabling it is recommended.
+* `IgnoreRhosts yes`
+
+### Disable challenge response
+By PAM authentication, challenge response authentication should be disabled to evade undefined behavior and unwanted authentication.
+* `ChallengeResponseAuthentication no`
+
+### Disable empty passwords
+Explicitly disallow remote login from accounts with empty passwords.
+* `PermitEmptyPasswords no`
+
+### Disable gateway for forwarded ports
+To prevent other remote hosts from connecting to forwarded ports, ssh binds local port forwardings to the loopback address only.
+* `GatewayPorts no`
+
+### Disable host-based authentication
+It is suggested to disable host-based authentication with the `HostbasedAuthentication` command.
+* `HostbasedAuthentication no`
+
+### Disable password authentication
+By default SSH can use keys or password to provide authentication, passwords are prone to brute force attacks. It is suggested to use keys only and completely disable password-based logins.
+* `PasswordAuthentication no`
+
+### Use SSHv2
+SSHv1 suffers man-in-the-middle attacks among other vulnerabilities and should be disabled.
+* `Protocol 2`
+
+### Disable root login
+It is suggested to disable root login via SSH to avoid publically offering root privileges.
+* `PermitRootLogin no`
+
+### 
