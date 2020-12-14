@@ -167,8 +167,15 @@ if /I "%Users%" EQU "Y" CALL :User_Auditing
 if /I "%Breaks%" EQU "Y" timeout /T 40
 if /I "Flush DNS" EQU "Flush DNS" CALL :Flush_DNS
 if /I "%Breaks%" EQU "Y" timeout /T 40
+if /I "Update Powershell" EQU "Update Powershell" CALL :Update_Powershell
+if /I "%Breaks%" EQU "Y" timeout /T 40
 
 goto :MENU
+
+:Update_Powershell
+iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI"
+powershell Install-Module –Name PowerShellGet –Force
+EXIT /B 0
 
 :Run_Wmic_Info
 call %~dp0\Meta\Sub_Scripts\wmic_info.bat
@@ -181,15 +188,23 @@ EXIT /B 0
 
 :Change_Firefox_Settings
 taskkill /IM firefox.exe /F
+
+::Asking you to wipe Firefox
+echo. & echo Look at the Add-ons section and click refresh to factory reset Firefox
+start firefox about:support
+timeout /T 60
+taskkill /IM firefox.exe /F
+cls
+
 cd %appdata%\Mozilla\Firefox\Profiles
 :: Below: this selects the next folder in the DIR [you have to do this becuase the folder you need to get into is generated at random]
 for /d %%F in (*) do cd "%%F" & goto :break
-:break
 copy /y /v %~dp0\Meta\Perfect\prefs.js %cd%
+
 cls
 echo. & echo You should be good!
 start firefox about:config
-timeout /T 20
+timeout /T 60
 taskkill /IM firefox.exe /F
 EXIT /B 0
 
@@ -345,17 +360,27 @@ if /I "%Disable_SMB%" EQU "N" (
   :: Disable SMB1
   sc.exe config lanmanworkstation depend= bowser/mrxsmb20/nsi
   sc.exe config mrxsmb10 start= disabled
+	powershell Disable-WindowsOptionalFeature -Online -FeatureName smb1protocol
+	powershell Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB1 -Type DWORD -Value 0 -Force
   :: Enable SMB2/3
   sc.exe config lanmanworkstation depend= bowser/mrxsmb10/mrxsmb20/nsi
   sc.exe config mrxsmb20 start= auto
+	powershell Set-SmbServerConfiguration -EnableSMB2Protocol $true
+	powershell Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB2 -Type DWORD -Value 1 -Force
+	gpupdate /force
 	EXIT /B 0
 ) else (
   :: Disables SMB1
   sc.exe config lanmanworkstation depend= bowser/mrxsmb20/nsi
   sc.exe config mrxsmb10 start= disabled
+	powershell Disable-WindowsOptionalFeature -Online -FeatureName smb1protocol
+	powershell Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB1 -Type DWORD -Value 0 -Force
   :: Disables SMB2/3
   sc.exe config lanmanworkstation depend= bowser/mrxsmb10/nsi
   sc.exe config mrxsmb20 start= disabled
+	powershell Set-SmbServerConfiguration -EnableSMB2Protocol $false
+	powershell Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB2 -Type DWORD -Value 0 -Force
+	gpupdate /force
 	EXIT /B 0
 )
 
@@ -459,8 +484,8 @@ copy %~dp0\Meta\Sub_Scripts\users.ps1 %USERPROFILE%\desktop
 pause
 set PATH=%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\
 REM Editied from Driscoll \/\/
-powershell.exe Unblock-File -Path .\Start-ActivityTracker.ps1
-powershell.exe -ExecutionPolicy Bypass -File %USERPROFILE%\desktop\users.ps1
+powershell Unblock-File -Path .\Start-ActivityTracker.ps1
+powershell -ExecutionPolicy Bypass -File %USERPROFILE%\desktop\users.ps1
 cd C:\Windows\System32
 set path=C:\Windows\System32
 REM del %USERPROFILE%\desktop\users.ps1
