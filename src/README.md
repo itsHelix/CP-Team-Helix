@@ -1,3 +1,5 @@
+**Warning:** As of May 2022, Bailey is abandoned by its maintainers, but remains open to any contributor who may be interested in its vision. For any inquiries, please open a pull request or contact an author.
+
 # Bailey
 A standard-based, organized hardening script for Ubuntu 14-18 and Debian 7-9.
 
