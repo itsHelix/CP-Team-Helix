@@ -1,0 +1,21 @@
+How to identify users in any group!
+1.	Go to "mmc"
+2.	From the "mmc" window, select File drop down menu and then “Add/Remove Snap-in.” In the “Available snap-ins” 	column, select “Local Users and Groups”
+3.	Then click the "Add" button. At the "Choose Target Machine" dialog box, select "Finish"
+4.	Double click on the new "Local Users and Groups" snap-in you just added.
+5.	Then double lcikc on the groups fodler and double click [insert group name here]
+6.	Look at users and DAB!
+
+Remote Registy!
+1.	Go to "services.msc"
+2.	Scroll down and double-click on "Remote Registry"
+3.	Change the "Startup Type" to "disabled"
+4.	Click apply and DAB!
+
+Account lockout threshold!
+1.	SecurityPolicy"->"AccountPolicies"->"AccountLockoutPolicy"->"Accountlockoutthreshold"
+2.	Change the setting to a value between 3-10 invalid logon attempts.
+3.	After setting the value for this setting, you will be prompted to change “Account Lockout Duration”
+4.	Change the “Reset account lockout counter after" to 30 minutes each. 
+4.	Apply these values and DAB!
+

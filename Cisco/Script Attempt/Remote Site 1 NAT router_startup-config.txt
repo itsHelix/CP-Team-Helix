@@ -1,0 +1,121 @@
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname RS1_NAT
+!
+!
+!
+enable secret 5 $1$mERr$YQa9DJe4kp6B2WmGcZojB/
+!
+!
+!
+!
+!
+!
+no ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FTX15240X73-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ description NAT pool OSPF
+ ip address 200.200.200.254 255.255.255.0
+ ip ospf network point-to-point
+!
+interface GigabitEthernet0/0
+ description DMZ01
+ ip address 199.100.100.2 255.255.255.0
+ ip nat outside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ description Inside NAT RS1
+ ip address 172.16.0.1 255.255.255.0
+ ip nat inside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2
+ no ip address
+ duplex auto
+ speed auto
+ shutdown
+!
+interface FastEthernet0/3/0
+ switchport mode access
+ switchport nonegotiate
+!
+interface FastEthernet0/3/1
+ switchport mode access
+ switchport nonegotiate
+!
+interface FastEthernet0/3/2
+ switchport mode access
+ switchport nonegotiate
+!
+interface FastEthernet0/3/3
+ switchport mode access
+ switchport nonegotiate
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router ospf 1
+ router-id 200.200.200.253
+ log-adjacency-changes
+ network 200.200.200.0 0.0.0.255 area 0
+ network 199.100.100.0 0.0.0.255 area 0
+!
+ip nat pool RSI 200.200.200.3 200.200.200.253 netmask 255.255.255.0
+ip nat inside source list 1 pool RSI
+ip nat inside source static 172.16.1.2 200.200.200.2 
+ip classless
+ip route 172.16.0.0 255.255.255.0 172.16.0.2 
+!
+ip flow-export version 9
+!
+!
+access-list 1 permit 172.16.1.0 0.0.0.255
+access-list 1 permit 172.16.0.0 0.0.0.255
+!
+!
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
+

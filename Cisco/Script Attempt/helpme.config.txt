@@ -1,0 +1,16 @@
+! 
+service password-encryption 
+! 
+hostname helpme 
+! 
+! 
+! 
+! 
+interface fa0/1 
+ switchport trunk allowed vlan 1,4,5 
+ switchport mode trunk 
+ switchport trunk encapsulation dot1q 
+ ip address 10.10.10.1 255.255.255.0 
+ shutdown 
+ description helpme 
+! 
